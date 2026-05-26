@@ -1,21 +1,27 @@
 import './App.css'
 
-import { Container, Flex, Heading, Text } from '@chakra-ui/react'
-import { FaPaw } from 'react-icons/fa'
+import { Center, HStack, Text } from '@chakra-ui/react'
+
+import Navigation from './components/Navigation'
+import Router from './components/Router'
+import { useAuth } from './contexts/AuthContexts'
 
 export default function App() {
+  const { user } = useAuth()
+
   return (
-    <Container m="8">
-      <Flex justifyContent="center" color="white">
-        <FaPaw size={32} />
-        <Heading pl="4">
-          &nbsp;Paw Plan 
-        </Heading>
-      </Flex>
-      
-      <Text pt="2">
-        App für Tierheime - zur Vereinbarung von Dates mit Hunden (mit Admin Sektion)
-      </Text>
-    </Container>
+    <>
+      {
+        user ?
+            <HStack>
+              <Navigation />
+              <Router />
+            </HStack>
+          :
+            <Center>
+              <Text>No user....</Text>
+            </Center>
+      }
+    </>
   )
 }
