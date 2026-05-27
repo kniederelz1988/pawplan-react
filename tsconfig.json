@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "es2020",
+        "lib": ["es2020", "DOM"],
+
+        "module": "esnext",
+
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "sourceMap": true,
+
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+
+        "jsx": "preserve"
+    },
+
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist"]
+}
