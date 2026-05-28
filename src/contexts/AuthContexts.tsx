@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react"
 
-import useAuthentication from "../hooks/useAuthentification"
-import LoadingPage from "../components/pages/LoadingPage"
+import useAuthentication from "@hooks/useAuthentification"
+import LoadingPage from "@components/pages/LoadingPage"
 
 const AuthContext = createContext({})
 
@@ -12,11 +12,11 @@ export function AuthProvider({ children } : {
 
     return (
         <AuthContext.Provider value={{ user, isLoading }}>
-            { 
-                isLoading 
-                    ? <LoadingPage />
-                    : children
-            }
+        { 
+            isLoading 
+                ? <LoadingPage />
+                : children
+        }
         </AuthContext.Provider>
     )
 }

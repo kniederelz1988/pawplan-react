@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 
-// @ts-ignore: JS module without type declarations
-import { auth } from "../firebase/config"
+import { auth } from "@fb/config" 
 import { User, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth"
 
 type UseAuthenficationResult = {
