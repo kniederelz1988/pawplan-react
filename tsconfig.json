@@ -25,7 +25,8 @@
             "@contexts/*": ["./contexts/*"],
             "@fb/*": ["./src/firebase/*"],
             "@models/*": ["./src/models/*"],
-            "@repos/*": ["./src/repositories/*"]
+            "@repos/*": ["./src/repositories/*"],
+            "@helpers/*": ["./src/helpers/*"]
         }
     },
 

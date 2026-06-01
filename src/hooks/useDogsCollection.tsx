@@ -8,7 +8,7 @@ export default function useDogsCollection(dogIds: string[]) {
     const [filterByIds, filterDogsByIds] = useState(dogIds)
 
     useEffect(() => {
-        if (filterByIds) {
+        if (!filterByIds || filterByIds.length == 0) {
             return dogRepository.subscribeForAllDogs(setDogs)
         }
 

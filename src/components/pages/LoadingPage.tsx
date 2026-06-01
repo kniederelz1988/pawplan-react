@@ -1,4 +1,5 @@
-import { Flex, Spacer, Spinner } from "@chakra-ui/react";
+import { Flex, Spacer } from "@chakra-ui/react";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function LoadingPage() {
     return (
@@ -8,7 +9,7 @@ export default function LoadingPage() {
             <Flex h="vh" direction="column">
                 <Spacer />
 
-                <Spinner size={"xl"}/>
+                <DotLottieReact src="loading-paw.lottie" style={{ width: "150px", height: "150px" }} loop autoplay />
 
                 <Spacer />
             </Flex>

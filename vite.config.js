@@ -17,7 +17,8 @@ export default defineConfig({
       '@contexts': path.resolve(__dirname, './src/contexts'),
       '@fb': path.resolve(__dirname, './src/firebase'),
       '@models': path.resolve(__dirname, './src/models'),
-      '@repos': path.resolve(__dirname, './src/repositories')
+      '@repos': path.resolve(__dirname, './src/repositories'),
+      '@helpers': path.resolve(__dirname, './src/helpers')
     }
   }
 })
