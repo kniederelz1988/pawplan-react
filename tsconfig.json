@@ -22,7 +22,7 @@
         "paths": {
             "@hooks/*": ["./src/hooks/*"],
             "@components/*": ["./src/components/*"],
-            "@contexts/*": ["./contexts/*"],
+            "@contexts/*": ["./src/contexts/*"],
             "@fb/*": ["./src/firebase/*"],
             "@models/*": ["./src/models/*"],
             "@repos/*": ["./src/repositories/*"],

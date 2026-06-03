@@ -1,37 +1,39 @@
-import { Button, Flex, Spacer  } from '@chakra-ui/react';
-import { FaMagnifyingGlass, FaRegCalendar, FaRegHeart, FaRegUser } from 'react-icons/fa6';
+import { Container, Spacer, VStack } from '@chakra-ui/react';
+import { FaMagnifyingGlass, FaRegCalendar, FaRegUser } from 'react-icons/fa6';
 
 import useAuthentification from '../hooks/useAuthentification';
 import NavigationLink from './NavigationLink';
+import UserProfileOverview from './utils/UserProfileOverview';
 
 export default function Navigation() {
-    const { signOutUser } = useAuthentification()
-
-    function handleLogout(e: any) {
-        e.preventDefault()
-        signOutUser()
-    }
+    const { user } = useAuthentification()
 
     return (
-        <Flex direction="column" w={200} h="vh" p={2}>
+        <VStack w="100%" h="100%" align="stretch">
+            <Container h={70} textAlign={"center"} alignContent={"center"}>
+                LOGO
+            </Container>
+
             <NavigationLink target="/">
                 <FaMagnifyingGlass /> Discover
             </NavigationLink>
-            <NavigationLink target="/userFavorites">
-                <FaRegHeart /> Favourites (2)
-            </NavigationLink>
-            <NavigationLink target="/userAppointments">
-                <FaRegCalendar /> Visits
-            </NavigationLink>
-            <NavigationLink target="/userProfile">
-                <FaRegUser />Profile
-            </NavigationLink>
+
+            {
+                user ?
+                    <>
+                        <NavigationLink target="/userAppointments">
+                            <FaRegCalendar /> Visits
+                        </NavigationLink>
+                        <NavigationLink target="/userProfile">
+                            <FaRegUser />Profile
+                        </NavigationLink>
+                    </>
+                    : <></>
+            }
 
             <Spacer />
 
-            <Button onClick={handleLogout}>
-                Logout
-            </Button>
-        </Flex>
+            <UserProfileOverview />
+        </VStack>
     )
 }

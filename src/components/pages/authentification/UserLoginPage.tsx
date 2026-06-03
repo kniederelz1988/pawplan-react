@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Alert, Button, Field, Flex, Heading, Input, Spacer, Text, VStack } from "@chakra-ui/react";
 
-import useAuthentication from "../../../hooks/useAuthentification";
+import useAuthentication from "@hooks/useAuthentification";
 
 export default function UserLoginPage() {
     const { error, signInUser } = useAuthentication()

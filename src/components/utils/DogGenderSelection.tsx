@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { createListCollection, SelectRootProps } from "@chakra-ui/react";
-import { DogSizeEnum, getSizeTitle } from "@models/enums/DogSizeEnum";
 import BaseSelection from "@components/utils/BaseSelection";
 import { DogGenderEnum, getGenderTitle } from "@models/enums/DogGenderEnum";
 

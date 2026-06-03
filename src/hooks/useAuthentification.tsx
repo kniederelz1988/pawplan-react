@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react"
 
 import { auth } from "@fb/config" 
-import { User, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth"
+import { User, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth"
 
 type UseAuthenficationResult = {
     user: User | null;
     isLoading: boolean;
     error: string | null;
     signInUser: (email: string, password: string) => Promise<void>;
-    createUser: (email: string, password: string) => Promise<void>;
+    createUser: (email: string, password: string, name: string) => Promise<void>;
     signOutUser: () => void;
 }
 
@@ -45,11 +45,14 @@ export default function useAuthentification() : UseAuthenficationResult {
 
         setLoading(false)
     }
-    async function createUser(email: string, password: string) {
+    async function createUser(email: string, password: string, name: string) {
         setLoading(true)
 
         try {
-            await createUserWithEmailAndPassword(auth, email, password)
+            const cred = await createUserWithEmailAndPassword(auth, email, password)
+            setError(null)
+            
+            await updateProfile(cred.user, { displayName: name })
             setError(null)
         } catch(err: any) {
             console.error(err.code)
@@ -68,7 +71,7 @@ export default function useAuthentification() : UseAuthenficationResult {
             setUser(user)
             setLoading(false)
         })
-
+        
         return unsubscribe
     }, [])
 

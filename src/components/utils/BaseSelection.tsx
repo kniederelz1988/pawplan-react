@@ -27,7 +27,7 @@ export default function BaseSelection({ collection, value, onValueChanged, getLa
     }
 
     return (
-        <Select.Root key={props.key} collection={collection} value={[value]} onValueChange={handleValueChanged}>
+        <Select.Root key={props.key} collection={collection} value={[value]} onValueChange={handleValueChanged} mt="-6px">
             <Select.HiddenSelect />
             <Select.Label>
             {
