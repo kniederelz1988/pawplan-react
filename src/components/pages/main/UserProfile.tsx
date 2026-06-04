@@ -16,7 +16,7 @@ export default function UserProfile() {
                 
                 <Box borderColor="black" borderRadius={16} borderWidth="1px" mt={8} p={6} maxW={500}>
                     <HStack>
-                        <Circle w="64px" h="64px" bgColor="black" color="white">
+                        <Circle w="64px" h="64px" bgColor="bg.inverted" color="bg">
                             {getUserInitials(user).toUpperCase()}
                         </Circle>
 
@@ -55,9 +55,9 @@ export default function UserProfile() {
                     </Box>
                 </Grid>
 
-                <Box p={6} bgColor={"gray.300"} borderRadius={16} mt={6} maxW={500}>
+                <Box p={6} bgColor="bg.emphasized" borderRadius={16} mt={6} maxW={500}>
                     <HStack>
-                        <FaMapMarkerAlt />
+                        <FaMapMarkerAlt color="bg"/>
 
                         <Spacer w="2" />
 

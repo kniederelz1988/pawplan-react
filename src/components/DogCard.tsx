@@ -41,7 +41,7 @@ export default function DogCard({ dog } : {
                         <Text fontSize={"sm"}>{getGenderTitle(dog.gender)}</Text>
                     </HStack>
                 </Card.Title>
-                <Card.Description>
+                <Card.Description as="div">
                     <HStack>
                         {getBreedTitle(dog.breed)}
                         <LuDot style={{ padding: 0, margin: -6 }}/>

@@ -11,7 +11,7 @@ export default function UserProfileOverview() {
         user ?
             
             <HStack>
-                <Circle w="36px" h="36px" bgColor="black" color="white">
+                <Circle w="36px" h="36px" bgColor="bg.inverted" color="bg">
                     {getUserInitials(user).toUpperCase()}
                 </Circle>
 

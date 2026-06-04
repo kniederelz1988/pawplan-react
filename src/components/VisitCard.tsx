@@ -17,7 +17,7 @@ export default function VisitCard({ appointment, dog  }: VisitCardProps) {
     return (
         <Card.Root w="100%" overflow="hidden" borderRadius={12}>
             <Card.Body gap={0} p={4}>
-                <Card.Description>
+                <Card.Description as="div">
                     <Flex direction="row" w="100%">
                         <Image w={16} h={16} borderRadius={16}
                             src="https://images.dog.ceo/breeds/shiba/shiba-15.jpg"

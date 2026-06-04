@@ -16,7 +16,7 @@ export default function DogsOverview() {
             <DogFilter onFilterChanged={() => {}} />
             
             <Text fontVariant="all-petite-caps">{dogs.length} dogs available</Text>
-            <Grid templateColumns="repeat(3, 1fr)" gap={5} pt={4}>
+            <Grid templateColumns={{ base: "repeat(2, 1fr)", lg: "repeat(3, 1fr)"}} gap={5} pt={4}>
             { 
                 dogs.map(t =>
                     <DogCard key={t.id} dog={t} />
