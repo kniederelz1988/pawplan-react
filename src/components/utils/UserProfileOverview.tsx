@@ -9,6 +9,7 @@ export default function UserProfileOverview() {
 
     return (
         user ?
+            
             <HStack>
                 <Circle w="36px" h="36px" bgColor="black" color="white">
                     {getUserInitials(user).toUpperCase()}
@@ -19,7 +20,9 @@ export default function UserProfileOverview() {
                     <Text fontSize="xs" w="100%">{user.email}</Text>
                 </VStack>
             </HStack>
-        :
+            
+        : 
+
             <Popover.Root positioning={{ placement: "bottom-start" }}>
                 <Popover.Trigger asChild>
                     <Button>
@@ -34,5 +37,6 @@ export default function UserProfileOverview() {
                     </Popover.Content>
                 </Popover.Positioner>
             </Popover.Root>
+        
     )
 }
