@@ -35,26 +35,26 @@ function Navigation({ user } : { user: User | null }) {
                             <NavigationLink target="/userProfile">
                                 <FaRegUser />Profile
                             </NavigationLink>
+
+                            <Spacer />
+
+                            <NavigationLink target="/users">
+                                <FaUsers /> Users
+                            </NavigationLink>
+
+                            <Spacer />
+                            <Spacer />
+                            <Spacer />
+                            <Spacer />
+                            <Spacer />
+                            <Spacer />
+                            <Spacer />
+                            <Spacer />
                         </>
                     : 
                         <>
                         </>
             }
-            
-            <Spacer />
-
-            <NavigationLink target="/users">
-                <FaUsers /> Users
-            </NavigationLink>
-
-            <Spacer />
-            <Spacer />
-            <Spacer />
-            <Spacer />
-            <Spacer />
-            <Spacer />
-            <Spacer />
-            <Spacer />
         </VStack>
     )
 }
