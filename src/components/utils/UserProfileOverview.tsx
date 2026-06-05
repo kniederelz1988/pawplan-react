@@ -16,7 +16,13 @@ export default function UserProfileOverview() {
                 </Circle>
 
                 <VStack gap={0} pl={1} w="100%">
-                    <Text fontSize="xs" fontWeight="bold" w="100%">Hallo {user.displayName}</Text>
+                    <Text fontSize="xs" fontWeight="bold" w="100%">
+                        {
+                            user.displayName 
+                                ? user.displayName 
+                                : "NONE"
+                        }
+                    </Text>
                     <Text fontSize="xs" w="100%">{user.email}</Text>
                 </VStack>
             </HStack>

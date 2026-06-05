@@ -8,6 +8,7 @@ import ConfirmationDialogue, { ConfirmationDialogueData } from "@components/dial
 import { AppointmentCancelDialogue } from "@components/dialogues/AppointmentCancelDialogue"
 import AppointmentEditDialogue, { AppointmentEditDialogueData } from "@components/dialogues/AppointmentEditDialogue"
 import DogEditDialogue, { DogEditDialogueData } from "@components/dialogues/DogEditDialogue"
+import UserEditDialogue, { UserEditDialogueData } from "@components/dialogues/UserEditDialogue"
 
 type DialogueContextData = {
     openDialogue: (type: DialogueType, data?: any) => void
@@ -36,11 +37,15 @@ export function DialogueProvider({ children } : DialogueProviderProps ) {
             return
         }
 
-        if (type == DialogueType.AppointmentCancel && (data as ConfirmationDialogueData) == null) {
+        if (type == DialogueType.AppointmentCancel && (data as AppointmentBookingDialogueData) == null) {
             return
         }
 
         if (type == DialogueType.DogEdit && (data as DogEditDialogueData) == null) {
+            return
+        }
+
+        if (type == DialogueType.UserEdit && (data as UserEditDialogueData) == null) {
             return
         }
 
@@ -57,6 +62,7 @@ export function DialogueProvider({ children } : DialogueProviderProps ) {
             {children}
             <UserLoginDialogue open={dialogueType == DialogueType.UserLogin} onClose={onCloseDialogue}/>
             <UserRegisterDialogue open={dialogueType == DialogueType.UserRegister} onClose={onCloseDialogue}/>
+            
             <AppointmentBookingDialogue open={dialogueType == DialogueType.AppointmentBooking} onClose={onCloseDialogue} 
                 data={dialogueData as AppointmentBookingDialogueData}
             />
@@ -65,8 +71,13 @@ export function DialogueProvider({ children } : DialogueProviderProps ) {
             <AppointmentCancelDialogue open={dialogueType == DialogueType.AppointmentCancel} onClose={onCloseDialogue} 
                 data={dialogueData as ConfirmationDialogueData}
             />
+            
             <DogEditDialogue open={dialogueType == DialogueType.DogEdit} onClose={onCloseDialogue}
                 data={dialogueData as DogEditDialogueData}
+            />
+            
+            <UserEditDialogue open={dialogueType == DialogueType.UserEdit} onClose={onCloseDialogue}
+                data={dialogueData as UserEditDialogueData}
             />
         </DialogueContext.Provider>
     )

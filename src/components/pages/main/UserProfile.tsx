@@ -1,12 +1,24 @@
-import { Badge, Box, Circle, Flex, Grid, Heading, HStack, Link, Spacer, Text, VStack } from "@chakra-ui/react";
+import { Badge, Box, Circle, Flex, Grid, Heading, HStack, IconButton, Link, Spacer, Text, VStack } from "@chakra-ui/react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { LuLogOut } from "react-icons/lu";
+import { BiPencil } from "react-icons/bi";
 
-import { getUserInitials } from "@helpers/UserHelpers";
 import useAuthentification from "@hooks/useAuthentification";
+import { getUserInitials } from "@helpers/UserHelpers";
+import { useDialogueContext } from "@contexts/DialogueContext";
+import { useCallback } from "react";
+import { DialogueType } from "@models/enums/DialogueType";
 
 export default function UserProfile() {
     const { user, signOutUser }  = useAuthentification()
+    const dialogueContext = useDialogueContext()
+
+    const onEditUserClick = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+
+        dialogueContext.openDialogue(DialogueType.UserEdit, { })
+    }, [user])
+
 
     return (
         user ?
@@ -21,7 +33,13 @@ export default function UserProfile() {
                         </Circle>
 
                         <VStack gap={0} pl={2} w="100%">
-                            <Text fontSize="md" fontWeight="bold" w="100%">Hallo {user.displayName}</Text>
+                            <Text fontSize="md" fontWeight="bold" w="100%">
+                                {
+                                    user.displayName 
+                                        ? user.displayName 
+                                        : "NONE"
+                                }
+                            </Text>
                             <Text fontSize="sm" w="100%">{user.email}</Text>
                             <Flex w="100%" pt={1}>
                                 <Badge>
@@ -29,6 +47,10 @@ export default function UserProfile() {
                                 </Badge>
                             </Flex> 
                         </VStack>
+
+                        <IconButton variant="subtle" borderRadius={24} onClick={onEditUserClick}>
+                            <BiPencil />
+                        </IconButton>
                     </HStack>
                 </Box>
 

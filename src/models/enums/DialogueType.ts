@@ -5,5 +5,6 @@ export enum DialogueType {
     AppointmentBooking,
     AppointmentEdit,
     AppointmentCancel,
-    DogEdit
+    DogEdit,
+    UserEdit
 }
