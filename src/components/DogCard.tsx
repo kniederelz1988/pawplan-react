@@ -23,8 +23,13 @@ export default function DogCard({ dog } : DogCardProps) {
     const onEditDogClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
 
+        if (user == null) {
+            dialogueContext.openDialogue(DialogueType.UserLogin)
+            return
+        }
+
         dialogueContext.openDialogue(DialogueType.DogEdit, { dog: dog })
-    }, [])
+    }, [user])
 
     const onLikeDogClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
@@ -35,7 +40,7 @@ export default function DogCard({ dog } : DogCardProps) {
         }
 
         console.log("like dog")
-    }, [])
+    }, [user])
 
     const onBookAppointmentClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
@@ -46,7 +51,7 @@ export default function DogCard({ dog } : DogCardProps) {
         }
 
         dialogueContext.openDialogue(DialogueType.AppointmentBooking, { dog: dog })
-    }, [])
+    }, [user, dog])
     
     return (
         <Card.Root maxW="sm" overflow="hidden">
