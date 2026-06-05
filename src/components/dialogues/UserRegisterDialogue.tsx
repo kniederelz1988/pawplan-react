@@ -1,5 +1,6 @@
 import { CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react";
 import UserRegisterForm from "@components/forms/UserRegisterForm";
+import { useCallback } from "react";
 
 type UserRegisterDialogueProps = { 
     open: boolean, 
@@ -7,11 +8,11 @@ type UserRegisterDialogueProps = {
 }
 
 export default function UserRegisterDialogue({ open, onClose } : UserRegisterDialogueProps) {
-    function handleOpenChange(e: DialogOpenChangeDetails) {
+    const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
         if(!e.open) {
             onClose()
         }
-    }
+    }, [])
 
     return (
         <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>

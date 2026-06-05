@@ -1,7 +1,8 @@
+import { useCallback, useEffect } from "react"
 import { CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react"
+
 import UserLoginForm from "@components/forms/UserLoginForm"
 import { useAuthContext } from "@contexts/AuthContexts"
-import { useEffect } from "react"
 
 type UserLoginDialogueProps = { 
     open: boolean, 
@@ -19,11 +20,11 @@ export default function UserLoginDialogue({ open, onClose } : UserLoginDialogueP
         onClose()
     }, [user])
 
-    function handleOpenChange(e: DialogOpenChangeDetails) {
+    const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
         if(!e.open) {
             onClose()
         }
-    }
+    }, [])
 
     return (
         <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>

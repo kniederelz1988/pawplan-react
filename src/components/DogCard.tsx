@@ -1,4 +1,4 @@
-import { Button, Card, HStack, Image, Spacer, Text } from "@chakra-ui/react";
+import { Button, Card, HStack, Icon, IconButton, Image, Spacer, Text } from "@chakra-ui/react";
 import { useAuthContext } from "@contexts/AuthContexts";
 import { useDialogueContext } from "@contexts/DialogueContext";
 import { getDogAge } from "@helpers/TimeHelpers";
@@ -7,15 +7,37 @@ import { DogModel } from "@models/DogModel";
 import { DialogueType } from "@models/enums/DialogueType";
 import { getGenderTitle } from "@models/enums/DogGenderEnum";
 import { getSizeTitle } from "@models/enums/DogSizeEnum";
+import { useCallback } from "react";
+import { HiHeart } from "react-icons/hi";
 import { LuDot } from "react-icons/lu";
+import { PiPencil } from "react-icons/pi";
 
-export default function DogCard({ dog } : { 
+type DogCardProps = {
     dog: DogModel
-}) {
+}
+
+export default function DogCard({ dog } : DogCardProps) {
     const user = useAuthContext()
     const dialogueContext = useDialogueContext()
 
-    function onClick(e: React.MouseEvent<HTMLButtonElement>) {
+    const onEditDogClick = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+
+        dialogueContext.openDialogue(DialogueType.DogEdit, { dog: dog })
+    }, [])
+
+    const onLikeDogClick = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+
+        if (user == null) {
+            dialogueContext.openDialogue(DialogueType.UserLogin)
+            return
+        }
+
+        console.log("like dog")
+    }, [])
+
+    const onBookAppointmentClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
         
         if (user == null) {
@@ -23,16 +45,35 @@ export default function DogCard({ dog } : {
             return
         }
 
-        dialogueContext.openDialogue(DialogueType.AppointmentBooking, dog)
-    }
+        dialogueContext.openDialogue(DialogueType.AppointmentBooking, { dog: dog })
+    }, [])
     
-
     return (
         <Card.Root maxW="sm" overflow="hidden">
-            <Image height={210}
-                src="https://images.dog.ceo/breeds/shiba/shiba-15.jpg"
-                alt="Green double couch with wooden legs"
-            />
+            <Card.Header p={0}>
+                <HStack height={210} 
+                    align="start"
+                    bgImage="url('https://images.dog.ceo/breeds/shiba/shiba-15.jpg')" 
+                    bgSize="cover"
+                    bgPos="center"
+                    p={2}
+                >   
+                    { 
+                        user 
+                            ? 
+                                <IconButton variant="subtle" borderRadius={24} bgColor={"whiteAlpha.700"} onClick={onEditDogClick}>
+                                    <PiPencil />
+                                </IconButton>
+                            : <></>
+                    }
+
+                    <Spacer />
+
+                    <IconButton variant="subtle" borderRadius={24} bgColor={"whiteAlpha.700"} onClick={onLikeDogClick}>
+                        <HiHeart />
+                    </IconButton>
+                </HStack>
+            </Card.Header>
             <Card.Body gap={0} p={4} pb={2}>
                 <Card.Title lineHeight={1.5}>
                     <HStack>
@@ -52,7 +93,7 @@ export default function DogCard({ dog } : {
                 </Card.Description>
             </Card.Body>
             <Card.Footer p={4} pt={2}>
-                <Button variant="solid" w="100%" onClick={onClick}>Meet {dog.name}</Button>
+                <Button variant="solid" w="100%" onClick={onBookAppointmentClick}>Meet {dog.name}</Button>
             </Card.Footer>
         </Card.Root>
     )

@@ -1,13 +1,19 @@
-import { Button, Grid, HStack, RadioCard, Spacer, Text, VStack } from "@chakra-ui/react";
+import { Button, DateValue, Grid, HStack, RadioCard, Spacer, Text, VStack } from "@chakra-ui/react";
+import { createDate } from "@helpers/TimeHelpers";
 import { DogModel } from "@models/DogModel";
+import { useCallback, useMemo, useState } from "react";
 
 type AppointmentBookingDialogueFormProps = {
     dog: DogModel,
+    onConfirm: (dog: DogModel, datetime: DateValue) => void,
     onClose: () => void
 }
 
-export default function AppointmentBookingDialogueForm({ dog, onClose } : AppointmentBookingDialogueFormProps) {
-    const timeSlots = [
+export default function AppointmentBookingDialogueForm({ dog, onConfirm, onClose } : AppointmentBookingDialogueFormProps) {
+    const [dayOffset, setDayOffset] = useState(0)
+    const [time, setTime] = useState("09:00")
+    
+    const timeSlots = useMemo(() => [
         "10:00",
         "10:30",
         "11:00",
@@ -23,20 +29,29 @@ export default function AppointmentBookingDialogueForm({ dog, onClose } : Appoin
         "16:00",
         "16:30",
         "17:00"
-    ];
+    ], []);
 
-    function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+    const handleSubmit = useCallback((e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        const date = createDate(dayOffset, time)
+        onConfirm(dog, date)
+    }, [dog])
+    const handleReset = useCallback((e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
         onClose()
+    }, [])
+
+    function onDayOffsetChanged(details: RadioCard.ValueChangeDetails) {
+        setDayOffset(details.value ? parseInt(details.value) : 0)
     }
-    function handleReset(e: React.SubmitEvent<HTMLFormElement>) {
-        e.preventDefault()
-        onClose()
+    function onTimeChanged(details: RadioCard.ValueChangeDetails) {
+        setTime(details.value ? details.value : "09:00")
     }
     
     return (
         <form onSubmit={handleSubmit} onReset={handleReset}>
-            <RadioCard.Root>
+            <RadioCard.Root onValueChange={onDayOffsetChanged}>
                 <RadioCard.Label>Choose a date</RadioCard.Label>
                 <Grid templateColumns="repeat(7, 1fr)" gap={2}>
                     {[1, 2, 3, 4, 5, 6, 7].map((item) => (
@@ -55,7 +70,7 @@ export default function AppointmentBookingDialogueForm({ dog, onClose } : Appoin
 
             <Spacer h={4}/>
 
-            <RadioCard.Root>
+            <RadioCard.Root name="time" onValueChange={onTimeChanged}>
                 <RadioCard.Label>Choose a time</RadioCard.Label>
                 <Grid templateColumns="repeat(5, 1fr)" gap={4}>
                     {timeSlots.map((item) => (

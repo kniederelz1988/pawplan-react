@@ -13,11 +13,11 @@ export default function UserAppointments() {
             </Heading>
             
             <Text fontVariant="all-petite-caps" mt={4}>Upcoming</Text>
-            <VisitCard dog={dogs[0]} appointment={{ }} />
+            <VisitCard dog={dogs[0]} appointment={{ }} cancelable />
 
             <Spacer h={4} />
             <Text fontVariant="all-petite-caps" mt={4}>Pending</Text>
-            <VisitCard dog={dogs[0]} appointment={{ }} />
+            <VisitCard dog={dogs[0]} appointment={{ }} editable cancelable />
 
             <Spacer h={4} />
             <Text fontVariant="all-petite-caps" mt={4}>Past visit</Text>

@@ -1,8 +1,12 @@
-import { Badge, Box, Button, Card, CloseButton, Flex, HStack, Icon, Image, Spacer, Span, Text, VStack } from "@chakra-ui/react"
+import { Badge, Card, Flex, HStack, Icon, IconButton, Image, Spacer, Text } from "@chakra-ui/react"
+import { useDialogueContext } from "@contexts/DialogueContext"
 import { getBreedTitle } from "@models/DogBreed"
 import { DogModel } from "@models/DogModel"
+import { DialogueType } from "@models/enums/DialogueType"
+import { useCallback } from "react"
 import { BiCalendar } from "react-icons/bi"
 import { CiClock1 } from "react-icons/ci"
+import { PiPencil, PiX } from "react-icons/pi"
 
 type AppointmentModel = {
 
@@ -10,10 +14,30 @@ type AppointmentModel = {
 
 type VisitCardProps = {
     appointment: AppointmentModel,
-    dog: DogModel
+    dog: DogModel,
+    editable?: boolean,
+    cancelable?: boolean
 }
 
-export default function VisitCard({ appointment, dog  }: VisitCardProps) {
+export default function VisitCard({ appointment, dog, editable, cancelable }: VisitCardProps) {
+    const dialogue = useDialogueContext()
+
+    const handleEditVisit = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        dialogue.openDialogue(DialogueType.AppointmentEdit, {
+        })
+    }, [appointment, dog])
+
+    const handleCancelVisit = useCallback((e: React.MouseEvent) => {
+        e.preventDefault()
+        dialogue.openDialogue(DialogueType.AppointmentCancel, { 
+            title: "Cancel visit", 
+            description: `Do you really want to cancel your visit with ${dog.name}`,
+            confirm: "Yes",
+            cancel: "No"
+        })
+    }, [appointment, dog])
+
     return (
         <Card.Root w="100%" overflow="hidden" borderRadius={12}>
             <Card.Body gap={0} p={4}>
@@ -46,13 +70,39 @@ export default function VisitCard({ appointment, dog  }: VisitCardProps) {
                         </Flex>
 
                         <Flex direction="column" gap={2}>
-                            <Badge w={32} h={4} m="auto" justifyContent={"center"}>
+                            <Badge w={24} h={4} m="auto" justifyContent={"center"}>
                                 Upcoming
                             </Badge>
 
-                            <Button variant="solid" h={8}>
-                                Cancel
-                            </Button>
+                            { 
+                                !editable && !cancelable 
+                                    ? 
+                                        <Spacer /> 
+                                    : 
+                                        <HStack align="end">
+                                        { 
+                                            editable 
+                                                ?
+                                                    <IconButton variant="subtle" onClick={handleEditVisit}>
+                                                        <PiPencil />
+                                                    </IconButton>
+                                                : 
+                                                    <></>
+                                        }
+
+                                        <Spacer />
+
+                                        {
+                                            cancelable 
+                                                ? 
+                                                    <IconButton variant="solid" onClick={handleCancelVisit}>
+                                                        <PiX />
+                                                    </IconButton>
+                                                : 
+                                                    <></>
+                                        }
+                            </HStack>
+}
                         </Flex>
                     </Flex>
                 </Card.Description>

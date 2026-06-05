@@ -1,20 +1,43 @@
-import { Button, CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react"
+import React, { useCallback } from "react"
+import { CloseButton, DateValue, Dialog, DialogOpenChangeDetails, Portal, Text } from "@chakra-ui/react"
+
 import AppointmentBookingDialogueForm from "@components/forms/AppointmentBookingDialogueForm"
 import { DogModel } from "@models/DogModel"
-import React from "react"
+import { toaster } from "@components/ui/toaster"
+
+export type AppointmentBookingDialogueData = {
+    dog: DogModel
+}
 
 type AppointmentBookingDialogueProps = { 
     open: boolean, 
     onClose: () => void,
-    dog: DogModel
+    data: AppointmentBookingDialogueData
 }
 
-export default function AppointmentBookingDialogue({ open, onClose, dog } : AppointmentBookingDialogueProps) {
-    function handleOpenChange(e: DialogOpenChangeDetails) {
+export default function AppointmentBookingDialogue({ open, onClose, data } : AppointmentBookingDialogueProps) {
+    const handleConfirm = useCallback((dog: DogModel, date: DateValue) => {
+        toaster.create({
+            title: "Visit booked",
+            description: (
+                <>
+                    <Text>
+                        Dog: {dog.name}
+                    </Text>
+                    <Text>
+                        Date: {date.toString()}
+                    </Text>
+                </>
+            )
+        })
+        onClose()
+    }, []);
+
+    const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
         if(!e.open) {
             onClose()
         }
-    }
+    }, [])
 
     return (
         <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>
@@ -34,11 +57,11 @@ export default function AppointmentBookingDialogue({ open, onClose, dog } : Appo
                     >
                         <Dialog.Header p="14px">
                             <Dialog.Title>
-                                Visit with {dog?.name}
+                                Visit with {data?.dog?.name}
                             </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
-                            <AppointmentBookingDialogueForm dog={dog} onClose={onClose}/>
+                            <AppointmentBookingDialogueForm dog={data?.dog} onConfirm={handleConfirm} onClose={onClose}/>
                         </Dialog.Body>
                         <Dialog.CloseTrigger asChild>
                             <CloseButton />
