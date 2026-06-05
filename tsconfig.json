@@ -17,7 +17,17 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
 
-        "jsx": "preserve"
+        "jsx": "preserve",
+
+        "paths": {
+            "@hooks/*": ["./src/hooks/*"],
+            "@components/*": ["./src/components/*"],
+            "@contexts/*": ["./src/contexts/*"],
+            "@fb/*": ["./src/firebase/*"],
+            "@models/*": ["./src/models/*"],
+            "@repos/*": ["./src/repositories/*"],
+            "@helpers/*": ["./src/helpers/*"]
+        }
     },
 
     "include": ["src/**/*"],
