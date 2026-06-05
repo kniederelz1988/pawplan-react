@@ -19,7 +19,6 @@ export default function UserProfile() {
         dialogueContext.openDialogue(DialogueType.UserEdit, { })
     }, [user])
 
-
     return (
         user ?
             <Flex flexDirection="column" m="auto" maxW={850}>

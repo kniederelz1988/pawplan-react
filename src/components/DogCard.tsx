@@ -54,7 +54,7 @@ export default function DogCard({ dog } : DogCardProps) {
     }, [user, dog])
     
     return (
-        <Card.Root maxW="sm" overflow="hidden">
+        <Card.Root overflow="hidden">
             <Card.Header p={0}>
                 <HStack height={210} 
                     align="start"

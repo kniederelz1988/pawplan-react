@@ -1,5 +1,5 @@
 import { Box, Button, CloseButton, Container, Drawer, HStack, Portal, Spacer, StackProps, Text, VStack } from '@chakra-ui/react';
-import { FaMagnifyingGlass, FaRegCalendar, FaRegUser } from 'react-icons/fa6';
+import { FaMagnifyingGlass, FaRegCalendar, FaRegUser, FaUsers } from 'react-icons/fa6';
 import { FiMenu } from 'react-icons/fi';
 
 import { useState } from 'react';
@@ -35,6 +35,21 @@ function Navigation({ user } : { user: User | null }) {
                             <NavigationLink target="/userProfile">
                                 <FaRegUser />Profile
                             </NavigationLink>
+
+                            <Spacer />
+
+                            <NavigationLink target="/users">
+                                <FaUsers /> Users
+                            </NavigationLink>
+
+                            <Spacer />
+                            <Spacer />
+                            <Spacer />
+                            <Spacer />
+                            <Spacer />
+                            <Spacer />
+                            <Spacer />
+                            <Spacer />
                         </>
                     : 
                         <>
