@@ -1,5 +1,6 @@
 import ConfirmationDialogue, { ConfirmationDialogueData } from "./ConfirmationDialogue";
 
-export type AppointmentCancelData = ConfirmationDialogueData
+export type AppointmentCancelDialogueData = ConfirmationDialogueData
 
-export const AppointmentCancelDialogue = ConfirmationDialogue
+const AppointmentCancelDialogue = ConfirmationDialogue
+export default AppointmentCancelDialogue

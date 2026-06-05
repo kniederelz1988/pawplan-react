@@ -1,12 +1,13 @@
+import { useCallback } from "react"
+import { BiCalendar } from "react-icons/bi"
+import { CiClock1 } from "react-icons/ci"
+import { PiPencil, PiX } from "react-icons/pi"
+
 import { Badge, Card, Flex, HStack, Icon, IconButton, Image, Spacer, Text } from "@chakra-ui/react"
 import { useDialogueContext } from "@contexts/DialogueContext"
 import { getBreedTitle } from "@models/DogBreed"
 import { DogModel } from "@models/DogModel"
 import { DialogueType } from "@models/enums/DialogueType"
-import { useCallback } from "react"
-import { BiCalendar } from "react-icons/bi"
-import { CiClock1 } from "react-icons/ci"
-import { PiPencil, PiX } from "react-icons/pi"
 
 type AppointmentModel = {
 

@@ -26,7 +26,7 @@ export default function UserRegisterDialogue({ open, onClose } : UserRegisterDia
                             </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
-                            <UserRegisterForm />
+                            <UserRegisterForm showLoginHint={true} />
                         </Dialog.Body>
                         <Dialog.CloseTrigger asChild>
                             <CloseButton />

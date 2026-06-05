@@ -38,7 +38,7 @@ export default function UserLoginDialogue({ open, onClose } : UserLoginDialogueP
                             </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
-                            <UserLoginForm />
+                            <UserLoginForm showRegisterLink={true} />
                         </Dialog.Body>
                         <Dialog.CloseTrigger asChild>
                             <CloseButton />

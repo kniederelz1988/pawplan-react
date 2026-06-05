@@ -4,8 +4,7 @@ import { DialogueType } from "@models/enums/DialogueType"
 import UserRegisterDialogue from "@components/dialogues/UserRegisterDialogue"
 import UserLoginDialogue from "@components/dialogues/UserLoginDialogue"
 import AppointmentBookingDialogue, { AppointmentBookingDialogueData } from "@components/dialogues/AppointmentBookingDialogue"
-import ConfirmationDialogue, { ConfirmationDialogueData } from "@components/dialogues/ConfirmationDialogue"
-import { AppointmentCancelDialogue } from "@components/dialogues/AppointmentCancelDialogue"
+import AppointmentCancelDialogue, { AppointmentCancelDialogueData } from "@components/dialogues/AppointmentCancelDialogue"
 import AppointmentEditDialogue, { AppointmentEditDialogueData } from "@components/dialogues/AppointmentEditDialogue"
 import DogEditDialogue, { DogEditDialogueData } from "@components/dialogues/DogEditDialogue"
 import UserEditDialogue, { UserEditDialogueData } from "@components/dialogues/UserEditDialogue"
@@ -26,7 +25,7 @@ type DialogueProviderProps = {
 
 export function DialogueProvider({ children } : DialogueProviderProps ) {
     const [dialogueType, setDialogueType] = useState<DialogueType>(DialogueType.None)
-    const [dialogueData, setDialogueData] = useState<AppointmentBookingDialogueData | ConfirmationDialogueData | null>(null)
+    const [dialogueData, setDialogueData] = useState<AppointmentBookingDialogueData | AppointmentCancelDialogueData | AppointmentEditDialogueData | null>(null)
 
     function onOpenDialogue(type: DialogueType, data: any | null) {
         if (type == DialogueType.AppointmentBooking && (data as AppointmentBookingDialogueData) == null) {
@@ -60,6 +59,7 @@ export function DialogueProvider({ children } : DialogueProviderProps ) {
     return (
         <DialogueContext.Provider value={{ openDialogue: onOpenDialogue, closeDialogue: onCloseDialogue }}>
             {children}
+
             <UserLoginDialogue open={dialogueType == DialogueType.UserLogin} onClose={onCloseDialogue}/>
             <UserRegisterDialogue open={dialogueType == DialogueType.UserRegister} onClose={onCloseDialogue}/>
             
@@ -69,7 +69,7 @@ export function DialogueProvider({ children } : DialogueProviderProps ) {
             <AppointmentEditDialogue open={dialogueType == DialogueType.AppointmentEdit} onClose={onCloseDialogue}
                 data={{ appointment: null }} />
             <AppointmentCancelDialogue open={dialogueType == DialogueType.AppointmentCancel} onClose={onCloseDialogue} 
-                data={dialogueData as ConfirmationDialogueData}
+                data={dialogueData as AppointmentCancelDialogueData}
             />
             
             <DogEditDialogue open={dialogueType == DialogueType.DogEdit} onClose={onCloseDialogue}
