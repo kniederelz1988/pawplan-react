@@ -3,12 +3,20 @@ import { differenceInMonths, differenceInYears } from "date-fns";
 
 import { CalendarDateTime, getLocalTimeZone, today } from "@internationalized/date";
 
-import { DateValue, parseDate as parse } from "@chakra-ui/react";
+import { DateValue, parseDate } from "@chakra-ui/react";
 
 import { DogModel } from "@models/DogModel";
 
-export function parseDate(date: Date) : DateValue {
-    return parse(date)
+export function dateToDateValue(date: Date) : DateValue {
+    return parseDate(date)
+}
+export function timestampToDateValue(timestamp: Timestamp) : DateValue {
+    return dateToDateValue(timestamp.toDate())
+}
+export function dateValueToTimestamp(dateValue: DateValue) : Timestamp {
+    const timezone = getLocalTimeZone()
+    const date = dateValue.toDate(timezone)
+    return Timestamp.fromDate(date)
 }
 
 export function createDate(dayOffset: number, time: string) : CalendarDateTime {
@@ -18,9 +26,6 @@ export function createDate(dayOffset: number, time: string) : CalendarDateTime {
     return new CalendarDateTime(date.year, date.month, date.day, hour, minute);
 }
 
-export function toTimestamp(date: DateValue): Timestamp {
-    return Timestamp.fromDate(date.toDate(getLocalTimeZone()))
-}
 
 export function getDogAge(dog: DogModel) : string {
     const date = dog.birthday.toDate()

@@ -7,22 +7,22 @@ import { useAuthContext } from "@contexts/AuthContexts"
 import UserLoginForm from "@components/forms/UserLoginForm"
 import UserRegisterForm from "@components/forms/UserRegisterForm"
 
-import { getUserInitials, getUserName } from "@helpers/UserHelpers"
-
+import useLocalVolunteer from "@hooks/useLocalVolunteer"
 
 export default function UserProfileOverview() {
     const { user, signOut }  = useAuthContext()
+    const volunteer = useLocalVolunteer()
 
     return (
         user ? (
             <HStack>
                 <Circle w="36px" h="36px" bgColor="Highlight" color="HighlightText">
-                    {getUserInitials(user).toUpperCase()}
+                    {volunteer?.name.substring(0, 1).toUpperCase()}
                 </Circle>
 
                 <VStack gap={0} px={1} w="100%">
                     <Text fontSize="xs" fontWeight="bold" w="100%">
-                        {getUserName(user)}
+                        {volunteer?.name}
                     </Text>
                     <Text fontSize="xs" w="100%">
                         {user.email}

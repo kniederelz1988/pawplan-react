@@ -7,7 +7,7 @@ import { Badge, Card, Flex, HStack, Icon, IconButton, Image, Spacer, Text } from
 import { useDialogueContext } from "@contexts/DialogueContext"
 import { getBreedTitle } from "@models/DogBreed"
 import { DogModel } from "@models/DogModel"
-import { DialogueType } from "@models/enums/DialogueType"
+import { DialogueTypeEnum } from "@models/enums/DialogueType"
 
 type AppointmentModel = {
 
@@ -25,13 +25,13 @@ export default function VisitCard({ appointment, dog, editable, cancelable }: Vi
 
     const handleEditVisit = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
-        dialogue.openDialogue(DialogueType.AppointmentEdit, {
+        dialogue.openDialogue(DialogueTypeEnum.AppointmentEdit, {
         })
     }, [appointment, dog])
 
     const handleCancelVisit = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
-        dialogue.openDialogue(DialogueType.AppointmentCancel, { 
+        dialogue.openDialogue(DialogueTypeEnum.AppointmentCancel, { 
             title: "Cancel visit", 
             description: `Do you really want to cancel your visit with ${dog.name}`,
             confirm: "Yes",

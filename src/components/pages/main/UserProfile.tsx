@@ -4,44 +4,51 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import { FiLogIn } from "react-icons/fi";
 import { BiPencil } from "react-icons/bi";
 
-import { getUserInitials, getUserName } from "@helpers/UserHelpers";
-
 import { useAuthContext } from "@contexts/AuthContexts";
 import { useDialogueContext } from "@contexts/DialogueContext";
 
-import { DialogueType } from "@models/enums/DialogueType";
+import { DialogueTypeEnum } from "@models/enums/DialogueType";
+import useLocalVolunteer from "@hooks/useLocalVolunteer";
 
 export default function UserProfile() {
     const { user, signOut }  = useAuthContext()
     const dialogueContext = useDialogueContext()
 
+    const volunteer = useLocalVolunteer()
+    
     const onEditUserClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
 
-        dialogueContext.openDialogue(DialogueType.UserEdit, { })
-    }, [user])
+        if (!volunteer) {
+            return
+        }
+
+        dialogueContext.openDialogue(DialogueTypeEnum.UserEdit, { volunteer: volunteer, enableAdminControls: true })
+    }, [volunteer])
 
     return (
-        user ?
+        user && volunteer &&
             <Flex flexDirection="column" m="auto" maxW={850}>
                 <Heading justifyContent="left" w="100%" mb={-1}>Your profile</Heading>
                 <Heading justifyContent="left" w="100%" fontSize="md" fontWeight="light">Your volunteer account and activity.</Heading>
                 
                 <Box borderColor="black" borderRadius={16} borderWidth="1px" mt={8} p={6}>
                     <HStack>
-                        <Circle w="64px" h="64px" bgColor="Highlight" color="HighlightText">
-                            {getUserInitials(user).toUpperCase()}
+                        <Circle w="64px" h="64px" fontSize={"3xl"} bgColor="Highlight" color="HighlightText">
+                            {volunteer.name.substring(0, 1).toUpperCase()}
                         </Circle>
 
                         <VStack gap={0} pl={2} w="100%">
                             <Text fontSize="md" fontWeight="bold" w="100%">
-                                {getUserName(user)}
+                                {volunteer.name}
                             </Text>
                             <Text fontSize="sm" w="100%">{user.email}</Text>
                             <Flex w="100%" pt={1}>
-                                <Badge>
-                                    Volunteer
-                                </Badge>
+                                { 
+                                    volunteer.admin
+                                        ? <Badge colorPalette={"red"}>Admin</Badge>
+                                        : <Badge>Volunteer</Badge>
+                                }
                             </Flex> 
                         </VStack>
 
@@ -90,6 +97,5 @@ export default function UserProfile() {
                     <Text fontSize="sm" fontWeight="medium"><FiLogIn />Sign out</Text>
                 </Link>
             </Flex>
-        : <></>
     )
 }

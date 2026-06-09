@@ -3,7 +3,9 @@ import { FiLogIn } from "react-icons/fi";
 
 import useAuthentification from "@hooks/useAuthentification";
 import { useDialogueContext } from "@contexts/DialogueContext";
-import { DialogueType } from "@models/enums/DialogueType";
+
+import { DialogueTypeEnum } from "@models/enums/DialogueType";
+import { useEffect } from "react";
 
 type UserLoginFormProps = {
     showRegisterLink: boolean
@@ -11,7 +13,7 @@ type UserLoginFormProps = {
 
 export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps ) {
     const dialogueContext = useDialogueContext()
-    const { error, signInUser } = useAuthentification()
+    const { user, error, signInUser } = useAuthentification()
 
     function handleLogin(e: any) {
         e.preventDefault()
@@ -19,7 +21,7 @@ export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps 
     }
     function handleRegister(e: any) {
         e.preventDefault()
-        dialogueContext.openDialogue(DialogueType.UserRegister)
+        dialogueContext.openDialogue(DialogueTypeEnum.UserRegister)
     }
 
     return (
@@ -39,7 +41,7 @@ export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps 
             </Field.Root>
 
             {
-                error ?   
+                error &&
                     <>
                         <Spacer h={2} />
 
@@ -47,9 +49,7 @@ export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps 
                             <Alert.Indicator />
                             <Alert.Title>{error}</Alert.Title>
                         </Alert.Root>
-
                     </>
-                    : <></>
             }
 
             <Spacer h={4} />
@@ -59,19 +59,17 @@ export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps 
             </IconButton>
 
             { 
-                showRegisterLink 
-                    ?
-                        <>
-                            <Spacer h={2} />
-            
-                            <Center>
-                                <HStack>
-                                    <Text>New volunteer?</Text>
-                                    <Link onClick={handleRegister}>Create an account</Link>
-                                </HStack>
-                            </Center>
-                        </>
-                    : <></>
+                showRegisterLink &&
+                    <>
+                        <Spacer h={2} />
+        
+                        <Center>
+                            <HStack>
+                                <Text>New volunteer?</Text>
+                                <Link onClick={handleRegister}>Create an account</Link>
+                            </HStack>
+                        </Center>
+                    </>
             }
         </form>
     )

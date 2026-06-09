@@ -4,7 +4,7 @@ import { FaUserPlus } from "react-icons/fa";
 import useAuthentification from "@hooks/useAuthentification";
 
 import { useDialogueContext } from "@contexts/DialogueContext";
-import { DialogueType } from "@models/enums/DialogueType";
+import { DialogueTypeEnum } from "@models/enums/DialogueType";
 
 type UserRegisterFormProps = {
     showLoginHint: boolean
@@ -16,7 +16,7 @@ export default function UserRegisterForm({ showLoginHint } : UserRegisterFormPro
 
     function handleLogin(e: React.MouseEvent) {
         e.preventDefault()
-        dialogueContext.openDialogue(DialogueType.UserLogin)
+        dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
     }
     function handleRegister(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault()

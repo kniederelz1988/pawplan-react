@@ -14,14 +14,9 @@ const dogConverter: FirestoreDataConverter<DogModel, DogModel> = {
 type DogRepositoryListener = (dogs: DogModel[]) => void
 type DogOperationCallback = (dog: DogModel, error: string | null) => void
 
-class DogRepository {
-    database: Firestore;
-
-    constructor(database: Firestore) {
-        this.database = database
-    }
-
-    subscribeForAllDogs(listener: DogRepositoryListener) {
+function DogRepository({ database } : { database: Firestore }) {
+    
+    function subscribeForAllDogs(listener: DogRepositoryListener) {
         const q = query(
             collection(database, "dogs")
         ).withConverter(dogConverter)
@@ -32,7 +27,10 @@ class DogRepository {
         })
     }
 
-    subscribeForDogs(dogIds: string[], listener: DogRepositoryListener) {
+    function subscribeForDogs(dogIds: string[], listener: DogRepositoryListener) {
+        if (dogIds.length == 0)
+            return
+
         const q = query(
             collection(database, "dogs"),
             where(documentId(), "in", dogIds)
@@ -44,7 +42,7 @@ class DogRepository {
         })
     }
 
-    createDog(dog: DogModel, operationResult: DogOperationCallback) {
+    function createDog(dog: DogModel, operationResult: DogOperationCallback) {
         if (!dog || dog.id)
             operationResult(dog, "undefined-data")
 
@@ -60,7 +58,9 @@ class DogRepository {
                 }
             )
     }
+
+    return { subscribeForAllDogs, subscribeForDogs, createDog }
 }
 
-const dogRepository = new DogRepository(database)
+const dogRepository = DogRepository({ database })
 export default dogRepository

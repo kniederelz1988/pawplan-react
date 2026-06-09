@@ -1,12 +1,13 @@
-import { Button, Card, HStack, Icon, IconButton, Image, Spacer, Text } from "@chakra-ui/react";
+import { Button, Card, HStack, IconButton, Spacer, Text } from "@chakra-ui/react";
 import { useAuthContext } from "@contexts/AuthContexts";
 import { useDialogueContext } from "@contexts/DialogueContext";
 import { getDogAge } from "@helpers/TimeHelpers";
 import { getBreedTitle } from "@models/DogBreed";
 import { DogModel } from "@models/DogModel";
-import { DialogueType } from "@models/enums/DialogueType";
-import { getGenderTitle } from "@models/enums/DogGenderEnum";
-import { getSizeTitle } from "@models/enums/DogSizeEnum";
+import { DialogueTypeEnum } from "@models/enums/DialogueType";
+
+import { getGenderTitle } from "@models/enums/DogGender";
+import { getSizeTitle } from "@models/enums/DogSize";
 import { useCallback } from "react";
 import { HiHeart } from "react-icons/hi";
 import { LuDot } from "react-icons/lu";
@@ -24,18 +25,18 @@ export default function DogCard({ dog } : DogCardProps) {
         e.preventDefault();
 
         if (user == null) {
-            dialogueContext.openDialogue(DialogueType.UserLogin)
+            dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
             return
         }
 
-        dialogueContext.openDialogue(DialogueType.DogEdit, { dog: dog })
+        dialogueContext.openDialogue(DialogueTypeEnum.DogEdit, { dog: dog })
     }, [user])
 
     const onLikeDogClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
 
         if (user == null) {
-            dialogueContext.openDialogue(DialogueType.UserLogin)
+            dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
             return
         }
 
@@ -46,11 +47,11 @@ export default function DogCard({ dog } : DogCardProps) {
         e.preventDefault();
         
         if (user == null) {
-            dialogueContext.openDialogue(DialogueType.UserLogin)
+            dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
             return
         }
 
-        dialogueContext.openDialogue(DialogueType.AppointmentBooking, { dog: dog })
+        dialogueContext.openDialogue(DialogueTypeEnum.AppointmentBooking, { dog: dog })
     }, [user, dog])
     
     return (

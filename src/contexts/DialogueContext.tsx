@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useState } from "react"
 
-import { DialogueType } from "@models/enums/DialogueType"
+import { DialogueType, DialogueTypeEnum } from "@models/enums/DialogueType"
+
 import UserRegisterDialogue from "@components/dialogues/UserRegisterDialogue"
 import UserLoginDialogue from "@components/dialogues/UserLoginDialogue"
 import AppointmentBookingDialogue, { AppointmentBookingDialogueData } from "@components/dialogues/AppointmentBookingDialogue"
 import AppointmentCancelDialogue, { AppointmentCancelDialogueData } from "@components/dialogues/AppointmentCancelDialogue"
 import AppointmentEditDialogue, { AppointmentEditDialogueData } from "@components/dialogues/AppointmentEditDialogue"
 import DogEditDialogue, { DogEditDialogueData } from "@components/dialogues/DogEditDialogue"
-import UserEditDialogue, { UserEditDialogueData } from "@components/dialogues/UserEditDialogue"
+import VolunteerEditDialogue, { VolunteerEditDialogueData } from "@components/dialogues/VolunteerEditDialogue"
 
 type DialogueContextData = {
     openDialogue: (type: DialogueType, data?: any) => void
@@ -23,28 +24,36 @@ type DialogueProviderProps = {
     children: React.ReactNode
 }
 
+type DialogueData =
+    AppointmentBookingDialogueData |
+    AppointmentCancelDialogueData | 
+    AppointmentEditDialogueData | 
+    DogEditDialogueData |
+    VolunteerEditDialogueData |
+    null
+
 export function DialogueProvider({ children } : DialogueProviderProps ) {
-    const [dialogueType, setDialogueType] = useState<DialogueType>(DialogueType.None)
-    const [dialogueData, setDialogueData] = useState<AppointmentBookingDialogueData | AppointmentCancelDialogueData | AppointmentEditDialogueData | null>(null)
+    const [dialogueType, setDialogueType] = useState<DialogueType>(DialogueTypeEnum.None)
+    const [dialogueData, setDialogueData] = useState<DialogueData>(null)
 
     function onOpenDialogue(type: DialogueType, data: any | null) {
-        if (type == DialogueType.AppointmentBooking && (data as AppointmentBookingDialogueData) == null) {
+        if (type == DialogueTypeEnum.AppointmentBooking && (data as AppointmentBookingDialogueData) == null) {
             return
         }
 
-        if (type == DialogueType.AppointmentEdit && (data as AppointmentEditDialogueData) == null) {
+        if (type == DialogueTypeEnum.AppointmentEdit && (data as AppointmentEditDialogueData) == null) {
             return
         }
 
-        if (type == DialogueType.AppointmentCancel && (data as AppointmentBookingDialogueData) == null) {
+        if (type == DialogueTypeEnum.AppointmentCancel && (data as AppointmentBookingDialogueData) == null) {
             return
         }
 
-        if (type == DialogueType.DogEdit && (data as DogEditDialogueData) == null) {
+        if (type == DialogueTypeEnum.DogEdit && (data as DogEditDialogueData) == null) {
             return
         }
 
-        if (type == DialogueType.UserEdit && (data as UserEditDialogueData) == null) {
+        if (type == DialogueTypeEnum.UserEdit && (data as VolunteerEditDialogueData) == null) {
             return
         }
 
@@ -52,7 +61,7 @@ export function DialogueProvider({ children } : DialogueProviderProps ) {
         setDialogueData(data)
     }
     function onCloseDialogue() {
-        setDialogueType(DialogueType.None)
+        setDialogueType(DialogueTypeEnum.None)
         setDialogueData(null)
     }
 
@@ -60,24 +69,24 @@ export function DialogueProvider({ children } : DialogueProviderProps ) {
         <DialogueContext.Provider value={{ openDialogue: onOpenDialogue, closeDialogue: onCloseDialogue }}>
             {children}
 
-            <UserLoginDialogue open={dialogueType == DialogueType.UserLogin} onClose={onCloseDialogue}/>
-            <UserRegisterDialogue open={dialogueType == DialogueType.UserRegister} onClose={onCloseDialogue}/>
+            <UserLoginDialogue open={dialogueType == DialogueTypeEnum.UserLogin} onClose={onCloseDialogue}/>
+            <UserRegisterDialogue open={dialogueType == DialogueTypeEnum.UserRegister} onClose={onCloseDialogue}/>
             
-            <AppointmentBookingDialogue open={dialogueType == DialogueType.AppointmentBooking} onClose={onCloseDialogue} 
+            <AppointmentBookingDialogue open={dialogueType == DialogueTypeEnum.AppointmentBooking} onClose={onCloseDialogue} 
                 data={dialogueData as AppointmentBookingDialogueData}
             />
-            <AppointmentEditDialogue open={dialogueType == DialogueType.AppointmentEdit} onClose={onCloseDialogue}
+            <AppointmentEditDialogue open={dialogueType == DialogueTypeEnum.AppointmentEdit} onClose={onCloseDialogue}
                 data={{ appointment: null }} />
-            <AppointmentCancelDialogue open={dialogueType == DialogueType.AppointmentCancel} onClose={onCloseDialogue} 
+            <AppointmentCancelDialogue open={dialogueType == DialogueTypeEnum.AppointmentCancel} onClose={onCloseDialogue} 
                 data={dialogueData as AppointmentCancelDialogueData}
             />
             
-            <DogEditDialogue open={dialogueType == DialogueType.DogEdit} onClose={onCloseDialogue}
+            <DogEditDialogue open={dialogueType == DialogueTypeEnum.DogEdit} onClose={onCloseDialogue}
                 data={dialogueData as DogEditDialogueData}
             />
             
-            <UserEditDialogue open={dialogueType == DialogueType.UserEdit} onClose={onCloseDialogue}
-                data={dialogueData as UserEditDialogueData}
+            <VolunteerEditDialogue open={dialogueType == DialogueTypeEnum.UserEdit} onClose={onCloseDialogue}
+                data={dialogueData as VolunteerEditDialogueData}
             />
         </DialogueContext.Provider>
     )
