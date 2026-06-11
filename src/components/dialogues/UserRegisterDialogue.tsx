@@ -12,7 +12,7 @@ export default function UserRegisterDialogue({ open, onClose } : UserRegisterDia
         if(!e.open) {
             onClose()
         }
-    }, [])
+    }, [onClose])
 
     return (
         <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>
@@ -26,7 +26,7 @@ export default function UserRegisterDialogue({ open, onClose } : UserRegisterDia
                             </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
-                            <UserRegisterForm />
+                            <UserRegisterForm showLoginHint={true} />
                         </Dialog.Body>
                         <Dialog.CloseTrigger asChild>
                             <CloseButton />

@@ -7,10 +7,10 @@ export type ConfirmationDialogueData = {
     description: React.ReactNode,
 
     confirm: React.ReactNode,
-    onConfirm: () => void,
+    onConfirm?: () => void,
 
     cancel: React.ReactNode,
-    onCancel: () => void
+    onCancel?: () => void
 }
 type ConfirmationDialogueProps = {
     open: boolean,
@@ -19,23 +19,24 @@ type ConfirmationDialogueProps = {
 }
 
 export default function ConfirmationDialogue({ open, onClose, data } : ConfirmationDialogueProps) {
-    const handleConfirm = useCallback((e: any) => {
-        console.log("confirm")
-        data?.onConfirm()
+    const handleConfirm = useCallback((_e: React.MouseEvent) => {
+        if (data?.onConfirm)
+            data.onConfirm()
+
         onClose()
-    }, [])
-    const handleCancel = useCallback((e: any) => {
-        console.log("cancel")
-        data?.onCancel()
+    }, [data, onClose])
+    const handleCancel = useCallback((_e: React.MouseEvent) => {
+        if (data?.onCancel)
+            data.onCancel()
+
         onClose()
-    }, [])
+    }, [data, onClose])
     
     const handleOpenChange = useCallback((e: OpenChangeDetails) => {
         if(!e.open) {
-            handleCancel(e)
             onClose()
         }
-    }, [])
+    }, [onClose])
 
     return (
         <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>
@@ -45,11 +46,11 @@ export default function ConfirmationDialogue({ open, onClose, data } : Confirmat
                     <Dialog.Content>
                         <Dialog.Header p="14px">
                             <Dialog.Title>
-                                {data?.title}
+                                {data && data.title}
                             </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
-                                {data?.description}
+                                {data && data.description}
                         </Dialog.Body>
                         <Dialog.Footer>
                             <Button variant="outline" onClick={handleCancel}>{data?.cancel}</Button>

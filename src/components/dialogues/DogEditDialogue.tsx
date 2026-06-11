@@ -14,23 +14,24 @@ type DogEditDialogueProps = {
 }
 
 export default function DogEditDialogue({ open, onClose, data } : DogEditDialogueProps) {
+    
     const handleConfirm = useCallback(() => {
             toaster.create({
                 title: "Done",
                 description: ( <></> )
         })
         onClose()
-    }, []);
+    }, [data, onClose]);
     const handleCancel = useCallback((e: any) => {
         console.log("cancel")
         onClose()
-    }, [])
+    }, [data, onClose])
 
     const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
         if(!e.open) {
             onClose()
         }
-    }, [])
+    }, [onClose])
 
     return (
         <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange} size="cover">

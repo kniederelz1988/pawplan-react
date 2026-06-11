@@ -1,37 +1,28 @@
 import { useCallback } from "react";
 import { createListCollection, SelectRootProps } from "@chakra-ui/react";
-import { DogSizeEnum, getSizeTitle } from "@models/enums/DogSizeEnum";
 import BaseSelection from "@components/utils/BaseSelection";
+import { AllDogSizes, DogSize } from "@models/enums/DogSize";
+import { getSizeTitle } from "@models/DogModel";
 
 export default function DogSizeSelection({ value, onValueChanged, ...props } : {
-        value: DogSizeEnum
-        onValueChanged: ((value: DogSizeEnum) => void)
-    } & Omit<SelectRootProps, "collection"|"value"|"onValueChange">) 
+        value: DogSize[],
+        defaultValue: DogSize[],
+        onValueChanged: ((value: DogSize[]) => void)
+    } & Omit<SelectRootProps, "collection"|"value"|"defaultValue"|"onValueChange">) 
 {
     const onValueChangedCallback = useCallback(onValueChanged, [onValueChanged])
 
-    const sizeCollection = createListCollection({
-        items: [ DogSizeEnum.Small, DogSizeEnum.Mid, DogSizeEnum.Big ].map(size => size.toString())
-    })
+    const sizeCollection = createListCollection({ items: AllDogSizes })
 
-    function getLabelTitle(strValue: string) {
-        return getSizeTitle(parseInt(strValue) as DogSizeEnum)
-    }
-
-    function handleValueChanged(strValue: string) {
-        if(!strValue) {
-            onValueChangedCallback(DogSizeEnum.Small)
-            return
-        }
-
-        onValueChangedCallback(parseInt(strValue) as DogSizeEnum)
+    function getLabelTitle(value: DogSize) {
+        return getSizeTitle(value)
     }
 
     return (
-        <BaseSelection
+        <BaseSelection<DogSize>
             collection={sizeCollection}
-            value={value.toString()} 
-            onValueChanged={handleValueChanged} 
+            value={value} 
+            onValueChanged={onValueChangedCallback} 
             getLabel={getLabelTitle}
             {...props} 
         />

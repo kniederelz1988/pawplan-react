@@ -1,9 +1,25 @@
 import React, { useCallback } from "react"
-import { CloseButton, DateValue, Dialog, DialogOpenChangeDetails, Portal, Text } from "@chakra-ui/react"
+import { Timestamp } from "firebase/firestore";
+
+import { CalendarDateTime } from "@internationalized/date";
+
+import { CloseButton, Dialog, DialogOpenChangeDetails, Portal, Text } from "@chakra-ui/react"
+
+import { toaster } from "@components/ui/toaster"
+
+import { useVolunteer } from "@hooks/VolunteerHooks";
 
 import AppointmentBookingDialogueForm from "@components/forms/AppointmentBookingDialogueForm"
+
 import { DogModel } from "@models/DogModel"
-import { toaster } from "@components/ui/toaster"
+import { dateValueToTimestamp } from "@helpers/TimeHelpers";
+
+import { AppointmentModel, AppointmentStatusModel } from "@models/AppointmentModel";
+
+import { AppointmentTypeEnum } from "@models/enums/AppointmentType";
+import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus";
+import { useAppointmentRepository } from "@hooks/AppointmentHooks";
+
 
 export type AppointmentBookingDialogueData = {
     dog: DogModel
@@ -16,28 +32,35 @@ type AppointmentBookingDialogueProps = {
 }
 
 export default function AppointmentBookingDialogue({ open, onClose, data } : AppointmentBookingDialogueProps) {
-    const handleConfirm = useCallback((dog: DogModel, date: DateValue) => {
-        toaster.create({
-            title: "Visit booked",
-            description: (
-                <>
-                    <Text>
-                        Dog: {dog.name}
-                    </Text>
-                    <Text>
-                        Date: {date.toString()}
-                    </Text>
-                </>
-            )
-        })
+    const { volunteer } = useVolunteer()
+    const { createAppointment } = useAppointmentRepository()
+
+    const handleConfirm = useCallback((dog: DogModel, date: CalendarDateTime) => {
+        if (!volunteer?.id || !dog?.id)
+            return
+        
+        const appointment: AppointmentModel = {
+            dogId: dog.id,
+            volunteerId: volunteer.id,
+            createdAt: Timestamp.now(),
+            date: dateValueToTimestamp(date),
+            type: AppointmentTypeEnum.Walk
+        }
+        const appointmentState: AppointmentStatusModel = {
+            status: AppointmentStatusEnum.Pending,
+            updateAt: Timestamp.now(),
+            updatedBy: volunteer.id
+        }
+
+        createAppointment(appointment, appointmentState)
         onClose()
-    }, []);
+    }, [data, onClose])
 
     const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
-        if(!e.open) {
+        if (!e.open) {
             onClose()
         }
-    }, [])
+    }, [onClose])
 
     return (
         <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>
@@ -57,11 +80,17 @@ export default function AppointmentBookingDialogue({ open, onClose, data } : App
                     >
                         <Dialog.Header p="14px">
                             <Dialog.Title>
-                                Visit with {data?.dog?.name}
+                                {  
+                                    data?.dog && 
+                                        <Text>Visit with {data.dog.name}</Text> 
+                                }
                             </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
-                            <AppointmentBookingDialogueForm dog={data?.dog} onConfirm={handleConfirm} onClose={onClose}/>
+                            { 
+                                data?.dog &&
+                                    <AppointmentBookingDialogueForm dog={data?.dog} onConfirm={handleConfirm} onClose={onClose}/>
+                            }
                         </Dialog.Body>
                         <Dialog.CloseTrigger asChild>
                             <CloseButton />

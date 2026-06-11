@@ -1,20 +1,26 @@
-import { createContext, useContext } from "react"
+import { createContext, useContext, useState } from "react"
 import { User } from "firebase/auth"
 
 import useAuthentication from "@hooks/useAuthentification"
+
 import LoadingPage from "@components/pages/LoadingPage"
 
-const AuthContext = createContext<User | null>(null)
+type AuthContextData = {
+    user: User | null
+    signIn?: (email: string, password: string) => Promise<void>
+    signOut?: () => void
+}
 
-export function AuthProvider({ children } : { 
-    children: React.ReactNode
-}) {
-    const { user, isLoading } = useAuthentication()
+const AuthContext = createContext<AuthContextData>({ user: null })
+
+export function AuthProvider({ children } : { children: React.ReactNode }) {
+    const { user, isLoading, signInUser, signOutUser } = useAuthentication()
+    const [loadOverwrite, setLoadOverwrite] = useState(false)
 
     return (
-        <AuthContext.Provider value={user}>
+        <AuthContext.Provider value={{ user: user, signIn: signInUser, signOut: signOutUser }}>
         { 
-            isLoading 
+            isLoading || loadOverwrite
                 ? <LoadingPage />
                 : children
         }

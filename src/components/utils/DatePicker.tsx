@@ -2,34 +2,36 @@ import { DatePickerContent, DatePickerControl, DatePickerDayTable, DatePickerHea
 import { LuCalendar } from "react-icons/lu";
 
 export default function DatePicker({ children, ...props }: DatePickerRootProps) {
+    const locale = navigator.language;
+
     return (
-        <DatePickerRoot {...props}>
+        <DatePickerRoot {...props} locale={locale}>
             <DatePickerLabel>{children}</DatePickerLabel>
             <DatePickerControl>
-            <DatePickerInput />
-            <DatePickerIndicatorGroup>
-                <DatePickerTrigger>
-                    <LuCalendar />
-                </DatePickerTrigger>
-            </DatePickerIndicatorGroup>
+                <DatePickerInput />
+                <DatePickerIndicatorGroup>
+                    <DatePickerTrigger>
+                        <LuCalendar />
+                    </DatePickerTrigger>
+                </DatePickerIndicatorGroup>
             </DatePickerControl>
             <Portal>
-            <DatePickerPositioner>
-                <DatePickerContent>
-                <DatePickerView view="day">
-                    <DatePickerHeader />
-                    <DatePickerDayTable />
-                </DatePickerView>
-                <DatePickerView view="month">
-                    <DatePickerHeader />
-                    <DatePickerMonthTable />
-                </DatePickerView>
-                <DatePickerView view="year">
-                    <DatePickerHeader />
-                    <DatePickerYearTable />
-                </DatePickerView>
-                </DatePickerContent>
-            </DatePickerPositioner>
+                <DatePickerPositioner>
+                    <DatePickerContent>
+                        <DatePickerView view="day">
+                            <DatePickerHeader />
+                            <DatePickerDayTable />
+                        </DatePickerView>
+                        <DatePickerView view="month">
+                            <DatePickerHeader />
+                            <DatePickerMonthTable />
+                        </DatePickerView>
+                        <DatePickerView view="year">
+                            <DatePickerHeader />
+                            <DatePickerYearTable />
+                        </DatePickerView>
+                    </DatePickerContent>
+                </DatePickerPositioner>
             </Portal>
         </DatePickerRoot>
     )

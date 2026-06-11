@@ -1,20 +1,27 @@
-import { Alert, Button, Center, Field, HStack, Input, Link, Spacer, Text } from "@chakra-ui/react";
-import useAuthentification from "@hooks/useAuthentification";
+import { Alert, Center, Field, HStack, IconButton, Input, Link, Spacer, Text } from "@chakra-ui/react";
+import { FaUserPlus } from "react-icons/fa";
 
 import { useDialogueContext } from "@contexts/DialogueContext";
-import { DialogueType } from "@models/enums/DialogueType";
-import { SubmitEventHandler } from "react";
+import { DialogueTypeEnum } from "@models/enums/DialogueType";
 
-export default function UserRegisterForm() {
+import useCreateUser from "@hooks/useCreateUser";
+
+type UserRegisterFormProps = {
+    showLoginHint: boolean
+}
+
+export default function UserRegisterForm({ showLoginHint } : UserRegisterFormProps) {
     const dialogueContext = useDialogueContext()
-    const { error, createUser } = useAuthentification()
+
+    const { isLoading, error, createUser } = useCreateUser()
 
     function handleLogin(e: React.MouseEvent) {
         e.preventDefault()
-        dialogueContext.openDialogue(DialogueType.UserLogin)
+        dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
     }
     function handleRegister(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault()
+
         createUser(e.target.email.value, e.target.password.value, e.target.displayName.value)
     }
     
@@ -42,29 +49,41 @@ export default function UserRegisterForm() {
                 <Field.ErrorText />
             </Field.Root>
 
-            <Spacer h={4} />
-
             {
-                error ?   
-                        <Alert.Root status="error" title={error} p={2}>
-                            <Alert.Indicator />
-                            <Alert.Title>{error}</Alert.Title>
-                        </Alert.Root>
+                error 
+                    ?  
+                        <>
+                            <Spacer h={4} />
+
+                            <Alert.Root status="error" title={error} p={2}>
+                                <Alert.Indicator />
+                                <Alert.Title>{error}</Alert.Title>
+                            </Alert.Root>
+                        </>
                     : <></>
             }
 
             <Spacer h={4} />
 
-            <Button type="submit" w="100%">Create account</Button>
+            <IconButton type="submit" w="100%">
+                <FaUserPlus /> Create account
+            </IconButton>
 
-            <Spacer h={4} />
-
-            <Center>
-                <HStack>
-                    <Text>Already volunteering?</Text>
-                    <Link onClick={handleLogin}>Use existing account</Link>
-                </HStack>
-            </Center>
+            {
+                showLoginHint 
+                    ?
+                        <>
+                            <Spacer h={2} />
+                            
+                            <Center>
+                                <HStack>
+                                    <Text>Already volunteering?</Text>
+                                    <Link onClick={handleLogin}>Use existing account</Link>
+                                </HStack>
+                            </Center>
+                        </>
+                    : <></>
+            }
         </form>
     )
 }

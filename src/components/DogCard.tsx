@@ -1,60 +1,63 @@
-import { Button, Card, HStack, Icon, IconButton, Image, Spacer, Text } from "@chakra-ui/react";
-import { useAuthContext } from "@contexts/AuthContexts";
-import { useDialogueContext } from "@contexts/DialogueContext";
-import { getDogAge } from "@helpers/TimeHelpers";
-import { getBreedTitle } from "@models/DogBreed";
-import { DogModel } from "@models/DogModel";
-import { DialogueType } from "@models/enums/DialogueType";
-import { getGenderTitle } from "@models/enums/DogGenderEnum";
-import { getSizeTitle } from "@models/enums/DogSizeEnum";
 import { useCallback } from "react";
+import { Button, Card, HStack, IconButton, Spacer, Text } from "@chakra-ui/react";
+
 import { HiHeart } from "react-icons/hi";
 import { LuDot } from "react-icons/lu";
 import { PiPencil } from "react-icons/pi";
+
+import { VolunteerRoleEnum } from "@models/enums/UserRoleType";
+import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks";
+
+import { useDialogueContext } from "@contexts/DialogueContext";
+import { DialogueTypeEnum } from "@models/enums/DialogueType";
+
+import { DogModel, getBreedTitle, getDogAge, getGenderTitle, getSizeTitle} from "@models/DogModel";
 
 type DogCardProps = {
     dog: DogModel
 }
 
 export default function DogCard({ dog } : DogCardProps) {
-    const user = useAuthContext()
+    const { volunteer, isFavourite, toggleFavourite } = useVolunteer()
+    const { role } = useVolunteerRole(volunteer)
+
     const dialogueContext = useDialogueContext()
 
     const onEditDogClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
 
-        if (user == null) {
-            dialogueContext.openDialogue(DialogueType.UserLogin)
+        if (volunteer == null) {
+            dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
             return
         }
 
-        dialogueContext.openDialogue(DialogueType.DogEdit, { dog: dog })
-    }, [user])
+        dialogueContext.openDialogue(DialogueTypeEnum.DogEdit, { dog: dog })
+    }, [volunteer])
 
-    const onLikeDogClick = useCallback((e: React.MouseEvent) => {
+    const onFavouriteDogClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
 
-        if (user == null) {
-            dialogueContext.openDialogue(DialogueType.UserLogin)
+        if (volunteer == null) {
+            dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
             return
         }
 
-        console.log("like dog")
-    }, [user])
+        toggleFavourite(dog)
+    }, [volunteer, toggleFavourite])
 
     const onBookAppointmentClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
         
-        if (user == null) {
-            dialogueContext.openDialogue(DialogueType.UserLogin)
+        if (volunteer == null) {
+            dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
             return
         }
 
-        dialogueContext.openDialogue(DialogueType.AppointmentBooking, { dog: dog })
-    }, [user, dog])
+        dialogueContext.openDialogue(DialogueTypeEnum.AppointmentBooking, { dog: dog })
+    }, [volunteer, dog])
     
     return (
-        <Card.Root overflow="hidden">
+        <Card.Root key={dog.id} overflow="hidden">
             <Card.Header p={0}>
                 <HStack height={210} 
                     align="start"
@@ -64,18 +67,16 @@ export default function DogCard({ dog } : DogCardProps) {
                     p={2}
                 >   
                     { 
-                        user 
-                            ? 
-                                <IconButton variant="subtle" borderRadius={24} bgColor={"whiteAlpha.700"} onClick={onEditDogClick}>
-                                    <PiPencil />
-                                </IconButton>
-                            : <></>
+                        volunteer && role == VolunteerRoleEnum.Admin &&
+                            <IconButton variant="subtle" borderRadius={24} bgColor={"whiteAlpha.700"} onClick={onEditDogClick}>
+                                <PiPencil />
+                            </IconButton>
                     }
 
                     <Spacer />
 
-                    <IconButton variant="subtle" borderRadius={24} bgColor={"whiteAlpha.700"} onClick={onLikeDogClick}>
-                        <HiHeart />
+                    <IconButton variant="subtle" borderRadius={24} bgColor={"whiteAlpha.700"} onClick={onFavouriteDogClick}>
+                        <HiHeart color={isFavourite(dog) ? "red" : "black"} />
                     </IconButton>
                 </HStack>
             </Card.Header>
