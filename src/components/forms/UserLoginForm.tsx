@@ -5,15 +5,14 @@ import useAuthentification from "@hooks/useAuthentification";
 import { useDialogueContext } from "@contexts/DialogueContext";
 
 import { DialogueTypeEnum } from "@models/enums/DialogueType";
-import { useEffect } from "react";
 
 type UserLoginFormProps = {
     showRegisterLink: boolean
 }
 
-export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps ) {
+export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps) {
     const dialogueContext = useDialogueContext()
-    const { user, error, signInUser } = useAuthentification()
+    const { error, signInUser } = useAuthentification()
 
     function handleLogin(e: any) {
         e.preventDefault()

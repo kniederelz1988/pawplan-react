@@ -1,7 +1,7 @@
 import { Center, HStack, Spacer, StackProps, Text, VStack } from "@chakra-ui/react";
 
-import Logo from "@components/Logo";
-import Navigation from "@components/Navigation";
+import Logo from "@components/navigation/Logo";
+import Navigation from "@components/navigation/Navigation";
 import { ColorModeButton } from "@components/ui/color-mode";
 import UserProfileOverview from "@components/utils/UserProfileOverview";
 

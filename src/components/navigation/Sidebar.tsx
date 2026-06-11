@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
 
-import SidebarContent from '@components/SidebarContent';
+import SidebarContent from '@components/navigation/SidebarContent';
 import { Box, Button, CloseButton, Drawer, Portal } from '@chakra-ui/react';
 
 export default function Sidebar() {

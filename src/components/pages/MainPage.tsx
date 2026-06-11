@@ -1,6 +1,6 @@
 import { Box, Container, Flex } from "@chakra-ui/react";
-import Sidebar from "@components/Sidebar";
-import Router from "@components/Router";
+import Sidebar from "@components/navigation/Sidebar";
+import Router from "@components/navigation/Router";
 
 export default function MainPage() {
     return (

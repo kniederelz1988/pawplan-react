@@ -1,7 +1,8 @@
 import { useCallback } from "react";
 import { createListCollection, SelectRootProps } from "@chakra-ui/react";
 import BaseSelection from "@components/utils/BaseSelection";
-import { AllDogSizes, DogSize, getSizeTitle } from "@models/enums/DogSize";
+import { AllDogSizes, DogSize } from "@models/enums/DogSize";
+import { getSizeTitle } from "@models/DogModel";
 
 export default function DogSizeSelection({ value, onValueChanged, ...props } : {
         value: DogSize[],

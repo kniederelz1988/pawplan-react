@@ -1,4 +1,4 @@
-import { Link, Text } from '@chakra-ui/react';
+import { Link } from '@chakra-ui/react';
 import { NavLink as ReactRouterLink } from 'react-router-dom';
 
 type NavigationLinkProps = {

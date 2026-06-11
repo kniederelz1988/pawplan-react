@@ -1,10 +1,10 @@
 import { Alert, Center, Field, HStack, IconButton, Input, Link, Spacer, Text } from "@chakra-ui/react";
 import { FaUserPlus } from "react-icons/fa";
 
-import useAuthentification from "@hooks/useAuthentification";
-
 import { useDialogueContext } from "@contexts/DialogueContext";
 import { DialogueTypeEnum } from "@models/enums/DialogueType";
+
+import useCreateUser from "@hooks/useCreateUser";
 
 type UserRegisterFormProps = {
     showLoginHint: boolean
@@ -12,7 +12,8 @@ type UserRegisterFormProps = {
 
 export default function UserRegisterForm({ showLoginHint } : UserRegisterFormProps) {
     const dialogueContext = useDialogueContext()
-    const { error, createUser } = useAuthentification()
+
+    const { isLoading, error, createUser } = useCreateUser()
 
     function handleLogin(e: React.MouseEvent) {
         e.preventDefault()
@@ -20,6 +21,7 @@ export default function UserRegisterForm({ showLoginHint } : UserRegisterFormPro
     }
     function handleRegister(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault()
+
         createUser(e.target.email.value, e.target.password.value, e.target.displayName.value)
     }
     

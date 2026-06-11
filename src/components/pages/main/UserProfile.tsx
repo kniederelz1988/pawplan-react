@@ -1,20 +1,28 @@
 import { useCallback } from "react";
-import { Badge, Box, Circle, Flex, Grid, GridItem, Heading, HStack, IconButton, Link, Text, VStack } from "@chakra-ui/react";
+
+import { Box, Circle, Flex, Grid, GridItem, Heading, HStack, IconButton, Link, Text, VStack } from "@chakra-ui/react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { FiLogIn } from "react-icons/fi";
 import { BiPencil } from "react-icons/bi";
 
-import { useAuthContext } from "@contexts/AuthContexts";
 import { useDialogueContext } from "@contexts/DialogueContext";
+import { useAuthContext } from "@contexts/AuthContexts";
+
+import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks";
+import { useVolunteerAppointments } from "@hooks/AppointmentHooks";
 
 import { DialogueTypeEnum } from "@models/enums/DialogueType";
-import useLocalVolunteer from "@hooks/useLocalVolunteer";
+
+import ProfileBadge from "@components/ProfileBadge";
 
 export default function UserProfile() {
-    const { user, signOut }  = useAuthContext()
     const dialogueContext = useDialogueContext()
 
-    const volunteer = useLocalVolunteer()
+    const { user, signOut }  = useAuthContext()
+    const { volunteer, likeCounter } = useVolunteer()
+    const { role } = useVolunteerRole(volunteer)
+
+    const { appointments } = useVolunteerAppointments(volunteer)
     
     const onEditUserClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
@@ -44,11 +52,7 @@ export default function UserProfile() {
                             </Text>
                             <Text fontSize="sm" w="100%">{user.email}</Text>
                             <Flex w="100%" pt={1}>
-                                { 
-                                    volunteer.admin
-                                        ? <Badge colorPalette={"red"}>Admin</Badge>
-                                        : <Badge>Volunteer</Badge>
-                                }
+                                <ProfileBadge role={role} />
                             </Flex> 
                         </VStack>
 
@@ -58,27 +62,24 @@ export default function UserProfile() {
                     </HStack>
                 </Box>
 
-                <Grid templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(4, 1fr)" }} gap={4} mt={8} >
+                <Grid templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(4, 1fr)" }} gap={4} mt={8}>
+                    <GridItem colSpan={{ md: 1 }} display={{ base: "none", md: "block"}}></GridItem>
+
                     <GridItem colSpan={1} justifyContent="center" borderColor="black" borderRadius={16} borderWidth="1px" p={4}>
                         <VStack gap={0}>
-                            <Text>{2}</Text>
+                            <Text>{appointments.length}</Text>
                             <Text>total visits</Text>
                         </VStack>
                     </GridItem>
 
                     <GridItem colSpan={1} justifyContent="center" borderColor="black" borderRadius={16} borderWidth="1px" p={4}>
                         <VStack gap={0}>
-                            <Text>{1}</Text>
-                            <Text>upcoming</Text>
-                        </VStack>
-                    </GridItem>
-
-                    <GridItem colSpan={2} justifyContent="center" borderColor="black" borderRadius={16} borderWidth="1px" p={4}>
-                        <VStack gap={0}>
-                            <Text>{2}</Text>
+                            <Text>{likeCounter}</Text>
                             <Text>favourites</Text>
                         </VStack>
                     </GridItem>
+
+                    <GridItem colSpan={{ base: 0, md: 1 }}></GridItem>
                 </Grid>
 
                 <Box bgColor="Highlight" borderRadius={16} mt={8} p={6}>

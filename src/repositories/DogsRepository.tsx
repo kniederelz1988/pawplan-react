@@ -1,4 +1,4 @@
-import { Firestore, collection, FirestoreDataConverter, onSnapshot, query, QueryDocumentSnapshot, where, documentId, addDoc, doc } from "firebase/firestore"
+import { Firestore, collection, FirestoreDataConverter, onSnapshot, query, QueryDocumentSnapshot, where, documentId, addDoc, doc, updateDoc } from "firebase/firestore"
 import { database } from "@fb/config"
 import { DogModel } from "@models/DogModel";
 
@@ -15,7 +15,7 @@ type DogRepositoryListener = (dogs: DogModel[]) => void
 type DogOperationCallback = (dog: DogModel, error: string | null) => void
 
 function DogRepository({ database } : { database: Firestore }) {
-    
+
     function subscribeForAllDogs(listener: DogRepositoryListener) {
         const q = query(
             collection(database, "dogs")
@@ -42,24 +42,40 @@ function DogRepository({ database } : { database: Firestore }) {
         })
     }
 
-    function createDog(dog: DogModel, operationResult: DogOperationCallback) {
-        if (!dog || dog.id)
+    async function createDog(dog: DogModel, operationResult: DogOperationCallback) {
+        if (!dog?.id) {
             operationResult(dog, "undefined-data")
+            return
+        }
+            
+        const c = collection(database, "dogs")
+        await addDoc(c, dog)
+            .then(
+                _onSuccess => operationResult(dog, null),
+                onError => operationResult(dog, onError)
+            )
+    }
+    async function updateDog(dog: DogModel, operationResult: DogOperationCallback) {
+        if (!dog?.id) {
+            operationResult(dog, "undefined-data")
+            return
+        }
 
         const c = collection(database, "dogs")
-        addDoc(c, dog)
+        const d = doc(c, dog.id)
+        await updateDoc(d, dog)
             .then(
-                onSuccess => { 
-                    dog.id = onSuccess.id
-                    operationResult(dog, null)
-                },
-                onError => {
-                    operationResult(dog, onError)
-                }
+                _onSuccess => operationResult(dog, null),
+                onError => operationResult(dog, onError)
             )
     }
 
-    return { subscribeForAllDogs, subscribeForDogs, createDog }
+    return { 
+        subscribeForAllDogs, 
+        subscribeForDogs, 
+        createDog,
+        updateDog
+    }
 }
 
 const dogRepository = DogRepository({ database })

@@ -1,52 +1,109 @@
-import { Button, DateValue, Grid, HStack, RadioCard, Spacer, Text, VStack } from "@chakra-ui/react";
-import { createDate } from "@helpers/TimeHelpers";
-import { DogModel } from "@models/DogModel";
 import { useCallback, useMemo, useState } from "react";
+import { Button, Grid, HStack, RadioCard, Spacer, Text, VStack } from "@chakra-ui/react";
+
+import { getDateFromToday } from "@helpers/TimeHelpers";
+
+import { CalendarDate, CalendarDateTime, getLocalTimeZone, Time } from "@internationalized/date";
+
+import { DogModel } from "@models/DogModel";
+
+type DayProps = {
+    date: Date
+}
+
+function DayDisplay({ date } : DayProps) {
+    return (
+        <VStack m="auto" gap="0">
+            <Text fontSize="xs">{date.toLocaleDateString(navigator.language, { weekday: "short" })}</Text>
+            <Text fontSize="sm" fontWeight="bold">{date.getDate()}</Text>
+        </VStack>
+    )
+}
+
+type TimeProps = {
+    time: Time
+}
+
+function TimeDisplay({ time } : TimeProps) {
+    return (
+        <HStack m="auto" gap={1}>
+            <Text fontSize="xs" fontWeight="bold">{time.hour}:{time.minute.toString().padStart(2, '0')}</Text>
+        </HStack>
+    )
+}
 
 type AppointmentBookingDialogueFormProps = {
     dog: DogModel,
-    onConfirm: (dog: DogModel, datetime: DateValue) => void,
+    onConfirm: (dog: DogModel, datetime: CalendarDateTime) => void,
     onClose: () => void
 }
 
 export default function AppointmentBookingDialogueForm({ dog, onConfirm, onClose } : AppointmentBookingDialogueFormProps) {
-    const [dayOffset, setDayOffset] = useState(0)
-    const [time, setTime] = useState("09:00")
+    const [date, setDate] = useState<CalendarDate>()
+    const [time, setTime] = useState<Time>()
     
+    const daySlots = useMemo(() => [
+        getDateFromToday(1), 
+        getDateFromToday(2),
+        getDateFromToday(3),
+        getDateFromToday(4),
+        getDateFromToday(5),
+        getDateFromToday(6),
+        getDateFromToday(7)    
+    ], [])
     const timeSlots = useMemo(() => [
-        "10:00",
-        "10:30",
-        "11:00",
-        "11:30",
-        "12:00",
-        "12:30",
-        "13:00",
-        "13:30",
-        "14:00",
-        "14:30",
-        "15:00",
-        "15:30",
-        "16:00",
-        "16:30",
-        "17:00"
+        new Time(10),
+        new Time(10, 30),
+        new Time(11),
+        new Time(11, 30),
+        new Time(12),
+        new Time(12, 30),
+        new Time(13),
+        new Time(13, 30),
+        new Time(14),
+        new Time(14, 30),
+        new Time(15),
+        new Time(15, 30),
+        new Time(16),
+        new Time(16, 30),
+        new Time(17)
     ], []);
 
     const handleSubmit = useCallback((e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        const date = createDate(dayOffset, time)
-        onConfirm(dog, date)
-    }, [dog])
+        if (!date || !time)
+            return
+
+        const dateTime = new CalendarDateTime(
+            date.year, 
+            date.month, 
+            date.day, 
+            time.hour, 
+            time.minute
+        )
+        console.log(dateTime)
+        onConfirm(dog, dateTime)
+    }, [date, time, dog])
+
     const handleReset = useCallback((e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
         onClose()
     }, [])
 
     function onDayOffsetChanged(details: RadioCard.ValueChangeDetails) {
-        setDayOffset(details.value ? parseInt(details.value) : 0)
+        if (!details.value)
+            return
+
+        const index = parseInt(details.value)
+        setDate(daySlots[index])
     }
     function onTimeChanged(details: RadioCard.ValueChangeDetails) {
-        setTime(details.value ? details.value : "09:00")
+        if (!details.value)
+            return
+
+        const index = parseInt(details.value)
+        setTime(timeSlots[index])
     }
     
     return (
@@ -54,14 +111,11 @@ export default function AppointmentBookingDialogueForm({ dog, onConfirm, onClose
             <RadioCard.Root onValueChange={onDayOffsetChanged}>
                 <RadioCard.Label>Choose a date</RadioCard.Label>
                 <Grid templateColumns="repeat(7, 1fr)" gap={2}>
-                    {[1, 2, 3, 4, 5, 6, 7].map((item) => (
-                        <RadioCard.Item key={item} value={item.toString()}>
+                    {daySlots.map((item, index) => (
+                        <RadioCard.Item key={index} value={index.toString()}>
                             <RadioCard.ItemHiddenInput />
                             <RadioCard.ItemControl bgColor={"whiteAlpha.700"} p={2}>
-                                <VStack m="auto" gap="0">
-                                    <Text fontSize="xs">Wed</Text>
-                                    <Text fontSize="sm" fontWeight="bold">{item}</Text>
-                                </VStack>
+                                <DayDisplay date={item.toDate(getLocalTimeZone())} />
                             </RadioCard.ItemControl>
                         </RadioCard.Item>
                     ))}
@@ -73,14 +127,11 @@ export default function AppointmentBookingDialogueForm({ dog, onConfirm, onClose
             <RadioCard.Root name="time" onValueChange={onTimeChanged}>
                 <RadioCard.Label>Choose a time</RadioCard.Label>
                 <Grid templateColumns="repeat(5, 1fr)" gap={4}>
-                    {timeSlots.map((item) => (
-                        <RadioCard.Item key={item} value={item.toString()}>
+                    {timeSlots.map((item, index) => (
+                        <RadioCard.Item key={index} value={index.toString()}>
                             <RadioCard.ItemHiddenInput />
                             <RadioCard.ItemControl bgColor={"whiteAlpha.700"} p={2}>
-                                <HStack m="auto" gap={1}>
-                                    <Text fontSize="xs" fontWeight="bold">{item}</Text>
-                                    <Text fontSize="xs">am</Text>
-                                </HStack>
+                                <TimeDisplay time={item} />
                             </RadioCard.ItemControl>
                         </RadioCard.Item>
                     ))}

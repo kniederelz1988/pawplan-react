@@ -1,13 +1,15 @@
 import { useCallback } from "react";
 import { ListCollection, Portal, Select, SelectRootProps, SelectValueChangeDetails } from "@chakra-ui/react";
 
-export default function BaseSelection<T>({ collection, value, onValueChanged, getLabel, ...props } : {
-        collection: ListCollection<T>
-        value: T[]
-        defaultValue: T[]
-        onValueChanged: ((value: T[]) => void)
-        getLabel: ((value: T) => string)
-    } & Omit<SelectRootProps, "collection"|"value"|"defaultValue"|"onValueChange">
+type BaseSelectionProps<T> = {
+    collection: ListCollection<T>
+    value: T[]
+    defaultValue: T[]
+    onValueChanged: ((value: T[]) => void)
+    getLabel: ((value: T) => string)
+}
+
+export default function BaseSelection<T>({ collection, value, onValueChanged, getLabel, ...props } : BaseSelectionProps<T> & Omit<SelectRootProps, "collection"|"value"|"defaultValue"|"onValueChange">
 ) {
     const getLabelCallback = useCallback(getLabel, [getLabel])
     const onValueChangedCallback = useCallback(onValueChanged, [onValueChanged])

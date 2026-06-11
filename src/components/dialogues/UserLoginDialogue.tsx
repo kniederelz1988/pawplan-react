@@ -18,13 +18,13 @@ export default function UserLoginDialogue({ open, onClose } : UserLoginDialogueP
         }
 
         onClose()
-    }, [user])
+    }, [user, onClose])
 
     const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
         if(!e.open) {
             onClose()
         }
-    }, [])
+    }, [onClose])
 
     return (
         <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>

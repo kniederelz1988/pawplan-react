@@ -1,11 +1,16 @@
-import { DialogOpenChangeDetails } from "@ark-ui/react"
-import { Button, CloseButton, Dialog, Portal } from "@chakra-ui/react"
+import React, { useCallback } from "react"
+import { Button, CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react"
+
 import { toaster } from "@components/ui/toaster"
-import { useCallback } from "react"
+import { Appointment } from "@models/AppointmentModel"
 
 export type AppointmentEditDialogueData = {
-    appointment: any
+    appointment: Appointment
 }
+export function createAppointmentEditDialogueData(appointment: Appointment) : AppointmentEditDialogueData {
+    return { appointment: appointment }
+}
+
 type AppointmentEditDialogueProps = { 
     open: boolean, 
     onClose: () => void,
@@ -13,23 +18,22 @@ type AppointmentEditDialogueProps = {
 }
 
 export default function AppointmentEditDialogue({ open, onClose, data } : AppointmentEditDialogueProps) {
-    const handleConfirm = useCallback(() => {
-            toaster.create({
-                title: "Your visit",
-                description: ( <></> )
+    const handleConfirm = useCallback((_e: React.MouseEvent) => {
+        toaster.create({
+            title: "Your visit",
+            description: ( <></> )
         })
         onClose()
-    }, []);
-    const handleCancel = useCallback((e: any) => {
-        console.log("cancel")
+    }, [data, onClose]);
+    const handleCancel = useCallback((_e: React.MouseEvent) => {
         onClose()
-    }, [])
+    }, [data, onClose])
 
     const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
         if(!e.open) {
             onClose()
         }
-    }, [])
+    }, [onClose])
 
     return (
         <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>

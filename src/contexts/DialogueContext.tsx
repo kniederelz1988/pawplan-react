@@ -9,6 +9,7 @@ import AppointmentCancelDialogue, { AppointmentCancelDialogueData } from "@compo
 import AppointmentEditDialogue, { AppointmentEditDialogueData } from "@components/dialogues/AppointmentEditDialogue"
 import DogEditDialogue, { DogEditDialogueData } from "@components/dialogues/DogEditDialogue"
 import VolunteerEditDialogue, { VolunteerEditDialogueData } from "@components/dialogues/VolunteerEditDialogue"
+import AppointmentCompleteDialogue, { AppointmentCompleteDialogueData } from "@components/dialogues/AppointmentCompleteDialogue"
 
 type DialogueContextData = {
     openDialogue: (type: DialogueType, data?: any) => void
@@ -49,6 +50,10 @@ export function DialogueProvider({ children } : DialogueProviderProps ) {
             return
         }
 
+        if (type == DialogueTypeEnum.AppointmentComplete && (data as AppointmentCompleteDialogueData) == null) {
+            return
+        }
+
         if (type == DialogueTypeEnum.DogEdit && (data as DogEditDialogueData) == null) {
             return
         }
@@ -76,9 +81,12 @@ export function DialogueProvider({ children } : DialogueProviderProps ) {
                 data={dialogueData as AppointmentBookingDialogueData}
             />
             <AppointmentEditDialogue open={dialogueType == DialogueTypeEnum.AppointmentEdit} onClose={onCloseDialogue}
-                data={{ appointment: null }} />
+                data={dialogueData as AppointmentEditDialogueData} />
             <AppointmentCancelDialogue open={dialogueType == DialogueTypeEnum.AppointmentCancel} onClose={onCloseDialogue} 
                 data={dialogueData as AppointmentCancelDialogueData}
+            />
+            <AppointmentCompleteDialogue open={dialogueType == DialogueTypeEnum.AppointmentComplete} onClose={onCloseDialogue}
+                data={dialogueData as AppointmentCompleteDialogueData}
             />
             
             <DogEditDialogue open={dialogueType == DialogueTypeEnum.DogEdit} onClose={onCloseDialogue}
