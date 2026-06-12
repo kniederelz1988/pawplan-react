@@ -12,7 +12,7 @@ export default function DogsOverview() {
             <Heading justifyContent="left" w="100%" mb={-1}>Dogs Overview</Heading>
             <Heading justifyContent="left" w="100%" fontSize="md" fontWeight="light">Find a shelter companion to spend time with today.</Heading>
             
-            <DogFilter onFilterChanged={() => {}} />
+            {/*<DogFilter onFilterChanged={() => {}} />*/}
             
             <Text fontVariant="all-petite-caps">{dogs.length} dogs available</Text>
             

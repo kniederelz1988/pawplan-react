@@ -1,17 +1,21 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Button, Field, Input, Spacer, SwitchControl, SwitchHiddenInput, SwitchLabel, SwitchRoot } from "@chakra-ui/react";
 
 import { DogModel } from "@models/DogModel";
-import { DogGender } from "@models/enums/DogGender";
-import { DogSize } from "@models/enums/DogSize";
+import { DogGender, DogGenderEnum } from "@models/enums/DogGender";
+import { DogSize, DogSizeEnum } from "@models/enums/DogSize";
 
 import DatePicker from "@components/utils/DatePicker";
-import DogSizeSelection from "@components/utils/DogSizeSelection";
-import DogGenderSelection from "@components/utils/DogGenderSelection";
 
 import { dateToDateValue, dateValueToTimestamp } from "@helpers/TimeHelpers";
 
-export default function DogForm({ dog }: { dog: DogModel }) {
+type DogFormProps = {
+    dog: DogModel,
+    onSubmit: (v: DogModel) => void,
+    onReset: () => void
+}
+
+export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
     const [name, setName] = useState(dog?.name)
     const [birthday, setBirthday] = useState(dog?.birthday)
     const [shelterDate, setShelterDate] = useState(dog?.shelterDate)
@@ -23,91 +27,118 @@ export default function DogForm({ dog }: { dog: DogModel }) {
     const [gender, setGender] = useState<DogGender>(dog?.gender)
     const [size, setSize] = useState<DogSize>(dog?.size)
 
-    const [imageUrl, setImageUrl] = useState(dog?.imageUrl)
+    const [imageUrl, setImageUrl] = useState(dog?.imageURL)
 
     const handleSizeValueChange = useCallback((values: DogSize[]) => {
+        if (values.length != 1) {
+            setSize(DogSizeEnum.Small)
+            return
+        }
+
         setSize(values[0])
     }, [])
     const handleGenderValueChange = useCallback((values: DogGender[]) => {
-        if (values.length != 1) return
+        if (values.length != 1) {
+            setGender(DogGenderEnum.Female)
+            return
+        }
 
         setGender(values[0])
     }, [])
 
-    useEffect(() => console.log(birthday), [birthday])
+    function handleSubmit(e: React.SubmitEvent) {
+        e.preventDefault()
+
+        dog.name = name
+        dog.birthday = birthday
+        dog.shelterDate = shelterDate
+
+        dog.adoptionDateValid = adoptionDateValid
+        dog.adoptionDate = adoptionDate
+
+        console.log(dog)
+
+        onSubmit(dog)
+    }
+    function handleReset(e: React.SyntheticEvent) {
+        e.preventDefault();
+        onReset()
+    }
 
     return (
-        dog &&
-            <form>
-                <Field.Root>
-                    <Field.Label>Name</Field.Label>
-                    <Input type="text" name="name" placeholder="Waldi" value={name} 
-                        onChange={(e) => setName(e.target.value) }
-                    />
-                    <Field.ErrorText />
-                </Field.Root>
+        <form onSubmit={handleSubmit} onReset={handleReset}>
+            <Field.Root>
+                <Field.Label>Name</Field.Label>
+                <Input type="text" name="name" placeholder="Waldi" value={name} 
+                    onChange={(e) => setName(e.target.value) }
+                />
+                <Field.ErrorText />
+            </Field.Root>
 
-                <Spacer h={2} />
+            <Spacer h={2} />
 
-                <Field.Root>
-                    <DatePicker value={[dateToDateValue(birthday.toDate())]}
-                        onValueChange={(d) => setBirthday(dateValueToTimestamp(d.value[0])) }
-                    >
-                        Birthday
-                    </DatePicker>
-                    <Field.ErrorText />
-                </Field.Root>
-
-                <Spacer h={4} />
-
-                <Field.Root>
-                    <DatePicker value={[dateToDateValue(shelterDate.toDate())]}
-                        onValueChange={(d) => setShelterDate(dateValueToTimestamp(d.value[0])) }
-                    >
-                        Sheltered date
-                    </DatePicker>
-                    <Field.ErrorText />
-                </Field.Root>
-
-                <Spacer h={4} />
-
-                <Field.Root>
-                    <SwitchRoot onCheckedChange={t => setAdoptionDateValid(t.checked)}>
-                        <SwitchHiddenInput />
-                        <SwitchControl />
-                        <SwitchLabel>Was adopted</SwitchLabel>
-                    </SwitchRoot>
-
-                    <DatePicker value={[dateToDateValue(adoptionDate.toDate())]}
-                        onValueChange={(d) => setAdoptionDate(dateValueToTimestamp(d.value[0])) }
-                        {...(adoptionDateValid ? {} : {"disabled": true})}
-                    >
-                        Adoption date
-                    </DatePicker>
-                    <Field.ErrorText />
-                </Field.Root>
+            <Field.Root>
+                <DatePicker value={[dateToDateValue(birthday.toDate())]}
+                    onValueChange={(d) => setBirthday(dateValueToTimestamp(d.value[0])) }
+                >
+                    Birthday
+                </DatePicker>
+                <Field.ErrorText />
+            </Field.Root>
 
             <Spacer h={4} />
 
             <Field.Root>
-                    <DogSizeSelection value={[size]} defaultValue={[]} onValueChanged={handleSizeValueChange}>
-                        Size
-                    </DogSizeSelection>
-                    <Field.ErrorText />
-                </Field.Root>
+                <DatePicker value={[dateToDateValue(shelterDate.toDate())]}
+                    onValueChange={(d) => setShelterDate(dateValueToTimestamp(d.value[0])) }
+                >
+                    Sheltered date
+                </DatePicker>
+                <Field.ErrorText />
+            </Field.Root>
 
             <Spacer h={4} />
 
             <Field.Root>
-                    <DogGenderSelection value={[gender]} defaultValue={[]} onValueChanged={handleGenderValueChange}>
-                        Gender
-                    </DogGenderSelection>
-                    <Field.ErrorText />
-                </Field.Root>
+                <SwitchRoot onCheckedChange={t => setAdoptionDateValid(t.checked)}>
+                    <SwitchHiddenInput />
+                    <SwitchControl />
+                    <SwitchLabel>Was adopted</SwitchLabel>
+                </SwitchRoot>
+
+                <DatePicker value={[dateToDateValue(adoptionDate.toDate())]}
+                    onValueChange={(d) => setAdoptionDate(dateValueToTimestamp(d.value[0])) }
+                    {...(adoptionDateValid ? {} : {"disabled": true})}
+                >
+                    Adoption date
+                </DatePicker>
+                <Field.ErrorText />
+            </Field.Root>
+
+            <Spacer h={4} />
+            {
+            /*
+            <Field.Root>
+                <DogSizeSelection value={[size]} onValueChanged={handleSizeValueChange}>
+                    Size
+                </DogSizeSelection>
+                <Field.ErrorText />
+            </Field.Root>
 
             <Spacer h={4} />
 
-                <Button type="submit" w="100%">Submit</Button>
-            </form>
+            <Field.Root>
+                <DogGenderSelection value={[gender]} onValueChanged={handleGenderValueChange}>
+                    Gender
+                </DogGenderSelection>
+                <Field.ErrorText />
+            </Field.Root>
+            */
+            }
+
+            <Button type="submit">
+                Submit
+            </Button>
+        </form>
     )
 }
