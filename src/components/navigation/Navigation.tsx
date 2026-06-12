@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 
-import { Spacer, VStack } from "@chakra-ui/react"
+import { Spacer, Text, VStack } from "@chakra-ui/react"
 import { FaMagnifyingGlass, FaPaw, FaRegCalendar, FaRegUser, FaUsers } from "react-icons/fa6"
 
 import NavigationLink from "@components/navigation/NavigationLink"
@@ -47,16 +47,18 @@ export default function Navigation() {
 
             <Spacer />
 
+            <Text fontVariant="all-petite-caps">Admin</Text>
+            
             <ButtonLink onClick={handleNewDogClick} disabled={!volunteer || role != VolunteerRoleEnum.Admin}>
-                <FaPaw /> New dog [Admin]
+                <FaPaw /> New dog
             </ButtonLink>
 
             <RouterNavigationLink target="/admin/users" disabled={!volunteer || role != VolunteerRoleEnum.Admin}>
-                <FaUsers /> Users [Admin]
+                <FaUsers /> Users
             </RouterNavigationLink>
 
             <RouterNavigationLink target="/admin/appointments" disabled={!volunteer || role != VolunteerRoleEnum.Admin}>
-                <FaRegCalendar /> Visits [Admin]
+                <FaRegCalendar /> Visits
             </RouterNavigationLink>
 
             <Spacer />
