@@ -55,15 +55,16 @@ export default function AppointmentCard({ appointment, editable, onEdit, confirm
             <Card.Body gap={0} p={4}>
                 <Card.Description as="div">
                     <Flex direction="row" w="100%">
-                        <Image w={16} h={16} borderRadius={16}
-                            src="https://images.dog.ceo/breeds/shiba/shiba-15.jpg"
-                        />
-                        
-                        <Flex direction="column" w="100%" mx={2} my="auto">
-                            <Text fontSize="md" fontWeight="bold">{dog?.name}</Text>
-                            <Text fontSize="xs" mt={-1}>{dog && getBreedTitle(dog.breed)}</Text>
+                        {
+                            dog &&
+                                <Image w={16} h={16} borderRadius={16} src={dog.imageURL ? dog.imageURL : "https://meredith.nhcrafts.org/wp-content/uploads/dog-placeholder.jpg" } />
+                        }
 
-                            <Flex direction="row" pt={.5}>
+                        <Flex direction="column" w="100%" mx={2}>
+                            <Text fontSize="md" fontWeight="bold" pt={1}>{dog?.name}</Text>
+                            <Text fontSize="xs" mt={-1}>{/*dog && getBreedTitle(dog.breed)*/}</Text>
+                            
+                            <Flex direction="row" pt={3}>
                                 <Icon size="sm" my="auto">
                                     <BiCalendar display="inline-block"/>
                                 </Icon>
@@ -87,10 +88,10 @@ export default function AppointmentCard({ appointment, editable, onEdit, confirm
                                 (editable || confirmable || cancelable) &&
                                     <HStack justifyContent="end">
                                     { 
-                                        editable &&
-                                            <IconButton variant="subtle" onClick={handleEditAppointment}>
+                                        editable && ""
+                                            /*<IconButton variant="subtle" onClick={handleEditAppointment}>
                                                 <PiPencilBold />
-                                            </IconButton>
+                                            </IconButton>*/
                                     }
 
                                     {

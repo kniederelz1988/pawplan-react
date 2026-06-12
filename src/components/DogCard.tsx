@@ -11,7 +11,7 @@ import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks";
 import { useDialogueContext } from "@contexts/DialogueContext";
 import { DialogueTypeEnum } from "@models/enums/DialogueType";
 
-import { DogModel, getBreedTitle, getDogAge, getGenderTitle, getSizeTitle} from "@models/DogModel";
+import { DogModel, getDogAge, getGenderTitle, getSizeTitle} from "@models/DogModel";
 
 type DogCardProps = {
     dog: DogModel
@@ -60,10 +60,7 @@ export default function DogCard({ dog } : DogCardProps) {
         <Card.Root key={dog.id} overflow="hidden">
             <Card.Header p={0}>
                 <HStack height={210} 
-                    align="start"
-                    bgImage="url('https://images.dog.ceo/breeds/shiba/shiba-15.jpg')" 
-                    bgSize="cover"
-                    bgPos="center"
+                    align="start" bgImage={`url(${dog.imageURL ? dog.imageURL : 'https://meredith.nhcrafts.org/wp-content/uploads/dog-placeholder.jpg'})`} bgSize="cover" bgPos="center"
                     p={2}
                 >   
                     { 
@@ -90,10 +87,11 @@ export default function DogCard({ dog } : DogCardProps) {
                 </Card.Title>
                 <Card.Description as="div">
                     <HStack>
-                        {getBreedTitle(dog.breed)}
-                        <LuDot style={{ padding: 0, margin: -6 }}/>
+                        {/*getBreedTitle(dog.breed)*/}
+                        {/*<LuDot style={{ padding: 0, margin: -6 }}/>*/}
                         {getDogAge(dog)}
-                        <LuDot style={{ padding: 0, margin: -6 }}/>
+                        <Spacer />
+                        {/*<LuDot style={{ padding: 0, margin: -6 }}/>*/}
                         {getSizeTitle(dog.size)}
                     </HStack>
                 </Card.Description>

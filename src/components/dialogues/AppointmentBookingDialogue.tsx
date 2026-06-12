@@ -70,9 +70,9 @@ export default function AppointmentBookingDialogue({ open, onClose, data } : App
                     <Dialog.Content
                         bgImage={`
                             linear-gradient(
-                                rgba(255,255,255,0.7)
+                                rgba(255,255,255,0.6)
                             ),
-                            url('https://images.dog.ceo/breeds/shiba/shiba-15.jpg')
+                            url('${data?.dog?.imageURL ? data.dog.imageURL : "https://meredith.nhcrafts.org/wp-content/uploads/dog-placeholder.jpg"}')
                         `}
                         bgSize="cover"
                         bgPos="center"

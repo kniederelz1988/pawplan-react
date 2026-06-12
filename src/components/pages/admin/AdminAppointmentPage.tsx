@@ -1,24 +1,25 @@
-import { useCallback, useEffect } from "react"
+import { useCallback } from "react"
 
 import { Container, Flex, Heading, Text } from "@chakra-ui/react"
 
 import { useDialogueContext } from "@contexts/DialogueContext"
+import { createAppointmentEditDialogueData } from "@components/dialogues/AppointmentEditDialogue"
+import { createAppointmentCancelDialogueData } from "@components/dialogues/AppointmentCancelDialogue"
+import { DialogueTypeEnum } from "@models/enums/DialogueType"
+    
+import { DogModel } from "@models/DogModel"
 
+import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
 import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks"
 import { useAppointmentCollection, useAppointmentRepository } from "@hooks/AppointmentHooks"
 
 import { Appointment } from "@models/AppointmentModel"
-import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
 import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus"
 
 import { RepositoryDateCompareEnum } from "@repos/enums/RepositoryDate"
 
 import withTabs from "@components/hocs/withAppointmentCollection"
 import { AppointmentCategory, AppointmentCollection } from "@components/AppointmentCollection"
-import { DialogueTypeEnum } from "@models/enums/DialogueType"
-import { createAppointmentEditDialogueData } from "@components/dialogues/AppointmentEditDialogue"
-import { DogModel } from "@models/DogModel"
-import { createAppointmentCancelDialogueData } from "@components/dialogues/AppointmentCancelDialogue"
 
 const AppointmentTabs = withTabs(AppointmentCollection)
 
