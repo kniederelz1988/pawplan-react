@@ -1,12 +1,10 @@
 import { useCallback, useMemo } from "react"
-import { BiCalendar } from "react-icons/bi"
-import { CiClock1 } from "react-icons/ci"
-import { PiCheckBold, PiPencilBold, PiXBold } from "react-icons/pi"
+import { PiCalendar, PiCheckBold, PiClock, PiXBold } from "react-icons/pi"
 
 import { Card, Flex, HStack, Icon, IconButton, Image, Spacer, Text } from "@chakra-ui/react"
 
 import useDogsCollection from "@hooks/DogHooks"
-import { DogModel, getBreedTitle } from "@models/DogModel"
+import { DogModel } from "@models/DogModel"
 
 import { Appointment } from "@models/AppointmentModel"
 import AppointmentStateBadge from "@components/AppointmentStateBadge"
@@ -66,14 +64,14 @@ export default function AppointmentCard({ appointment, editable, onEdit, confirm
                             
                             <Flex direction="row" pt={3}>
                                 <Icon size="sm" my="auto">
-                                    <BiCalendar display="inline-block"/>
+                                    <PiCalendar display="inline-block"/>
                                 </Icon>
                                 <Text fontSize="xs" h="16px" ml={1}>
                                     {appointment.data.date.toDate().toLocaleDateString(navigator.language)}
                                 </Text>
 
                                 <Icon size="sm" ml={4}>
-                                    <CiClock1 display="inline-block" />
+                                    <PiClock display="inline-block" />
                                 </Icon>
                                 <Text fontSize="xs" h="16px" ml={1}>
                                     {appointment.data.date.toDate().toLocaleTimeString(navigator.language)}

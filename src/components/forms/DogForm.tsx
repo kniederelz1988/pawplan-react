@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Button, Field, Input, Spacer, SwitchControl, SwitchHiddenInput, SwitchLabel, SwitchRoot } from "@chakra-ui/react";
+import { Button, Field, HStack, Input, Spacer, SwitchControl, SwitchHiddenInput, SwitchLabel, SwitchRoot } from "@chakra-ui/react";
 
 import { DogModel } from "@models/DogModel";
 import { DogGender, DogGenderEnum } from "@models/enums/DogGender";
@@ -8,6 +8,8 @@ import { DogSize, DogSizeEnum } from "@models/enums/DogSize";
 import DatePicker from "@components/utils/DatePicker";
 
 import { dateToDateValue, dateValueToTimestamp } from "@helpers/TimeHelpers";
+import DogSizeSelection from "@components/utils/DogSizeSelection";
+import DogGenderSelection from "@components/utils/DogGenderSelection";
 
 type DogFormProps = {
     dog: DogModel,
@@ -56,7 +58,8 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
         dog.adoptionDateValid = adoptionDateValid
         dog.adoptionDate = adoptionDate
 
-        console.log(dog)
+        dog.gender = gender
+        dog.size = size
 
         onSubmit(dog)
     }
@@ -116,10 +119,9 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
             </Field.Root>
 
             <Spacer h={4} />
-            {
-            /*
+            
             <Field.Root>
-                <DogSizeSelection value={[size]} onValueChanged={handleSizeValueChange}>
+                <DogSizeSelection values={[size]} onValueChanged={handleSizeValueChange}>
                     Size
                 </DogSizeSelection>
                 <Field.ErrorText />
@@ -128,17 +130,20 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
             <Spacer h={4} />
 
             <Field.Root>
-                <DogGenderSelection value={[gender]} onValueChanged={handleGenderValueChange}>
+                <DogGenderSelection values={[gender]} onValueChanged={handleGenderValueChange}>
                     Gender
                 </DogGenderSelection>
                 <Field.ErrorText />
             </Field.Root>
-            */
-            }
 
-            <Button type="submit">
-                Submit
-            </Button>
+            <Spacer h={4} />
+            
+            <HStack>
+                <Spacer />
+            
+                <Button variant="outline" type="reset">Cancel</Button>
+                <Button type="submit">Submit</Button>
+            </HStack>
         </form>
     )
 }

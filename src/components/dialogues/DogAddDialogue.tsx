@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Button, CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react";
+import { CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react";
 
 import { useDogRepository } from "@hooks/DogHooks";
 import { DogModel } from "@models/DogModel";
@@ -12,8 +12,7 @@ import { DogSizeEnum } from "@models/enums/DogSize";
 export type DogAddDialogueData = {
     dog: DogModel
 }
-export function createDogAddDialogueData() 
-    : DogAddDialogueData {
+export function createDogAddDialogueData() : DogAddDialogueData {
     return {
         dog: {
             name: "",
@@ -69,14 +68,6 @@ export default function DogAddDialogue({ open, onClose, data } : DogAddDialogueP
                         <Dialog.Body>
                             <DogForm dog={data?.dog} onSubmit={handleConfirm} onReset={handleCancel}/>
                         </Dialog.Body>
-                        {/*
-                        <Dialog.Footer>
-                            <Button variant="outline" onClick={handleCancel}>Cancel</Button>
-                            <Dialog.ActionTrigger asChild>
-                                <Button onClick={handleConfirm}>Submit</Button>
-                            </Dialog.ActionTrigger>
-                        </Dialog.Footer>
-                        */}
                         <Dialog.CloseTrigger asChild>
                             <CloseButton />
                         </Dialog.CloseTrigger>

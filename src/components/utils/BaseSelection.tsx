@@ -1,45 +1,41 @@
-import { useCallback } from "react";
-import { Portal, Select, SelectRootProps, SelectValueChangeDetails } from "@chakra-ui/react";
+import { useCallback, useMemo } from "react";
+import { createListCollection, Portal, Select, SelectValueChangeDetails } from "@chakra-ui/react";
 
-type BaseSelectionProps<T> = {
+type BaseSelectionItems = {
+    label: string,
+    value: string
+}
+type BaseSelectionProps = {
+    items: BaseSelectionItems[]
     value: string[]
-    getLabelCallback: ((value: T) => string)
-    getValueCallback: ((value: T) => string)
-    onValueChanged: ((value: T[]) => void)
+    children: React.ReactNode | React.ReactNode[]
+    onValueChanged: ((value: string[]) => void)
 }
 
-export default function BaseSelection({ collection, value, getLabelCallback, getValueCallback, onValueChanged, ...props } 
-    : BaseSelectionProps<string> & Omit<SelectRootProps, "onValueChange">
+export default function BaseSelection({ items, value, children, onValueChanged } 
+    : BaseSelectionProps
 ) {
-    const onValueChangedCallback = useCallback(onValueChanged, [onValueChanged])
+    const collection = useMemo(() => createListCollection({ items: items.map(t => t)}), [items])
 
-    function handleValueChanged(changeDetails: SelectValueChangeDetails) {
-        console.log(changeDetails.value)
-        if (changeDetails.value.length != 1) {
-            onValueChangedCallback([])
-            return
-        }
-
-        const index = collection.items.findIndex(t => t === parseInt(changeDetails.value[0]))
-        console.log(index)
-        if (index == -1) {
-            onValueChangedCallback([])
-            return
-        }
-
-        onValueChangedCallback([collection.items[index]])
-    }
+    const handleValueChanged = useCallback((changeDetails: SelectValueChangeDetails) => {
+        onValueChanged(changeDetails.value)
+    }, [onValueChanged])
 
     return (
-        <Select.Root key={props.key} collection={collection} value={value} onValueChange={(e:any) => { console.log(e); handleValueChanged(e) }} mt="-6px">
+        <Select.Root collection={collection} value={value} onValueChange={handleValueChanged} mt="-6px">
             <Select.HiddenSelect />
             <Select.Label>
-                {props.children}
+                {children}
             </Select.Label>
             <Select.Control>
                 <Select.Trigger>
                     <Select.ValueText placeholder="Select size">
-                        {value.join(", ")}
+                        {
+                            value.map(v => {
+                                const t = collection.items.find(t => t.value == v)
+                                return t?.label
+                            })
+                        }
                     </Select.ValueText>
                 </Select.Trigger>
                 <Select.IndicatorGroup>
@@ -51,8 +47,8 @@ export default function BaseSelection({ collection, value, getLabelCallback, get
                     <Select.Content>
                     {
                         collection.items.map((t, i) => (
-                            <Select.Item key={i} item={t} >
-                                {getLabelCallback(t)}
+                            <Select.Item key={i} item={t.value}>
+                                {t.label}
                                 <Select.ItemIndicator />
                             </Select.Item>
                         ))
