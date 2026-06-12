@@ -3,11 +3,12 @@ import { useCallback } from 'react';
 
 type NavigationLinkProps = {
     children: React.ReactNode | React.ReactNode[] 
-    active: boolean,
+    active: boolean
+    disabled?: boolean
     onClick?: () => void
 }
 
-export default function NavigationLink({ children, active, onClick } : NavigationLinkProps)
+export default function NavigationLink({ children, active, disabled, onClick } : NavigationLinkProps)
 {
     const handleOnClick = useCallback((e: React.MouseEvent) => {
         if (!onClick)
@@ -31,6 +32,9 @@ export default function NavigationLink({ children, active, onClick } : Navigatio
 
             bgColor="Highlight"
             color="HighlightText"
+
+            cursor={disabled? "disabled": "pointer"}
+            opacity={disabled? 0.6 : 1}
         >
             {children}
         </Link>
