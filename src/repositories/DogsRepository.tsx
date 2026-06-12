@@ -1,6 +1,9 @@
 import { Firestore, collection, FirestoreDataConverter, onSnapshot, query, QueryDocumentSnapshot, where, documentId, addDoc, doc, updateDoc } from "firebase/firestore"
 import { database } from "@fb/config"
 import { DogModel } from "@models/DogModel";
+import { RepositoryOperationCallback } from "./utils/RepositoryOperationCallback";
+import { getRepositoryOperationErrorMessage, RepositoryOperationErrorEnum } from "./helpers/RepositoryOperationErrorMessages";
+import { RepositoryOperationStatusEnum } from "./enums/RepositoryOperationStatus";
 
 const dogConverter: FirestoreDataConverter<DogModel, DogModel> = {
     toFirestore: (data: DogModel) => data,
@@ -12,9 +15,9 @@ const dogConverter: FirestoreDataConverter<DogModel, DogModel> = {
 }
 
 type DogRepositoryListener = (dogs: DogModel[]) => void
-type DogOperationCallback = (dog: DogModel, error: string | null) => void
 
 function DogRepository({ database } : { database: Firestore }) {
+    const collectionName = "dogs"
 
     function subscribeForAllDogs(listener: DogRepositoryListener) {
         const q = query(
@@ -42,32 +45,40 @@ function DogRepository({ database } : { database: Firestore }) {
         })
     }
 
-    async function createDog(dog: DogModel, operationResult: DogOperationCallback) {
-        if (!dog?.id) {
-            operationResult(dog, "undefined-data")
+    async function createDog(dog: DogModel, operationCallback: RepositoryOperationCallback) {
+        if (dog.id) {
+            const e = getRepositoryOperationErrorMessage(RepositoryOperationErrorEnum.UndefinedData)
+            operationCallback(RepositoryOperationStatusEnum.Error, e)
             return
         }
             
-        const c = collection(database, "dogs")
-        await addDoc(c, dog)
-            .then(
-                _onSuccess => operationResult(dog, null),
-                onError => operationResult(dog, onError)
-            )
+        try {
+            await addDoc(collection(database, collectionName), dog)
+        } catch (error) {
+            const e = getRepositoryOperationErrorMessage(error)
+            operationCallback(RepositoryOperationStatusEnum.Error, e)
+            return;
+        }
+
+        operationCallback(RepositoryOperationStatusEnum.Success)
     }
-    async function updateDog(dog: DogModel, operationResult: DogOperationCallback) {
+    async function updateDog(dog: DogModel, operationCallback: RepositoryOperationCallback) {
         if (!dog?.id) {
-            operationResult(dog, "undefined-data")
+            const e = getRepositoryOperationErrorMessage(RepositoryOperationErrorEnum.UndefinedData)
+            operationCallback(RepositoryOperationStatusEnum.Error, e)
             return
         }
 
-        const c = collection(database, "dogs")
-        const d = doc(c, dog.id)
-        await updateDoc(d, dog)
-            .then(
-                _onSuccess => operationResult(dog, null),
-                onError => operationResult(dog, onError)
-            )
+        try {
+            const d = doc(collection(database, "dogs"), dog.id)
+            await updateDoc(d, dog)
+        } catch (error) {
+            const e = getRepositoryOperationErrorMessage(error)
+            operationCallback(RepositoryOperationStatusEnum.Error, e)
+            return;
+        }
+
+        operationCallback(RepositoryOperationStatusEnum.Success)
     }
 
     return { 

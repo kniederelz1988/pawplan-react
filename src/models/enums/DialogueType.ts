@@ -9,7 +9,8 @@ export const DialogueTypeEnum = {
     AppointmentCancel:  13,
     AppointmentComplete:14,
 
-    DogEdit:            21,
-    UserEdit:           22
+    DogAdd:             21,
+    DogEdit:            22,
+    UserEdit:           23
 } as const
 export type DialogueType = typeof DialogueTypeEnum[keyof typeof DialogueTypeEnum]

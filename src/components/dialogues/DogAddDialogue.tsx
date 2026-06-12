@@ -1,28 +1,48 @@
 import { useCallback } from "react";
-
 import { Button, CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react";
-import DogForm from "@components/forms/DogForm";
 
-import { DogModel } from "@models/DogModel";
 import { useDogRepository } from "@hooks/DogHooks";
+import { DogModel } from "@models/DogModel";
 
-export type DogEditDialogueData = {
+import DogForm from "@components/forms/DogForm";
+import { Timestamp } from "firebase/firestore";
+import { DogGenderEnum } from "@models/enums/DogGender";
+import { DogSizeEnum } from "@models/enums/DogSize";
+
+export type DogAddDialogueData = {
     dog: DogModel
 }
-type DogEditDialogueProps = { 
-    open: boolean, 
-    onClose: () => void,
-    data: DogEditDialogueData
+export function createDogAddDialogueData() 
+    : DogAddDialogueData {
+    return {
+        dog: {
+            name: "",
+            birthday: Timestamp.now(),
+            shelterDate: Timestamp.now(),
+            adoptionDateValid: false,
+            adoptionDate: Timestamp.now(),
+            breed: "",
+            gender: DogGenderEnum.Female,
+            size: DogSizeEnum.Small,
+            imageURL: ""
+        }
+    }
 }
 
-export default function DogEditDialogue({ open, onClose, data } : DogEditDialogueProps) {
-    const { updateDog }= useDogRepository()
+type DogAddDialogueProps = { 
+    open: boolean, 
+    onClose: () => void,
+    data: DogAddDialogueData
+}
+
+export default function DogAddDialogue({ open, onClose, data } : DogAddDialogueProps) {
+    const { createDog } = useDogRepository()
 
     const handleConfirm = useCallback(() => {
         if (!data?.dog)
             return
 
-        updateDog(data.dog)
+        createDog(data.dog)
         onClose()
     }, [data, onClose]);
     const handleCancel = useCallback(() => {
@@ -43,11 +63,11 @@ export default function DogEditDialogue({ open, onClose, data } : DogEditDialogu
                     <Dialog.Content>
                         <Dialog.Header p="14px">
                             <Dialog.Title>
-                                Edit dog
+                                Add dog
                             </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
-                            <DogForm dog={data?.dog} onSubmit={handleConfirm} onReset={handleCancel} />
+                            <DogForm dog={data?.dog} onSubmit={handleConfirm} onReset={handleCancel}/>
                         </Dialog.Body>
                         {/*
                         <Dialog.Footer>

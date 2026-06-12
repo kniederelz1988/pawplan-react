@@ -5,8 +5,6 @@ import { CalendarDateTime } from "@internationalized/date";
 
 import { CloseButton, Dialog, DialogOpenChangeDetails, Portal, Text } from "@chakra-ui/react"
 
-import { toaster } from "@components/ui/toaster"
-
 import { useVolunteer } from "@hooks/VolunteerHooks";
 
 import AppointmentBookingDialogueForm from "@components/forms/AppointmentBookingDialogueForm"

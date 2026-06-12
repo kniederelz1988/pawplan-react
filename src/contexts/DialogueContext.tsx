@@ -10,6 +10,7 @@ import AppointmentEditDialogue, { AppointmentEditDialogueData } from "@component
 import DogEditDialogue, { DogEditDialogueData } from "@components/dialogues/DogEditDialogue"
 import VolunteerEditDialogue, { VolunteerEditDialogueData } from "@components/dialogues/VolunteerEditDialogue"
 import AppointmentCompleteDialogue, { AppointmentCompleteDialogueData } from "@components/dialogues/AppointmentCompleteDialogue"
+import DogAddDialogue, { DogAddDialogueData } from "@components/dialogues/DogAddDialogue"
 
 type DialogueContextData = {
     openDialogue: (type: DialogueType, data?: any) => void
@@ -54,6 +55,10 @@ export function DialogueProvider({ children } : DialogueProviderProps ) {
             return
         }
 
+        if (type == DialogueTypeEnum.DogAdd && (data as DogAddDialogueData) == null) {
+            return
+        }
+
         if (type == DialogueTypeEnum.DogEdit && (data as DogEditDialogueData) == null) {
             return
         }
@@ -89,6 +94,9 @@ export function DialogueProvider({ children } : DialogueProviderProps ) {
                 data={dialogueData as AppointmentCompleteDialogueData}
             />
             
+            <DogAddDialogue open={dialogueType == DialogueTypeEnum.DogAdd} onClose={onCloseDialogue}
+                data={dialogueData as DogAddDialogueData}
+            />
             <DogEditDialogue open={dialogueType == DialogueTypeEnum.DogEdit} onClose={onCloseDialogue}
                 data={dialogueData as DogEditDialogueData}
             />

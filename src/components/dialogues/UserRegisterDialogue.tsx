@@ -1,6 +1,7 @@
 import { CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react";
-import UserRegisterForm from "@components/forms/UserRegisterForm";
+
 import { useCallback } from "react";
+import UserRegisterForm from "@components/forms/UserRegisterForm";
 
 type UserRegisterDialogueProps = { 
     open: boolean, 

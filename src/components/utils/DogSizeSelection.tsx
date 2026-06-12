@@ -1,29 +1,44 @@
 import { useCallback } from "react";
 import { createListCollection, SelectRootProps } from "@chakra-ui/react";
+
 import BaseSelection from "@components/utils/BaseSelection";
+
 import { AllDogSizes, DogSize } from "@models/enums/DogSize";
 import { getSizeTitle } from "@models/DogModel";
 
-export default function DogSizeSelection({ value, onValueChanged, ...props } : {
-        value: DogSize[],
-        defaultValue: DogSize[],
-        onValueChanged: ((value: DogSize[]) => void)
-    } & Omit<SelectRootProps, "collection"|"value"|"defaultValue"|"onValueChange">) 
+type DogSizeSelectionProps = {
+    value: DogSize[],
+    onValueChanged: ((value: DogSize[]) => void)
+}
+
+export default function DogSizeSelection({ value, onValueChanged, ...props } 
+    : DogSizeSelectionProps & Omit<SelectRootProps, "collection" | "value" | "onValueChange">
+) 
 {
-    const onValueChangedCallback = useCallback(onValueChanged, [onValueChanged])
+    const sizeCollection = createListCollection({ items: AllDogSizes.map(t => t.toString() ) })
 
-    const sizeCollection = createListCollection({ items: AllDogSizes })
+    const onValueChangedCallback = useCallback((value: string[]) => {
+        const t = value.map( t => AllDogSizes[parseInt(t)])
+        onValueChanged(t)
+    }, [onValueChanged])
 
-    function getLabelTitle(value: DogSize) {
-        return getSizeTitle(value)
-    }
+    const getLabel = useCallback((value: string) => {
+        const i = parseInt(value)
+        return getSizeTitle(AllDogSizes[i])
+    }, [])
+    const getValue = useCallback((value: string) => {
+        const i = parseInt(value)
+        return AllDogSizes[i].toString()
+    }, [])
 
     return (
-        <BaseSelection<DogSize>
+        <BaseSelection
             collection={sizeCollection}
-            value={value} 
+            value={value.map(t => t.toString())}
             onValueChanged={onValueChangedCallback} 
-            getLabel={getLabelTitle}
+            getLabelCallback={getLabel}
+            getValueCallback={getValue}
+            
             {...props} 
         />
     )
