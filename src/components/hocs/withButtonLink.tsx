@@ -4,12 +4,13 @@ import { Button } from "@chakra-ui/react";
 
 type Props = {
     children: React.ReactNode | React.ReactNode[]
-    disabled?: boolean,
+    disabled?: boolean
     onClick?: () => void
 }
 type CompontentProps = {
     children: React.ReactNode | React.ReactNode[]
-    active: boolean,
+    active: boolean
+    disabled?: boolean
     onClick?: () => void
 }
 
@@ -17,7 +18,7 @@ export default function withButtonLink(Component : React.ComponentType<Componten
     return ({ children, disabled, onClick } : Props) => {
         if (disabled) {
             return (
-                <Component active={false}>
+                <Component active={false} disabled={true}>
                     {children}
                 </Component>
             )
@@ -25,7 +26,7 @@ export default function withButtonLink(Component : React.ComponentType<Componten
 
         return (
             <Button asChild>
-                <Component active={false} onClick={onClick}>
+                <Component active={false} disabled={false} onClick={onClick}>
                     {children}
                 </Component>
             </Button>

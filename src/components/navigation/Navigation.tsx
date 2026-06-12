@@ -47,7 +47,7 @@ export default function Navigation() {
 
             <Spacer />
 
-            <ButtonLink onClick={handleNewDogClick}>
+            <ButtonLink onClick={handleNewDogClick} disabled={!volunteer || role != VolunteerRoleEnum.Admin}>
                 <FaPaw /> New dog [Admin]
             </ButtonLink>
 

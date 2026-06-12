@@ -9,13 +9,14 @@ type Props = {
 type CompontentProps = {
     children: React.ReactNode | React.ReactNode[]
     active: boolean
+    disabled?: boolean
 }
 
 export default function withRouterLink(Component : React.ComponentType<CompontentProps>) {
     return ({ children, disabled, target } : Props) => {
         if (disabled) {
             return (
-                <Component active={false}>
+                <Component active={false} disabled={true}>
                     {children}
                 </Component>
             )
@@ -24,7 +25,7 @@ export default function withRouterLink(Component : React.ComponentType<Componten
         return (
             <ReactRouterLink to={target}>
                 {({isActive}) => (
-                    <Component active={isActive}>
+                    <Component active={isActive} disabled={false}>
                         {children}
                     </Component>
                 )}
