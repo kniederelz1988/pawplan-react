@@ -19,7 +19,7 @@ export default function NavigationLink({ children, active, disabled, onClick } :
     }, [onClick])
 
     return (
-        <Link onClick={handleOnClick}
+        <Link onClick={handleOnClick} as="span"
             width="100%"
 
             fontSize={"sm"}

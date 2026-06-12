@@ -15,10 +15,10 @@ export function useAppointmentRepository() {
         appointmentRepository.createAppointment(appointment, appointmentState, (state, result) => {
             switch (state) {
                 case RepositoryOperationStatusEnum.Success:
-                    console.log(state, result)
+                    
                     return;
                 case RepositoryOperationStatusEnum.Error:
-                    console.error(state, result)
+                    
                     return;
             }
         })
@@ -28,10 +28,10 @@ export function useAppointmentRepository() {
         appointmentRepository.updateAppointment(appointment.data, (state, result) => {
             switch (state) {
                 case RepositoryOperationStatusEnum.Success:
-                    console.log(state, result)
+                    
                     return;
                 case RepositoryOperationStatusEnum.Error:
-                    console.error(state, result)
+                    
                     return;
             }
         })
@@ -50,10 +50,10 @@ export function useAppointmentRepository() {
         appointmentRepository.deleteAppointment(appointment.data, (state, result) => {
             switch (state) {
                 case RepositoryOperationStatusEnum.Success:
-                    console.log(state, result)
+                    
                     return;
                 case RepositoryOperationStatusEnum.Error:
-                    console.error(state, result)
+                    
                     return;
             }
         })

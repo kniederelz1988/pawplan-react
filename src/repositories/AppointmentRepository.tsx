@@ -52,7 +52,6 @@ function AppointmentRepository({ database } : { database: Firestore }) {
     function subscribeForAllAppointments(date: RepositoryDateCompare, queryCursor: AppointmentModel | null, queryLimit: number, listener: AppointmentsListener) {
         const q = createAppointmentQuery(date, queryCursor, queryLimit)
         return onSnapshot(q, (snap) => {
-            console.log("TRE", snap.empty)
             const data = snap.docs.map(t => t.data())
             listener(data)
         })

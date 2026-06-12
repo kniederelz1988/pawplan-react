@@ -35,12 +35,9 @@ export function AppointmentCollection({ collection, pageControls, createCategori
     return (<>
         <Flex direction={"column"} gap={4}>
         {
-            categories.map(c => 
-                <Container p={0}>
-                    {
-                        c.title && 
-                            <Text fontVariant="all-petite-caps">{c.title}</Text>
-                    }
+            categories.map((c, i) => 
+                <Container key={c.title+i} p={0}>
+                    {c.title && <Text fontVariant="all-petite-caps">{c.title}</Text>}
                     <Flex flexDirection="column" maxW="100%" gap={2} mt={2}>
                         {c.appointments.map(t => 
                             <AppointmentCard appointment={t} 
