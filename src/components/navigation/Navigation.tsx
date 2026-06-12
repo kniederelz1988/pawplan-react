@@ -8,7 +8,6 @@ import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
 import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks"
 
 export default function Navigation() {
-    const user = useAuthContext()
     const { volunteer } = useVolunteer()
     const { role } = useVolunteerRole(volunteer)
 
@@ -17,10 +16,10 @@ export default function Navigation() {
             <NavigationLink target="/">
                 <FaMagnifyingGlass /> Discover
             </NavigationLink>
-            <NavigationLink target="/userAppointments" disabled={!user}>
+            <NavigationLink target="/userAppointments" disabled={!volunteer || role == VolunteerRoleEnum.Observer}>
                 <FaRegCalendar /> Visits
             </NavigationLink>
-            <NavigationLink target="/userProfile" disabled={!user}>
+            <NavigationLink target="/userProfile" disabled={!volunteer || role == VolunteerRoleEnum.Observer}>
                 <FaRegUser />Profile
             </NavigationLink>
 
