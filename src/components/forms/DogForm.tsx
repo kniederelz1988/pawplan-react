@@ -80,25 +80,27 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
 
             <Spacer h={2} />
 
-            <Field.Root>
-                <DatePicker value={[dateToDateValue(birthday.toDate())]}
-                    onValueChange={(d) => setBirthday(dateValueToTimestamp(d.value[0])) }
-                >
-                    Birthday
-                </DatePicker>
-                <Field.ErrorText />
-            </Field.Root>
+            <HStack>
+                <Field.Root>
+                    <DatePicker value={[dateToDateValue(birthday.toDate())]}
+                        onValueChange={(d) => setBirthday(dateValueToTimestamp(d.value[0])) }
+                    >
+                        Birthday
+                    </DatePicker>
+                    <Field.ErrorText />
+                </Field.Root>
 
-            <Spacer h={4} />
+                <Spacer h={4} />
 
-            <Field.Root>
-                <DatePicker value={[dateToDateValue(shelterDate.toDate())]}
-                    onValueChange={(d) => setShelterDate(dateValueToTimestamp(d.value[0])) }
-                >
-                    Sheltered date
-                </DatePicker>
-                <Field.ErrorText />
-            </Field.Root>
+                <Field.Root>
+                    <DatePicker value={[dateToDateValue(shelterDate.toDate())]}
+                        onValueChange={(d) => setShelterDate(dateValueToTimestamp(d.value[0])) }
+                    >
+                        Sheltered date
+                    </DatePicker>
+                    <Field.ErrorText />
+                </Field.Root>
+            </HStack>
 
             <Spacer h={4} />
 
@@ -120,21 +122,23 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
 
             <Spacer h={4} />
             
-            <Field.Root>
-                <DogSizeSelection values={[size]} onValueChanged={handleSizeValueChange}>
-                    Size
-                </DogSizeSelection>
-                <Field.ErrorText />
-            </Field.Root>
+            <HStack>
+                <Field.Root>
+                    <DogSizeSelection values={[size]} onValueChanged={handleSizeValueChange}>
+                        Size
+                    </DogSizeSelection>
+                    <Field.ErrorText />
+                </Field.Root>
 
-            <Spacer h={4} />
+                <Spacer h={4} />
 
-            <Field.Root>
-                <DogGenderSelection values={[gender]} onValueChanged={handleGenderValueChange}>
-                    Gender
-                </DogGenderSelection>
-                <Field.ErrorText />
-            </Field.Root>
+                <Field.Root>
+                    <DogGenderSelection values={[gender]} onValueChanged={handleGenderValueChange}>
+                        Gender
+                    </DogGenderSelection>
+                    <Field.ErrorText />
+                </Field.Root>
+            </HStack>
 
             <Spacer h={4} />
             
@@ -142,7 +146,7 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
                 <Spacer />
             
                 <Button variant="outline" type="reset">Cancel</Button>
-                <Button type="submit">Submit</Button>
+                <Button type="submit">Confirm</Button>
             </HStack>
         </form>
     )

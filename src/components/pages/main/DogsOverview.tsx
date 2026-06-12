@@ -1,6 +1,6 @@
 import { Heading, Grid, Flex, Text } from "@chakra-ui/react";
 
-import DogCard from "@components/DogCard";
+import DogAppointmentCard from "@components/DogAppointmentCard";
 import DogFilter from "@components/utils/DogFilter";
 import useDogsCollection from "@hooks/DogHooks";
 
@@ -19,7 +19,7 @@ export default function DogsOverview() {
             <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)"}} gap={4}>
             { 
                 dogs.map(t =>
-                    <DogCard key={t.id} dog={t} />
+                    <DogAppointmentCard key={t.id} dog={t} />
                 )
             }
             </Grid>

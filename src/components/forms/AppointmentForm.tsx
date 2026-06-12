@@ -32,13 +32,13 @@ function TimeDisplay({ time } : TimeProps) {
     )
 }
 
-type AppointmentBookingDialogueFormProps = {
+type AppointmentFormProps = {
     dog: DogModel,
     onConfirm: (dog: DogModel, datetime: CalendarDateTime) => void,
     onClose: () => void
 }
 
-export default function AppointmentBookingDialogueForm({ dog, onConfirm, onClose } : AppointmentBookingDialogueFormProps) {
+export default function AppointmentForm({ dog, onConfirm, onClose } : AppointmentFormProps) {
     const [date, setDate] = useState<CalendarDate>()
     const [time, setTime] = useState<Time>()
     
@@ -122,7 +122,7 @@ export default function AppointmentBookingDialogueForm({ dog, onConfirm, onClose
                 </Grid>
             </RadioCard.Root>
 
-            <Spacer h={4}/>
+            <Spacer h={4} />
 
             <RadioCard.Root name="time" onValueChange={onTimeChanged}>
                 <RadioCard.Label>Choose a time</RadioCard.Label>
@@ -138,9 +138,13 @@ export default function AppointmentBookingDialogueForm({ dog, onConfirm, onClose
                 </Grid>
             </RadioCard.Root>
             
-            <Spacer h={8} />
+            <Spacer h={4} />
 
-            <Button type="submit" w="100%">Confirm visit</Button>
+            <HStack>
+                <Spacer />
+            
+                <Button type="submit">Confirm</Button>
+            </HStack>
         </form>
     )
 }

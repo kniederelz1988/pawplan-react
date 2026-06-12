@@ -3,11 +3,11 @@ import { Timestamp } from "firebase/firestore";
 
 import { CalendarDateTime } from "@internationalized/date";
 
-import { CloseButton, Dialog, DialogOpenChangeDetails, Portal, Text } from "@chakra-ui/react"
+import { CloseButton, Dialog, DialogOpenChangeDetails, Grid, GridItem, Heading, Portal, Text } from "@chakra-ui/react"
 
 import { useVolunteer } from "@hooks/VolunteerHooks";
 
-import AppointmentBookingDialogueForm from "@components/forms/AppointmentBookingDialogueForm"
+import AppointmentForm from "@components/forms/AppointmentForm"
 
 import { DogModel } from "@models/DogModel"
 import { dateValueToTimestamp } from "@helpers/TimeHelpers";
@@ -17,6 +17,7 @@ import { AppointmentModel, AppointmentStatusModel } from "@models/AppointmentMod
 import { AppointmentTypeEnum } from "@models/enums/AppointmentType";
 import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus";
 import { useAppointmentRepository } from "@hooks/AppointmentHooks";
+import DogCard from "@components/DogCard";
 
 
 export type AppointmentBookingDialogueData = {
@@ -61,34 +62,22 @@ export default function AppointmentBookingDialogue({ open, onClose, data } : App
     }, [onClose])
 
     return (
-        <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>
+        <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange} size={"xl"}>
             <Portal>
                 <Dialog.Backdrop onClick={onClose}/>
                 <Dialog.Positioner>
-                    <Dialog.Content
-                        bgImage={`
-                            linear-gradient(
-                                rgba(255,255,255,0.6)
-                            ),
-                            url('${data?.dog?.imageURL ? data.dog.imageURL : "https://meredith.nhcrafts.org/wp-content/uploads/dog-placeholder.jpg"}')
-                        `}
-                        bgSize="cover"
-                        bgPos="center"
-                        bgRepeat="no-repeat"
-                    >
-                        <Dialog.Header p="14px">
-                            <Dialog.Title>
-                                {  
-                                    data?.dog && 
-                                        <Text>Visit with {data.dog.name}</Text> 
-                                }
-                            </Dialog.Title>
-                        </Dialog.Header>
-                        <Dialog.Body>
-                            { 
-                                data?.dog &&
-                                    <AppointmentBookingDialogueForm dog={data?.dog} onConfirm={handleConfirm} onClose={onClose}/>
-                            }
+                    <Dialog.Content>
+                        <Dialog.Body p={8}>
+                            <Grid templateColumns="repeat(5, 1fr)" gap={6}>
+                                <GridItem colSpan={2} alignContent={"center"}>
+                                    { data?.dog && <DogCard dog={data.dog} /> }
+                                </GridItem>
+
+                                <GridItem colSpan={3} alignContent={"center"}>
+                                    <Heading pb={2}>Your appointment</Heading>
+                                    { data?.dog && <AppointmentForm dog={data.dog} onConfirm={handleConfirm} onClose={onClose}/> }
+                                </GridItem>
+                            </Grid>
                         </Dialog.Body>
                         <Dialog.CloseTrigger asChild>
                             <CloseButton />
