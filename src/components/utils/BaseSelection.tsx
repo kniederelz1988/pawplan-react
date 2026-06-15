@@ -22,7 +22,10 @@ export default function BaseSelection({ items, value, children, onValueChanged }
     }, [onValueChanged])
 
     return (
-        <Select.Root collection={collection} value={value} onValueChange={handleValueChanged} mt="-6px">
+        <Select.Root collection={collection} 
+            value={value} 
+            onValueChange={handleValueChanged} 
+            mt="-6px">
             <Select.HiddenSelect />
             <Select.Label>
                 {children}

@@ -22,7 +22,10 @@ export default function DogSizeSelection({ values, children, onValueChanged } : 
     }, [onValueChanged])
 
     return (
-        <BaseSelection items={sizeItems} value={values.map(t => t.toString())} onValueChanged={onValueChangedCallback}>
+        <BaseSelection items={sizeItems} 
+            value={values.map(t => t.toString())}
+            onValueChanged={onValueChangedCallback}
+        >
             {children}
         </BaseSelection>
     )
