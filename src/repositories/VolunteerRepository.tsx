@@ -38,7 +38,10 @@ function VolunteerRepository({ database } : { database: Firestore }) {
 
         return onSnapshot(q, (snap) => {
             if (snap.empty)
+            {
+                listener([])
                 return
+            }
 
             listener([snap.docs[0].data()])
         })
@@ -165,7 +168,7 @@ function VolunteerRepository({ database } : { database: Firestore }) {
     
     async function createVolunteerIfNonExistant(user: User, name: string, operationCallback: RepositoryOperationCallback) {
         const unsubcribe = subscribeForVolunteer(user.uid, (result) => {
-            if (!result?.length) {
+            if (result?.length) {
                 const volunteer = result[0]
                 volunteer.name = name
 
@@ -176,7 +179,6 @@ function VolunteerRepository({ database } : { database: Firestore }) {
             
             const volunteer = { 
                 userId: user.uid,
-                role: VolunteerRoleEnum.Observer,
                 birthday: Timestamp.now(),
                 volunteerSince: Timestamp.now(),
                 name: name,

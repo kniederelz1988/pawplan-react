@@ -41,7 +41,7 @@ export default function Navigation() {
             <RouterNavigationLink target="/userAppointments" disabled={!volunteer || role == VolunteerRoleEnum.Observer}>
                 <FaRegCalendar /> Visits
             </RouterNavigationLink>
-            <RouterNavigationLink target="/userProfile" disabled={!volunteer || role == VolunteerRoleEnum.Observer}>
+            <RouterNavigationLink target="/userProfile" disabled={!volunteer}>
                 <FaRegUser />Profile
             </RouterNavigationLink>
 
