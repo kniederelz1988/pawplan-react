@@ -6,31 +6,9 @@ import { getDateFromToday } from "@helpers/TimeHelpers";
 import { CalendarDate, CalendarDateTime, getLocalTimeZone, Time } from "@internationalized/date";
 
 import { DogModel } from "@models/DogModel";
+import TimeDisplay from "@components/TimeDisplay";
+import DayDisplay from "@components/DayDisplay";
 
-type DayProps = {
-    date: Date
-}
-
-function DayDisplay({ date } : DayProps) {
-    return (
-        <VStack m="auto" gap="0">
-            <Text fontSize="xs">{date.toLocaleDateString(navigator.language, { weekday: "short" })}</Text>
-            <Text fontSize="sm" fontWeight="bold">{date.getDate()}</Text>
-        </VStack>
-    )
-}
-
-type TimeProps = {
-    time: Time
-}
-
-function TimeDisplay({ time } : TimeProps) {
-    return (
-        <HStack m="auto" gap={1}>
-            <Text fontSize="xs" fontWeight="bold">{time.hour}:{time.minute.toString().padStart(2, '0')}</Text>
-        </HStack>
-    )
-}
 
 type AppointmentFormProps = {
     dog: DogModel,
@@ -143,7 +121,7 @@ export default function AppointmentForm({ dog, onConfirm, onClose } : Appointmen
             <HStack>
                 <Spacer />
             
-                <Button type="submit">Confirm</Button>
+                <Button type="submit" disabled={!time || !date}>Confirm</Button>
             </HStack>
         </form>
     )

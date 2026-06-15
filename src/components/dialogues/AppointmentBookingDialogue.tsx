@@ -3,7 +3,7 @@ import { Timestamp } from "firebase/firestore";
 
 import { CalendarDateTime } from "@internationalized/date";
 
-import { CloseButton, Dialog, DialogOpenChangeDetails, Grid, GridItem, Heading, Portal, Text } from "@chakra-ui/react"
+import { CloseButton, Dialog, DialogOpenChangeDetails, Grid, GridItem, Heading, Portal } from "@chakra-ui/react"
 
 import { useVolunteer } from "@hooks/VolunteerHooks";
 
@@ -67,7 +67,7 @@ export default function AppointmentBookingDialogue({ open, onClose, data } : App
                 <Dialog.Backdrop onClick={onClose}/>
                 <Dialog.Positioner>
                     <Dialog.Content>
-                        <Dialog.Body p={8}>
+                        <Dialog.Body p={8} mx={4} my={8}>
                             <Grid templateColumns="repeat(5, 1fr)" gap={6}>
                                 <GridItem colSpan={2} alignContent={"center"}>
                                     { data?.dog && <DogCard dog={data.dog} /> }
