@@ -17,6 +17,7 @@ export default function useCreateUser() {
 
         try {
             const cred = await createUserWithEmailAndPassword(auth, email, password)
+            console.log("DD")
             await updateProfile(cred.user, { displayName: name })
 
             createVolunteer(cred.user, name)

@@ -6,7 +6,7 @@ export default function DatePicker({ children, ...props }: DatePickerRootProps) 
 
     return (
         <DatePickerRoot {...props} locale={locale}>
-            <DatePickerLabel>{children}</DatePickerLabel>
+            { children && <DatePickerLabel>{children}</DatePickerLabel> }
             <DatePickerControl>
                 <DatePickerInput />
                 <DatePickerIndicatorGroup>

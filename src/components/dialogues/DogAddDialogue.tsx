@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { CloseButton, Dialog, DialogOpenChangeDetails, Grid, GridItem, Heading, Portal } from "@chakra-ui/react";
+import { CloseButton, Dialog, DialogOpenChangeDetails, Grid, GridItem, Portal } from "@chakra-ui/react";
 
 import { useDogRepository } from "@hooks/DogHooks";
 import { DogModel } from "@models/DogModel";

@@ -4,6 +4,9 @@ import { database } from "@fb/config"
 import { VolunteerDogLikeModel } from "@models/VolunteerLikeModel";
 import { VolunteerModel } from "@models/VolunteerModel";
 import { DogModel } from "@models/DogModel";
+import { RepositoryOperationCallback } from "./utils/RepositoryOperationCallback";
+import { getRepositoryOperationErrorMessage } from "./helpers/RepositoryOperationErrorMessages";
+import { RepositoryOperationStatusEnum } from "./enums/RepositoryOperationStatus";
 
 const modelConverter: FirestoreDataConverter<VolunteerDogLikeModel, VolunteerDogLikeModel> = {
     toFirestore: (data: VolunteerDogLikeModel) => data,
@@ -26,30 +29,46 @@ function VolunteerDogLikesRepository({ database } : { database: Firestore }) {
         return onSnapshot(q, (snap) => listener(snap.docs.map(t => t.data())))
     }
 
-    async function addLike(volunteer: VolunteerModel, dog: DogModel) {
+    async function addLike(volunteer: VolunteerModel, dog: DogModel, operationCallback: RepositoryOperationCallback) {
         if (!volunteer?.id || !dog?.id)
             return
 
-        const likesCollection = collection(database, collectionName)
-        await addDoc(likesCollection, {
-            volunteerId: volunteer.id,
-            dogId: dog.id
-        })
+        try {
+            await addDoc(collection(database, collectionName), {
+                volunteerId: volunteer.id,
+                dogId: dog.id
+            })
+        } catch (error) {
+            const e = getRepositoryOperationErrorMessage(error)
+            operationCallback(RepositoryOperationStatusEnum.Error, e)
+            return;
+        }
+
+        operationCallback(RepositoryOperationStatusEnum.Success)
     }
-    async function removeLike(volunteer: VolunteerModel, dog: DogModel) {
+    async function removeLike(volunteer: VolunteerModel, dog: DogModel, operationCallback: RepositoryOperationCallback) {
         if (!volunteer?.id || !dog?.id)
             return
 
-        const q = query(
-            collection(database, collectionName),
-            where("volunteerId", "==", volunteer.id),
-            where("dogId", "==", dog.id)
-        )
+        try {
+            const q = query(
+                collection(database, collectionName),
+                where("volunteerId", "==", volunteer.id),
+                where("dogId", "==", dog.id)
+            )
 
-        const snap = await getDocs(q)
+            const snap = await getDocs(q)
+            if (!snap.empty) {
+                const deletePromises = snap.docs.map((t) => deleteDoc(doc(database, collectionName, t.id)))
+                await Promise.all(deletePromises)
+            }
+        } catch (error) {
+            const e = getRepositoryOperationErrorMessage(error)
+            operationCallback(RepositoryOperationStatusEnum.Error, e)
+            return
+        }
 
-        const deletePromises = snap.docs.map((t) => deleteDoc(doc(database, collectionName, t.id)))
-        await Promise.all(deletePromises)
+        operationCallback(RepositoryOperationStatusEnum.Success)
     }
 
     return { subscribeForVolunteerLikes, addLike, removeLike }

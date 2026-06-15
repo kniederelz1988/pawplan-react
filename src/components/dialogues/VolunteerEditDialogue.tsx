@@ -1,14 +1,11 @@
 import { useCallback } from "react";
-import { CloseButton, Dialog, DialogOpenChangeDetails, HStack, Portal, Spacer, Text } from "@chakra-ui/react";
-
-import { toaster } from "@components/ui/toaster";
+import { CloseButton, Dialog, DialogOpenChangeDetails, HStack, Portal, Spacer } from "@chakra-ui/react";
 
 import { VolunteerModel } from "@models/VolunteerModel";
-import volunteerRepository from "@repos/VolunteerRepository";
 
 import VolunteerForm from "@components/forms/VolunteerForm";
 import ProfileBadge from "@components/ProfileBadge";
-import { useVolunteerRole } from "@hooks/VolunteerHooks";
+import { useVolunteerRepository, useVolunteerRole } from "@hooks/VolunteerHooks";
 
 export type VolunteerEditDialogueData = {
     volunteer: VolunteerModel
@@ -24,23 +21,12 @@ type VolunteerEditDialogueProps = {
 }
 
 export default function VolunteerEditDialogue({ open, onClose, data } : VolunteerEditDialogueProps) {
+    const volunteerRepository = useVolunteerRepository()
     const { role } = useVolunteerRole(data?.volunteer)
     
     const handleSubmit = useCallback((volunteer: VolunteerModel) => {
-        volunteerRepository.updateVolunteer(volunteer, (_, error) => {
-            if (error) {
-                toaster.create({
-                    title: "Update failed",
-                    description: ( <Text>{error}</Text> )
-                })
-                onClose()
-                return
-            }
-
-            toaster.create({ title: "Update success" })
-            onClose()
-        })
-
+        volunteerRepository.updateVolunteer(volunteer)
+        onClose()
     }, [data, onClose]);
 
     const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {

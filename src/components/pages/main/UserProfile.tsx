@@ -14,6 +14,7 @@ import { useVolunteerAppointments } from "@hooks/AppointmentHooks";
 import { DialogueTypeEnum } from "@models/enums/DialogueType";
 
 import ProfileBadge from "@components/ProfileBadge";
+import { VolunteerRoleEnum } from "@models/enums/UserRoleType";
 
 export default function UserProfile() {
     const dialogueContext = useDialogueContext()
@@ -31,7 +32,7 @@ export default function UserProfile() {
             return
         }
 
-        dialogueContext.openDialogue(DialogueTypeEnum.UserEdit, { volunteer: volunteer, enableAdminControls: true })
+        dialogueContext.openDialogue(DialogueTypeEnum.UserEdit, { volunteer: volunteer })
     }, [volunteer])
 
     return (

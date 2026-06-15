@@ -22,7 +22,10 @@ export default function DogGenderSelection({ values, children, onValueChanged } 
     }, [onValueChanged])
 
     return (
-        <BaseSelection items={genderItems} value={values.map(t => t.toString())} onValueChanged={onValueChangedCallback}>
+        <BaseSelection items={genderItems} 
+            value={values.map(t => t.toString())} 
+            onValueChanged={onValueChangedCallback}
+        >
             {children}
         </BaseSelection>
     )

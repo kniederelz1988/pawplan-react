@@ -3,16 +3,22 @@ import { useEffect, useState } from "react";
 import dogRepository from "@repos/DogsRepository";
 import { DogModel } from "@models/DogModel";
 import { RepositoryOperationStatusEnum } from "@repos/enums/RepositoryOperationStatus";
+import { toaster } from "@components/ui/toaster";
 
 export function useDogRepository() {
     function createDog(dog: DogModel) {
         dogRepository.createDog(dog, (state, result) => {
             switch (state) {
                 case RepositoryOperationStatusEnum.Success:
-                    console.log(state, result)
+                    toaster.success({ 
+                        title: "Dog succesfully added"
+                    })
                     return;
                 case RepositoryOperationStatusEnum.Error:
-                    console.error(state, result)
+                    toaster.error({
+                        title: "Dog could not be added",
+                        description: `Error: ${result}`
+                    })
                     return;
             }
         })
@@ -22,10 +28,15 @@ export function useDogRepository() {
         dogRepository.updateDog(dog, (state, result) => {
             switch (state) {
                 case RepositoryOperationStatusEnum.Success:
-                    console.log(state, result)
+                    toaster.success({ 
+                        title: "Dog succesfully updated"
+                    })
                     return;
                 case RepositoryOperationStatusEnum.Error:
-                    console.error(state, result)
+                    toaster.error({
+                        title: "Dog could not be updated",
+                        description: `Error: ${result}`
+                    })
                     return;
             }
         })
