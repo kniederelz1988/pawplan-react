@@ -1,9 +1,9 @@
-import { Circle, HStack, IconButton, Popover, Text, VStack } from "@chakra-ui/react"
+import { Circle, Grid, GridItem, IconButton, Popover, Text, VStack } from "@chakra-ui/react"
 import { FaUserPlus } from "react-icons/fa"
 import { FiLogIn } from "react-icons/fi"
 import { LuLogOut } from "react-icons/lu"
 
-import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks"
+import { useVolunteer } from "@hooks/VolunteerHooks"
 
 import { useAuthContext } from "@contexts/AuthContexts"
 import UserLoginForm from "@components/forms/UserLoginForm"
@@ -12,28 +12,31 @@ import UserRegisterForm from "@components/forms/UserRegisterForm"
 export default function UserProfileOverview() {
     const { user, signOut } = useAuthContext()
     const { volunteer } = useVolunteer()
-    const { role } = useVolunteerRole(volunteer)
 
     return (
         (user && volunteer) ? (
-            <HStack>
-                <Circle w="36px" h="36px" bgColor="Highlight" color="HighlightText">
-                    {volunteer.name.substring(0, 1).toUpperCase()}
-                </Circle>
-
-                <VStack gap={0} px={1}>
-                    <Text fontSize="xs" fontWeight="bold" w="100%">
-                        {volunteer.name}
-                    </Text>
-                    <Text fontSize="xs" w="100%">
-                        {user.email}
-                    </Text>
-                </VStack>
-
-                <IconButton variant={"subtle"} borderRadius={24} onClick={signOut}>
-                    <LuLogOut />
-                </IconButton>
-            </HStack>
+            <Grid templateColumns="auto 1fr auto" gap={2}>
+                <GridItem>
+                    <Circle w="40px" h="40px" bgColor="Highlight" color="HighlightText">
+                        {volunteer.name.substring(0, 1).toUpperCase()}
+                    </Circle>
+                </GridItem>
+                <GridItem m="auto" w="100%" minW={0} overflow={"clip"}>
+                    <VStack gap={0}>
+                        <Text w="100%" fontSize="xs" fontWeight="bold" overflow={"hidden"} truncate>
+                            {volunteer.name}
+                        </Text>
+                        <Text w="100%" fontSize="xs" overflow={"hidden"} truncate>
+                            {user.email}
+                        </Text>
+                    </VStack>
+                </GridItem>
+                <GridItem>
+                    <IconButton variant={"subtle"} borderRadius={24} onClick={signOut}>
+                        <LuLogOut />
+                    </IconButton>
+                </GridItem>
+            </Grid>
         ) : (
             <>       
                 <Popover.Root positioning={{ placement: "bottom-start" }}>
