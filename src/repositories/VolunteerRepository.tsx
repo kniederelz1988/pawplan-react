@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-import { addDoc, collection, doc, documentId, Firestore, FirestoreDataConverter, limit, onSnapshot, orderBy, Query, query, QueryDocumentSnapshot, setDoc, startAfter, Timestamp, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, documentId, Firestore, FirestoreDataConverter, limit, onSnapshot, orderBy, Query, query, QueryDocumentSnapshot, setDoc, startAfter, Timestamp, updateDoc, where } from "firebase/firestore";
 
 import { database } from "@fb/config"
 import { VolunteerModel } from "@models/VolunteerModel";
@@ -58,6 +58,16 @@ function VolunteerRepository({ database } : { database: Firestore }) {
         })
     }
     
+    function subscribeForAllVolunteers(queryCursor: VolunteerModel | null, queryLimit: number, listener: VolunteerRepositoryListener) {
+        const q = createVolunteerQuery(queryCursor, queryLimit)
+        return onSnapshot(q, (snap) => {
+            if (snap.empty)
+                listener([])
+
+            listener(snap.docs.map(t => t.data()))
+        })
+    }
+    
     function createVolunteerQuery(queryCursor: VolunteerModel | null, queryLimit: number)
         : Query<VolunteerModel, VolunteerModel>
     {
@@ -76,15 +86,6 @@ function VolunteerRepository({ database } : { database: Firestore }) {
             startAfter(queryCursorRef),
             limit(queryLimit)
         ).withConverter(volunteerConverter)
-    }
-    function subscribeForAllVolunteers(queryCursor: VolunteerModel | null, queryLimit: number, listener: VolunteerRepositoryListener) {
-        const q = createVolunteerQuery(queryCursor, queryLimit)
-        return onSnapshot(q, (snap) => {
-            if (snap.empty)
-                listener([])
-
-            listener(snap.docs.map(t => t.data()))
-        })
     }
 
     async function createVolunteer(volunteer: VolunteerModel, operationCallback: RepositoryOperationCallback) {
@@ -142,14 +143,33 @@ function VolunteerRepository({ database } : { database: Firestore }) {
 
         operationCallback(RepositoryOperationStatusEnum.Success)
     }
+
+    async function deleteVolunteer(volunteer: VolunteerModel, operationCallback: RepositoryOperationCallback) {
+        if (!volunteer?.id) {
+            const e = getRepositoryOperationErrorMessage(RepositoryOperationErrorEnum.UndefinedData)
+            operationCallback(RepositoryOperationStatusEnum.Error, e)
+            return
+        }
+        
+        try {
+            await deleteDoc(doc(collection(database, collectionName), volunteer.id))
+            await deleteDoc(doc(collection(database, roleCollectionName), volunteer.id))
+        } catch (error) {
+            const e = getRepositoryOperationErrorMessage(error)
+            operationCallback(RepositoryOperationStatusEnum.Error, e)
+            return;
+        }
+
+        operationCallback(RepositoryOperationStatusEnum.Success)
+    }
     
-    async function createVolunteerIfNonExistant(user: User, name: string) {
+    async function createVolunteerIfNonExistant(user: User, name: string, operationCallback: RepositoryOperationCallback) {
         const unsubcribe = subscribeForVolunteer(user.uid, (result) => {
-            if (result?.length) {
+            if (!result?.length) {
                 const volunteer = result[0]
                 volunteer.name = name
 
-                updateVolunteer(volunteer, (_s, _r) => {})
+                updateVolunteer(volunteer, operationCallback)
                 unsubcribe()
                 return
             }
@@ -161,11 +181,14 @@ function VolunteerRepository({ database } : { database: Firestore }) {
                 volunteerSince: Timestamp.now(),
                 name: name,
             }
-            createVolunteer(volunteer, (_s, _r) => unsubcribe)
+            createVolunteer(volunteer, (state, result) => {
+                operationCallback(state, result)
+                unsubcribe()
+            })
         })
     }
 
-    return { subscribeForVolunteer, subscribeForAllVolunteers, subscribeForVolunteerRole, createVolunteer, createVolunteerIfNonExistant, updateVolunteer, updateVolunteerRole }
+    return { subscribeForVolunteer, subscribeForAllVolunteers, subscribeForVolunteerRole, createVolunteer, updateVolunteer, updateVolunteerRole, deleteVolunteer, createVolunteerIfNonExistant }
 }
 
 const volunteerRepository = VolunteerRepository({ database })

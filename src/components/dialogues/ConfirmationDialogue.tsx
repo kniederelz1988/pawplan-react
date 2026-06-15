@@ -1,5 +1,4 @@
-import { Button, CloseButton, Dialog, Portal } from "@chakra-ui/react"
-import { OpenChangeDetails } from "@zag-js/dialog"
+import { Button, CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react"
 import React, { useCallback } from "react"
 
 export type ConfirmationDialogueData = {
@@ -32,7 +31,7 @@ export default function ConfirmationDialogue({ open, onClose, data } : Confirmat
         onClose()
     }, [data, onClose])
     
-    const handleOpenChange = useCallback((e: OpenChangeDetails) => {
+    const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
         if(!e.open) {
             onClose()
         }

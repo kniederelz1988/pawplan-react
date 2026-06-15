@@ -9,20 +9,78 @@ import volunteerRepository from "@repos/VolunteerRepository"
 
 import { DogModel } from "@models/DogModel"
 import { VolunteerRole, VolunteerRoleEnum } from "@models/enums/UserRoleType"
+import { RepositoryOperationStatusEnum } from "@repos/enums/RepositoryOperationStatus"
+import { toaster } from "@components/ui/toaster"
 
 export function useVolunteerRepository() {
     function createVolunteer(user: User, name: string) {
-        volunteerRepository.createVolunteerIfNonExistant(user, name)
+        volunteerRepository.createVolunteerIfNonExistant(user, name, (state, result)  => {
+            switch (state) {
+                case RepositoryOperationStatusEnum.Success:
+                    toaster.success({ 
+                        title: "Volunteer succesfully created"
+                    })
+                    return;
+                case RepositoryOperationStatusEnum.Error:
+                    toaster.error({
+                        title: "Volunteer could not be created",
+                        description: `Error: ${result}`
+                    })
+                    return;
+            }
+        })
     }
 
     function updateVolunteer(volunteer: VolunteerModel) {
-        volunteerRepository.updateVolunteer(volunteer, (state, _r) => {})
+        volunteerRepository.updateVolunteer(volunteer, (state, result)  => {
+            switch (state) {
+                case RepositoryOperationStatusEnum.Success:
+                    toaster.success({ 
+                        title: "Volunteer succesfully updated"
+                    })
+                    return;
+                case RepositoryOperationStatusEnum.Error:
+                    toaster.error({
+                        title: "Volunteer could not be updated",
+                        description: `Error: ${result}`
+                    })
+                    return;
+            }
+        })
     }
     function updateVolunteerRole(volunteer: VolunteerModel, role: VolunteerRole) {
-        volunteerRepository.updateVolunteerRole(volunteer, role, (state, _r) => {})
+        volunteerRepository.updateVolunteerRole(volunteer, role, (state, result) => {
+            switch (state) {
+                case RepositoryOperationStatusEnum.Success:
+                    toaster.success({ 
+                        title: "Volunteer role succesfully updated"
+                    })
+                    return;
+                case RepositoryOperationStatusEnum.Error:
+                    toaster.error({
+                        title: "Volunteer role could not be updated",
+                        description: `Error: ${result}`
+                    })
+                    return;
+            }
+        })
     }
     function deleteVolunteer(volunteer: VolunteerModel) {
-        
+        volunteerRepository.deleteVolunteer(volunteer, (state, result) => {
+             switch (state) {
+                case RepositoryOperationStatusEnum.Success:
+                    toaster.success({ 
+                        title: "Volunteer succesfully deleted"
+                    })
+                    return;
+                case RepositoryOperationStatusEnum.Error:
+                    toaster.error({
+                        title: "Volunteer could not be deleted",
+                        description: `Error: ${result}`
+                    })
+                    return;
+            }
+        })
     }
 
     return { createVolunteer, updateVolunteer, updateVolunteerRole, deleteVolunteer }
@@ -46,9 +104,27 @@ export function useVolunteer() {
             return
 
         if (!isFavourite(dog)) {
-            volunteerDogLikesRepository.addLike(volunteer, dog)
+            volunteerDogLikesRepository.addLike(volunteer, dog, (state, result) => {
+                switch (state) {
+                    case RepositoryOperationStatusEnum.Error:
+                        toaster.error({
+                            title: "Like could not be added",
+                            description: `Error: ${result}`
+                        })
+                        return;
+                }
+            })
         } else {
-            volunteerDogLikesRepository.removeLike(volunteer, dog)
+            volunteerDogLikesRepository.removeLike(volunteer, dog, (state, result) => {
+                switch (state) {
+                    case RepositoryOperationStatusEnum.Error:
+                        toaster.error({
+                            title: "Like could not be revoked",
+                            description: `Error: ${result}`
+                        })
+                        return;
+                }
+            })
         }
     }, [volunteer, likedDogs])
 

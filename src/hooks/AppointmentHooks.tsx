@@ -9,39 +9,56 @@ import { RepositoryOperationStatusEnum } from "@repos/enums/RepositoryOperationS
 import { RepositoryDateCompare } from "@repos/enums/RepositoryDate";
 import { createAppointmentsMap } from "./helpers/AppointmentMap";
 import { sortAppointments as createAppointments } from "./helpers/AppointmentSort";
+import { toaster } from "@components/ui/toaster";
 
 export function useAppointmentRepository() {
     function createAppointment(appointment: AppointmentModel, appointmentState: AppointmentStatusModel) {
         appointmentRepository.createAppointment(appointment, appointmentState, (state, result) => {
             switch (state) {
                 case RepositoryOperationStatusEnum.Success:
-                    
+                    toaster.success({ 
+                        title: "Visit succesfully added",
+                        description: "Please wait for the visit to be confirmed."
+                    })
                     return;
                 case RepositoryOperationStatusEnum.Error:
-                    
+                    toaster.error({
+                        title: "Visit could not be added",
+                        description: `Error: ${result}`
+                    })
                     return;
             }
         })
     }
 
-    function updateAppointment(appointment: Appointment) {
-        appointmentRepository.updateAppointment(appointment.data, (state, result) => {
+    async function updateAppointment(appointment: Appointment) {
+        await appointmentRepository.updateAppointment(appointment.data, (state, result) => {
             switch (state) {
                 case RepositoryOperationStatusEnum.Success:
-                    
+                    toaster.success({ 
+                        title: "Visit succesfully updated"
+                    })
                     return;
                 case RepositoryOperationStatusEnum.Error:
-                    
+                    toaster.error({
+                        title: "Visit could not be updated",
+                        description: `Error: ${result}`
+                    })
                     return;
             }
         })
-        appointmentRepository.updateAppointmentStatus(appointment.data, appointment.metaData, (state, result) => {
+        await appointmentRepository.updateAppointmentStatus(appointment.data, appointment.metaData, (state, result) => {
             switch (state) {
                 case RepositoryOperationStatusEnum.Success:
-                    console.log(result)
+                    toaster.success({ 
+                        title: "Visit status succesfully updated"
+                    })
                     return;
                 case RepositoryOperationStatusEnum.Error:
-                    console.error(result)
+                    toaster.error({
+                        title: "Visit status could not be updated",
+                        description: `Error: ${result}`
+                    })
                     return;
             }
         })
@@ -50,10 +67,15 @@ export function useAppointmentRepository() {
         appointmentRepository.deleteAppointment(appointment.data, (state, result) => {
             switch (state) {
                 case RepositoryOperationStatusEnum.Success:
-                    
+                    toaster.success({ 
+                        title: "Visit succesfully removed"
+                    })
                     return;
                 case RepositoryOperationStatusEnum.Error:
-                    
+                    toaster.error({
+                        title: "Visit could not be removed",
+                        description: `Error: ${result}`
+                    })
                     return;
             }
         })

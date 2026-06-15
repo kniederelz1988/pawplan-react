@@ -3,7 +3,7 @@ import { Timestamp } from "firebase/firestore";
 
 import { CalendarDateTime } from "@internationalized/date";
 
-import { CloseButton, Dialog, DialogOpenChangeDetails, Grid, GridItem, Heading, Portal, Text } from "@chakra-ui/react"
+import { CloseButton, Dialog, DialogOpenChangeDetails, Grid, GridItem, Heading, Portal } from "@chakra-ui/react"
 
 import { useVolunteer } from "@hooks/VolunteerHooks";
 
