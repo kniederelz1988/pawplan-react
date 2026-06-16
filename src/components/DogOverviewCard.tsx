@@ -1,8 +1,5 @@
 import { useCallback } from "react";
-import { Button, Card, HStack, IconButton, Spacer, Text } from "@chakra-ui/react";
-
-import { HiHeart } from "react-icons/hi";
-import { PiPencil } from "react-icons/pi";
+import { Button, Card, HStack, Spacer, Text, VStack } from "@chakra-ui/react";
 
 import { VolunteerRoleEnum } from "@models/enums/UserRoleType";
 import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks";
@@ -11,49 +8,52 @@ import { useDialogueContext } from "@contexts/DialogueContext";
 import { DialogueTypeEnum } from "@models/enums/DialogueType";
 
 import { DogModel, getDogAge, getGenderTitle, getSizeTitle} from "@models/DogModel";
+import { useNavigate } from "react-router-dom";
+import DogFavouriteButton from "./DogFavouriteButton";
+import DogEditButton from "./DogEditButton";
 
 type DogAppointmentCardProps = {
     dog: DogModel
 }
 
-export default function DogAppointmentCard({ dog } : DogAppointmentCardProps) {
-    const { volunteer, isFavourite, toggleFavourite } = useVolunteer()
+export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
+    const { volunteer } = useVolunteer()
     const { role } = useVolunteerRole(volunteer)
 
     const dialogueContext = useDialogueContext()
+    const navigate = useNavigate()
 
-    const onEditDogClick = useCallback((e: React.MouseEvent) => {
-        e.preventDefault();
-
-        if (volunteer == null) {
-            dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
-            return
-        }
-
-        dialogueContext.openDialogue(DialogueTypeEnum.DogEdit, { dog: dog })
-    }, [volunteer])
-
-    const onFavouriteDogClick = useCallback((e: React.MouseEvent) => {
-        e.preventDefault();
-
-        if (volunteer == null) {
-            dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
-            return
-        }
-
-        toggleFavourite(dog)
-    }, [volunteer, toggleFavourite])
-
-    const onBookAppointmentClick = useCallback((e: React.MouseEvent) => {
-        e.preventDefault();
+    const onMeetClick = useCallback((e: React.MouseEvent) => {
+        e.preventDefault()
         
-        if (volunteer == null) {
+        if (!volunteer) {
             dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
+            return
+        }
+
+        if (role == VolunteerRoleEnum.Observer) {
+            //dialogueContext.openDialogue(DialogueTypeEnum.InsufficientRights)
             return
         }
 
         dialogueContext.openDialogue(DialogueTypeEnum.AppointmentBooking, { dog: dog })
-    }, [volunteer, dog])
+    }, [volunteer, role, dog])
+    
+    const onAboutClick = useCallback((e: React.MouseEvent) => {
+        e.preventDefault()
+
+        if (!volunteer) {
+            dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
+            return
+        }
+
+        if (role == VolunteerRoleEnum.Observer) {
+            //dialogueContext.openDialogue(DialogueTypeEnum.InsufficientRights)
+            return
+        }
+
+        navigate(`dog/${dog.id}`)
+    }, [volunteer, role, dog])
     
     return (
         <Card.Root key={dog.id} overflow="hidden">
@@ -62,18 +62,9 @@ export default function DogAppointmentCard({ dog } : DogAppointmentCardProps) {
                     align="start" bgImage={`url(${dog.imageURL ? dog.imageURL : 'https://meredith.nhcrafts.org/wp-content/uploads/dog-placeholder.jpg'})`} bgSize="cover" bgPos="center"
                     p={2}
                 >   
-                    { 
-                        volunteer && role == VolunteerRoleEnum.Admin &&
-                            <IconButton variant="subtle" borderRadius={24} bgColor={"whiteAlpha.700"} onClick={onEditDogClick}>
-                                <PiPencil />
-                            </IconButton>
-                    }
-
+                    <DogEditButton dog={dog} />
                     <Spacer />
-
-                    <IconButton variant="subtle" borderRadius={24} bgColor={"whiteAlpha.700"} onClick={onFavouriteDogClick}>
-                        <HiHeart color={isFavourite(dog) ? "red" : "black"} />
-                    </IconButton>
+                    <DogFavouriteButton dog={dog} />
                 </HStack>
             </Card.Header>
             <Card.Body gap={0} p={4} pb={2}>
@@ -96,7 +87,10 @@ export default function DogAppointmentCard({ dog } : DogAppointmentCardProps) {
                 </Card.Description>
             </Card.Body>
             <Card.Footer p={4} pt={2}>
-                <Button variant="solid" w="100%" onClick={onBookAppointmentClick}>Meet {dog.name}</Button>
+                <VStack w="100%">
+                    <Button variant="subtle" w="100%" onClick={onMeetClick}>Meet {dog.name}</Button>
+                    <Button variant="solid" w="100%" onClick={onAboutClick}>More</Button>
+                </VStack>   
             </Card.Footer>
         </Card.Root>
     )
