@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Button, Center, Container, Flex, Text } from "@chakra-ui/react";
 
 import { DogModel } from "@models/DogModel";
@@ -31,7 +31,7 @@ export function AppointmentCollection({ collection, pageControls, createCategori
     const categories = useMemo(() => {
         return createCategories(collection.appointments)
     }, [collection])
-    
+
     return (<>
         <Flex direction={"column"} gap={4}>
         {
@@ -39,13 +39,15 @@ export function AppointmentCollection({ collection, pageControls, createCategori
                 <Container key={c.title+i} p={0}>
                     {c.title && <Text fontVariant="all-petite-caps">{c.title}</Text>}
                     <Flex flexDirection="column" maxW="100%" gap={2} mt={2}>
-                        {c.appointments.map(t => 
-                            <AppointmentCard appointment={t} 
-                                editable={c.editable} onEdit={onEdit} 
-                                cancelable={c.cancelable} onCancel={onCancel}
-                                confirmable={c.confirmable} onConfirm={onConfirm} 
-                            />
-                        )}
+                        {
+                            c.appointments.map(t => 
+                                <AppointmentCard appointment={t} 
+                                    editable={c.editable} onEdit={onEdit} 
+                                    cancelable={c.cancelable} onCancel={onCancel}
+                                    confirmable={c.confirmable} onConfirm={onConfirm} 
+                                />
+                            )
+                        }
                     </Flex>
                 </Container>
             )
@@ -58,6 +60,7 @@ export function AppointmentCollection({ collection, pageControls, createCategori
                     <Button onClick={collection.previousPage} disabled={!collection.previousPageActive}>
                         Prev
                     </Button>
+                    <Text w={16} textAlign={"center"} fontSize={"sm"} fontWeight={"bold"}>{collection.page}</Text>
                     <Button onClick={collection.nextPage} disabled={!collection.nextPageActive}>
                         Next
                     </Button>

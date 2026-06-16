@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 
-import { Button, Center, Flex, Heading } from "@chakra-ui/react"
+import { Button, Center, Flex, Heading, Text } from "@chakra-ui/react"
 
 import { VolunteerModel } from "@models/VolunteerModel"
 import { VolunteerRole, VolunteerRoleEnum } from "@models/enums/UserRoleType"
@@ -21,7 +21,7 @@ export default function AdminUserPage() {
 
     const { updateVolunteerRole } = useVolunteerRepository()
 
-    const { volunteers, previousPage, previousPageActive, nextPage, nextPageActive } = useVolunteerCollection()
+    const { volunteers, page, previousPage, previousPageActive, nextPage, nextPageActive } = useVolunteerCollection()
 
     const onEditVolunteer = useCallback((v: VolunteerModel) => {
         const data = createVolunteerEditDialogueData(v)
@@ -47,6 +47,7 @@ export default function AdminUserPage() {
                 <Button onClick={previousPage} disabled={!previousPageActive}>
                     Prev
                 </Button>
+                <Text w={16} textAlign={"center"} fontSize={"sm"} fontWeight={"bold"}>{page}</Text>
                 <Button onClick={nextPage} disabled={!nextPageActive}>
                     Next
                 </Button>

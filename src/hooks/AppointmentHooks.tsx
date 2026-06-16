@@ -107,7 +107,7 @@ export function useVolunteerAppointments(volunteer: VolunteerModel | null)
         })
     }, [appointmentModels])
 
-    return { appointments, previousPage: () => {}, previousPageActive: false, nextPage: () => {}, nextPageActive: false }
+    return { appointments, page: 0, previousPage: () => {}, previousPageActive: false, nextPage: () => {}, nextPageActive: false }
 }
 
 export function useAppointmentCollection(dateCompare: RepositoryDateCompare, elementLimit: number) :
@@ -119,8 +119,8 @@ export function useAppointmentCollection(dateCompare: RepositoryDateCompare, ele
     const [page, setPage] = useState(0)
     const [pageCursors, setPageCursors] = useState<AppointmentModel[]>([])
 
-    function setPageCursor(cursor: any) {
-        const p = [...pageCursors.slice(0, page), cursor, ...pageCursors.slice(page)]
+    function setPageCursor(pageCursor: any) {
+        const p = [...pageCursors.slice(0, page), pageCursor, ...pageCursors.slice(page + 1)]
         setPageCursors(p)
     }
     function getPageCursor() {
@@ -152,12 +152,16 @@ export function useAppointmentCollection(dateCompare: RepositoryDateCompare, ele
     useEffect(() => {
         const pageCursor = getPageCursor()
         return appointmentRepository.subscribeForAllAppointments(dateCompare, pageCursor, elementLimit, (result) => {
-            if (result.length == 0) {
+            if (!result?.length) {
                 setAppointmentModels([])
+                return
             }
 
             setAppointmentModels(result)
-            setPageCursor(result[result.length - 1])
+            
+            if (result.length >= elementLimit) {
+                setPageCursor(result[result.length - 1])
+            }
         })
     }, [page])
 
@@ -171,6 +175,7 @@ export function useAppointmentCollection(dateCompare: RepositoryDateCompare, ele
 
     return { 
         appointments, 
+        page,
         previousPage, 
         previousPageActive, 
         nextPage, 
