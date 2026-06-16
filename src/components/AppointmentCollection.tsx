@@ -60,7 +60,7 @@ export function AppointmentCollection({ collection, pageControls, createCategori
                     <Button onClick={collection.previousPage} disabled={!collection.previousPageActive}>
                         Prev
                     </Button>
-                    <Text w={16} textAlign={"center"} fontSize={"sm"} fontWeight={"bold"}>{collection.page}</Text>
+                    <Text w={16} textAlign={"center"} fontSize={"sm"} fontWeight={"bold"}>{collection.page + 1}</Text>
                     <Button onClick={collection.nextPage} disabled={!collection.nextPageActive}>
                         Next
                     </Button>

@@ -47,7 +47,7 @@ export default function AdminUserPage() {
                 <Button onClick={previousPage} disabled={!previousPageActive}>
                     Prev
                 </Button>
-                <Text w={16} textAlign={"center"} fontSize={"sm"} fontWeight={"bold"}>{page}</Text>
+                <Text w={16} textAlign={"center"} fontSize={"sm"} fontWeight={"bold"}>{page + 1}</Text>
                 <Button onClick={nextPage} disabled={!nextPageActive}>
                     Next
                 </Button>
