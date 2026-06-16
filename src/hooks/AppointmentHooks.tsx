@@ -1,19 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { VolunteerModel } from "@models/VolunteerModel";
+import { DogModel } from "@models/DogModel";
 
-import { Appointment, AppointmentModel, AppointmentStatusModel, PagedAppointmentCollection } from "@models/AppointmentModel";
+import { Appointment, AppointmentModel, AppointmentRatingModel, AppointmentStatusModel } from "@models/AppointmentModel";
+
+import { setupAppointments } from "./helpers/AppointmentSort";
 
 import appointmentRepository from "@repos/AppointmentRepository";
 import { RepositoryOperationStatusEnum } from "@repos/enums/RepositoryOperationStatus";
 import { RepositoryDateCompare } from "@repos/enums/RepositoryDate";
-import { createAppointmentsMap } from "./helpers/AppointmentMap";
-import { sortAppointments as createAppointments } from "./helpers/AppointmentSort";
+
 import { toaster } from "@components/ui/toaster";
 
 export function useAppointmentRepository() {
-    function createAppointment(appointment: AppointmentModel, appointmentState: AppointmentStatusModel) {
-        appointmentRepository.createAppointment(appointment, appointmentState, (state, result) => {
+    function createAppointment(appointment: AppointmentModel) {
+        appointmentRepository.createAppointment(appointment, (state, result) => {
             switch (state) {
                 case RepositoryOperationStatusEnum.Success:
                     toaster.success({ 
@@ -31,8 +33,8 @@ export function useAppointmentRepository() {
         })
     }
 
-    async function updateAppointment(appointment: Appointment) {
-        await appointmentRepository.updateAppointment(appointment.data, (state, result) => {
+    async function updateAppointment(appointment: AppointmentModel) {
+        await appointmentRepository.updateAppointment(appointment, (state, result) => {
             switch (state) {
                 case RepositoryOperationStatusEnum.Success:
                     toaster.success({ 
@@ -42,21 +44,6 @@ export function useAppointmentRepository() {
                 case RepositoryOperationStatusEnum.Error:
                     toaster.error({
                         title: "Visit could not be updated",
-                        description: `Error: ${result}`
-                    })
-                    return;
-            }
-        })
-        await appointmentRepository.updateAppointmentStatus(appointment.data, appointment.metaData, (state, result) => {
-            switch (state) {
-                case RepositoryOperationStatusEnum.Success:
-                    toaster.success({ 
-                        title: "Visit status succesfully updated"
-                    })
-                    return;
-                case RepositoryOperationStatusEnum.Error:
-                    toaster.error({
-                        title: "Visit status could not be updated",
                         description: `Error: ${result}`
                     })
                     return;
@@ -81,45 +68,102 @@ export function useAppointmentRepository() {
         })
     }
 
-    return { createAppointment, updateAppointment, deleteAppointment }
+    async function updateStatus(appointment: AppointmentModel, status: AppointmentStatusModel) {
+        await appointmentRepository.updateAppointmentStatus(appointment, status, (state, result) => {
+            switch (state) {
+                case RepositoryOperationStatusEnum.Success:
+                    toaster.success({ 
+                        title: "Visit status succesfully updated"
+                    })
+                    return;
+                case RepositoryOperationStatusEnum.Error:
+                    toaster.error({
+                        title: "Visit status could not be updated",
+                        description: `Error: ${result}`
+                    })
+                    return;
+            }
+        })
+    }
+
+    function createRating(appointment: AppointmentModel, rating: AppointmentRatingModel) {
+        appointmentRepository.createAppointmentRating(appointment, rating, (state, result) => {
+            switch (state) {
+                case RepositoryOperationStatusEnum.Success:
+                    toaster.success({ 
+                        title: "Visit succesfully rated",
+                    })
+                    return;
+                case RepositoryOperationStatusEnum.Error:
+                    toaster.error({
+                        title: "Visit could not be rated",
+                        description: `Error: ${result}`
+                    })
+                    return;
+            }
+        })
+    }
+    async function updateRating(appointment: AppointmentModel, rating: AppointmentRatingModel) {
+        appointmentRepository.updateAppointmentRating(appointment, rating, (state, result) => {
+            switch (state) {
+                case RepositoryOperationStatusEnum.Success:
+                    toaster.success({ 
+                        title: "Visit succesfully updated",
+                    })
+                    return;
+                case RepositoryOperationStatusEnum.Error:
+                    toaster.error({
+                        title: "Visit could not be updated",
+                        description: `Error: ${result}`
+                    })
+                    return;
+            }
+        })
+    }
+
+    return { createAppointment, updateAppointment, deleteAppointment, updateStatus, createRating, updateRating }
 }
 
-export function useVolunteerAppointments(volunteer: VolunteerModel | null) 
-    : PagedAppointmentCollection 
-{
-    const [appointmentModels, setAllAppointments] = useState<AppointmentModel[]>([]) 
-    const [appointments, setSortedAppointments] = useState<Appointment[]>([])
+function useAppointments() {
+    const [appointmentModels,   setAppointmentModels]   = useState(new Map<string, AppointmentModel>())
+    const [statusModels,        setStatusModels]        = useState(new Map<string, AppointmentStatusModel>())
+    const [ratingModels,        setRatingModels]        = useState(new Map<string, AppointmentRatingModel>())
+
+    const [appointments,        setAppointments]  = useState<Appointment[]>([])
 
     useEffect(() => {
-        if (!volunteer?.id) {
-            setAllAppointments([])
+        if (!appointmentModels) {
+            setStatusModels(new Map<string, AppointmentStatusModel>())
             return
         }
 
-        return appointmentRepository.subscribeForAppointments(volunteer?.id, setAllAppointments)
-    }, [volunteer])
-
-    useEffect(() => {
-        const appointmentsMap: Map<string, AppointmentModel> = createAppointmentsMap(appointmentModels)
-        return appointmentRepository.subscribeForAppointmentStates(Array.from(appointmentsMap.keys()), (result) => {
-            const sortedAppointments = createAppointments(appointmentsMap, result)
-            setSortedAppointments(sortedAppointments)
-        })
+        const keys = Array.from(appointmentModels.keys())
+        return appointmentRepository.subscribeForAppointmentStates(keys, setStatusModels)
     }, [appointmentModels])
 
-    return { appointments, page: 0, previousPage: () => {}, previousPageActive: false, nextPage: () => {}, nextPageActive: false }
+    useEffect(() => {
+        if (!appointmentModels) {
+            setRatingModels(new Map<string, AppointmentRatingModel>())
+            return
+        }
+
+        const keys = Array.from(appointmentModels.keys())
+        return appointmentRepository.subscribeForAppointmentRatings(keys, setRatingModels)
+    }, [appointmentModels])
+
+    useEffect(() => {
+        const t = setupAppointments(appointmentModels, statusModels, ratingModels)
+        setAppointments(t)
+    }, [appointmentModels, statusModels, ratingModels])
+
+    return { appointments, setAppointmentModels }
 }
 
-export function useAppointmentCollection(dateCompare: RepositoryDateCompare, elementLimit: number) :
-    PagedAppointmentCollection
-{
-    const [appointmentModels, setAppointmentModels] = useState<AppointmentModel[]>([]) 
-    const [appointments, setAppointments] = useState<Appointment[]>([])
-
+function usePages<T>() {
     const [page, setPage] = useState(0)
-    const [pageCursors, setPageCursors] = useState<AppointmentModel[]>([])
+    const [pageCursors, setPageCursors] = useState<T[]>([])
 
-    function setPageCursor(pageCursor: any) {
+    function setPageCursor(pageCursor: T) {
         const p = [...pageCursors.slice(0, page), pageCursor, ...pageCursors.slice(page + 1)]
         setPageCursors(p)
     }
@@ -147,38 +191,88 @@ export function useAppointmentCollection(dateCompare: RepositoryDateCompare, ele
         
         setPage(page + 1)
     }
-    const nextPageActive = useMemo(() => appointmentModels.length == elementLimit, [appointmentModels] )
+    const nextPageActive = useMemo(() => page < pageCursors.length, [page, pageCursors])
+
+    return { 
+        page:           page,
+        pageControls:   { previousPage, previousPageActive, nextPage, nextPageActive },
+        pageCursor:     { set: setPageCursor, get: getPageCursor }
+    }
+}
+
+export function useVolunteerAppointments(elementLimit: number) 
+{
+    const [volunteer, setVolunteer] = useState<VolunteerModel | null>(null)
+
+    const { appointments, setAppointmentModels } = useAppointments()
+    const { page, pageControls, pageCursor }     = usePages<AppointmentModel>()
 
     useEffect(() => {
-        const pageCursor = getPageCursor()
-        return appointmentRepository.subscribeForAllAppointments(dateCompare, pageCursor, elementLimit, (result) => {
-            if (!result?.length) {
-                setAppointmentModels([])
-                return
-            }
+        if (!volunteer?.id) {
+            setAppointmentModels(new Map<string, AppointmentModel>())
+            return
+        }
 
-            setAppointmentModels(result)
-            
-            if (result.length >= elementLimit) {
-                setPageCursor(result[result.length - 1])
-            }
+        const c = pageCursor.get()
+        return appointmentRepository.subscribeForVolunteerAppointments(volunteer, c, elementLimit, setAppointmentModels)
+    }, [volunteer])
+
+    useEffect(() => {
+        if (appointments.length >= elementLimit) {
+            const t = appointments[appointments.length - 1]
+            pageCursor.set(t.data)
+        }
+    }, [appointments])
+
+
+    return { appointments, page, ...pageControls, for: setVolunteer }
+}
+export function useDogAppointmentRatings(elementLimit: number) 
+{
+    const [dog, setDog] = useState<DogModel | null>(null)
+
+    const [ratings, setRatings]                 = useState<AppointmentRatingModel[]>([])
+    const { page, pageControls, pageCursor }    = usePages<AppointmentRatingModel>()
+
+    useEffect(() => {
+        if (!dog?.id) {
+            setRatings([])
+            return
+        }
+
+        const c = pageCursor.get()
+        return appointmentRepository.subscribeForDogAppointmentRatings(dog, c, elementLimit, (r) => {
+            const ratings = Array.from(r.values()) 
+            setRatings(ratings) 
         })
+    }, [dog])
+
+    useEffect(() => {
+        if (ratings.length >= elementLimit) {
+            const t = ratings[ratings.length - 1]
+            pageCursor.set(t)
+        }
+    }, [ratings])
+
+    return { ratings, page, ...pageControls, for: setDog }
+}
+
+export function useAppointmentCollection(dateCompare: RepositoryDateCompare, elementLimit: number)
+{
+    const { appointments, setAppointmentModels }    = useAppointments()
+    const { page, pageControls, pageCursor }        = usePages<AppointmentModel>()
+
+    useEffect(() => {
+        const c = pageCursor.get()
+        return appointmentRepository.subscribeForAllAppointments(dateCompare, c, elementLimit, setAppointmentModels)
     }, [page])
 
     useEffect(() => {
-        const appointmentsMap: Map<string, AppointmentModel> = createAppointmentsMap(appointmentModels)
-        return appointmentRepository.subscribeForAppointmentStates(Array.from(appointmentsMap.keys()), (result) => {
-            const appointments = createAppointments(appointmentsMap, result)
-            setAppointments(appointments)
-        })
-    }, [appointmentModels])
+        if (appointments.length >= elementLimit) {
+            const t = appointments[appointments.length - 1]
+            pageCursor.set(t.data)
+        }
+    }, [appointments])
 
-    return { 
-        appointments, 
-        page,
-        previousPage, 
-        previousPageActive, 
-        nextPage, 
-        nextPageActive
-    }
+    return { appointments, page, ...pageControls }
 }

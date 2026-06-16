@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Button, Grid, HStack, RadioCard, Spacer, Text, VStack } from "@chakra-ui/react";
+import { Button, Grid, HStack, RadioCard, Spacer } from "@chakra-ui/react";
 
 import { getDateFromToday } from "@helpers/TimeHelpers";
 
@@ -8,7 +8,6 @@ import { CalendarDate, CalendarDateTime, getLocalTimeZone, Time } from "@interna
 import { DogModel } from "@models/DogModel";
 import TimeDisplay from "@components/TimeDisplay";
 import DayDisplay from "@components/DayDisplay";
-
 
 type AppointmentFormProps = {
     dog: DogModel,
@@ -60,7 +59,6 @@ export default function AppointmentForm({ dog, onConfirm, onClose } : Appointmen
             time.hour, 
             time.minute
         )
-        console.log(dateTime)
         onConfirm(dog, dateTime)
     }, [date, time, dog])
 

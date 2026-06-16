@@ -80,7 +80,8 @@ export default function AppointmentCard({ appointment, editable, onEdit, confirm
                         </Flex>
 
                         <Flex direction="column">
-                            <AppointmentStateBadge status={appointment.metaData.status} />
+                            {appointment.statusData && <AppointmentStateBadge status={appointment.statusData.status} />}
+
                             <Spacer /> 
                             { 
                                 (editable || confirmable || cancelable) &&

@@ -1,13 +1,14 @@
 import React, { useCallback } from "react"
 import { Button, CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react"
 
+import { AppointmentModel } from "@models/AppointmentModel"
+
 import { toaster } from "@components/ui/toaster"
-import { Appointment } from "@models/AppointmentModel"
 
 export type AppointmentEditDialogueData = {
-    appointment: Appointment
+    appointment: AppointmentModel
 }
-export function createAppointmentEditDialogueData(appointment: Appointment) : AppointmentEditDialogueData {
+export function createAppointmentEditDialogueData(appointment: AppointmentModel) : AppointmentEditDialogueData {
     return { appointment: appointment }
 }
 

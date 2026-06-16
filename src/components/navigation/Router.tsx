@@ -8,6 +8,7 @@ import AdminUserPage from "@components/pages/admin/AdminUserPage"
 import AdminAppointmentPage from "@components/pages/admin/AdminAppointmentPage"
 import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks"
 import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
+import DogsDetails from "@components/pages/main/DogsDetails"
 
 export default function Router() {
     const { volunteer } = useVolunteer()
@@ -16,6 +17,7 @@ export default function Router() {
     return (
         <Routes>
             <Route path="*" element={<DogsOverview />} />
+            <Route path="dog/:id" element={<DogsDetails />} />
             <Route path="userAppointments" element={<UserAppointments />} />
             <Route path="userProfile" element={<UserProfile />} />
 

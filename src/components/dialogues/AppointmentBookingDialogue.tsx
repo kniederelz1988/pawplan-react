@@ -5,20 +5,17 @@ import { CalendarDateTime } from "@internationalized/date";
 
 import { CloseButton, Dialog, DialogOpenChangeDetails, Grid, GridItem, Heading, Portal } from "@chakra-ui/react"
 
+import { useAppointmentRepository } from "@hooks/AppointmentHooks";
 import { useVolunteer } from "@hooks/VolunteerHooks";
 
+import { DogModel } from "@models/DogModel"
+import { AppointmentModel } from "@models/AppointmentModel";
+import { AppointmentTypeEnum } from "@models/enums/AppointmentType";
+
+import DogCard from "@components/DogCard";
 import AppointmentForm from "@components/forms/AppointmentForm"
 
-import { DogModel } from "@models/DogModel"
 import { dateValueToTimestamp } from "@helpers/TimeHelpers";
-
-import { AppointmentModel, AppointmentStatusModel } from "@models/AppointmentModel";
-
-import { AppointmentTypeEnum } from "@models/enums/AppointmentType";
-import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus";
-import { useAppointmentRepository } from "@hooks/AppointmentHooks";
-import DogCard from "@components/DogCard";
-
 
 export type AppointmentBookingDialogueData = {
     dog: DogModel
@@ -32,7 +29,7 @@ type AppointmentBookingDialogueProps = {
 
 export default function AppointmentBookingDialogue({ open, onClose, data } : AppointmentBookingDialogueProps) {
     const { volunteer } = useVolunteer()
-    const { createAppointment } = useAppointmentRepository()
+    const repository = useAppointmentRepository()
 
     const handleConfirm = useCallback((dog: DogModel, date: CalendarDateTime) => {
         if (!volunteer?.id || !dog?.id)
@@ -45,13 +42,7 @@ export default function AppointmentBookingDialogue({ open, onClose, data } : App
             date: dateValueToTimestamp(date),
             type: AppointmentTypeEnum.Walk
         }
-        const appointmentState: AppointmentStatusModel = {
-            status: AppointmentStatusEnum.Pending,
-            updateAt: Timestamp.now(),
-            updatedBy: volunteer.id
-        }
-
-        createAppointment(appointment, appointmentState)
+        repository.createAppointment(appointment)
         onClose()
     }, [data, onClose])
 
