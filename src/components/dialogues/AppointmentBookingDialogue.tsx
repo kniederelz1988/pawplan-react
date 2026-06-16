@@ -29,7 +29,7 @@ type AppointmentBookingDialogueProps = {
 
 export default function AppointmentBookingDialogue({ open, onClose, data } : AppointmentBookingDialogueProps) {
     const { volunteer } = useVolunteer()
-    const { createAppointment } = useAppointmentRepository()
+    const repository = useAppointmentRepository()
 
     const handleConfirm = useCallback((dog: DogModel, date: CalendarDateTime) => {
         if (!volunteer?.id || !dog?.id)
@@ -42,7 +42,7 @@ export default function AppointmentBookingDialogue({ open, onClose, data } : App
             date: dateValueToTimestamp(date),
             type: AppointmentTypeEnum.Walk
         }
-        createAppointment(appointment)
+        repository.createAppointment(appointment)
         onClose()
     }, [data, onClose])
 

@@ -6,7 +6,6 @@ import { useDialogueContext } from "@contexts/DialogueContext";
 import { DialogueTypeEnum } from "@models/enums/DialogueType";
 import { createAppointmentCancelDialogueData } from "@components/dialogues/AppointmentCancelDialogue";
 import { createAppointmentEditDialogueData } from "@components/dialogues/AppointmentEditDialogue";
-import { createAppointmentCompleteDialogueData } from "@components/dialogues/AppointmentCompleteDialogue";
 
 import { useVolunteer } from "@hooks/VolunteerHooks";
 import { useVolunteerAppointments } from "@hooks/AppointmentHooks";
@@ -26,15 +25,21 @@ export default function UserAppointments() {
     useEffect(() => { appointmentCollection.for(volunteer) }, [volunteer])
 
     function onEditAppointment(appointment: Appointment) {
-        const data = createAppointmentEditDialogueData(appointment)
+        const data = createAppointmentEditDialogueData(appointment.data)
         dialogue.openDialogue(DialogueTypeEnum.AppointmentEdit, data)
     }
     function onCancelAppointment(appointment: Appointment, dog: DogModel) {
-        const data = createAppointmentCancelDialogueData(appointment, dog)
+        if (!volunteer?.id)
+            return
+
+        const data = createAppointmentCancelDialogueData(appointment.data, volunteer, dog)
         dialogue.openDialogue(DialogueTypeEnum.AppointmentCancel, data)
     }
     function onCompleteAppointment(appointment: Appointment, dog: DogModel) {
-        const data = createAppointmentCompleteDialogueData(appointment, dog);
+        if (!volunteer?.id)
+            return
+
+        const data = { appointment: appointment.data, volunteer: volunteer, dog: dog }
         dialogue.openDialogue(DialogueTypeEnum.AppointmentComplete, data)
     }
 

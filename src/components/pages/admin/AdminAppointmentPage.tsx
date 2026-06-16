@@ -20,6 +20,7 @@ import { RepositoryDateCompareEnum } from "@repos/enums/RepositoryDate"
 
 import withTabs from "@components/hocs/withAppointmentCollection"
 import { AppointmentCollection } from "@components/AppointmentCollection"
+import { Timestamp } from "firebase/firestore"
 
 const AppointmentTabs = withTabs(AppointmentCollection)
 
@@ -29,37 +30,44 @@ export default function AdminAppointmentPage() {
     const { volunteer } = useVolunteer()
     const { role } = useVolunteerRole(volunteer)
 
-    const { updateStatus } = useAppointmentRepository()
+    const repository = useAppointmentRepository()
 
     const pastCollection = useAppointmentCollection(RepositoryDateCompareEnum.Past, 5)
-    const futureCollection = useAppointmentCollection(RepositoryDateCompareEnum.Future, 5)
+    const futureCollection = useAppointmentCollection(RepositoryDateCompareEnum.Future, 10)
 
     const onEditAppointment = useCallback((appointment: Appointment) => {
-        const data = createAppointmentEditDialogueData(appointment)
+        const data = createAppointmentEditDialogueData(appointment.data)
         dialogue.openDialogue(DialogueTypeEnum.AppointmentEdit, data)
     }, [])
 
-    const onConfirmAppointment = useCallback((a: Appointment) => {
-        if (!a.statusData)
+    const onConfirmAppointment = useCallback((appointment: Appointment) => {
+        if (!volunteer?.id || role != VolunteerRoleEnum.Admin)
             return
 
-        if (role != VolunteerRoleEnum.Admin)
+        if (!appointment.data?.id)
             return
 
-        a.statusData.status = AppointmentStatusEnum.Confirmed
-        updateStatus(a.data, a.statusData)
+        const status = {
+            appointmentId   : appointment.data.id,
+            dogId           : appointment.data.dogId,
+            volunteerId     : appointment.data.volunteerId,
+            status          : AppointmentStatusEnum.Confirmed,
+            updatedBy       : volunteer.id,
+            updateAt        : Timestamp.now()
+        }
+        repository.updateStatus(appointment.data, status)
     }, [volunteer, role])
     const onCancelAppointment = useCallback((appointment: Appointment, dog: DogModel) => {
-        if (role != VolunteerRoleEnum.Admin)
+        if (!volunteer?.id || role != VolunteerRoleEnum.Admin)
             return
 
-        const data = createAppointmentCancelDialogueData(appointment, dog)
+        const data = createAppointmentCancelDialogueData(appointment.data, volunteer, dog)
         dialogue.openDialogue(DialogueTypeEnum.AppointmentCancel, data)
     }, [volunteer, role])
 
     return (
         <Flex flexDirection="column" m="auto" maxW={850}>
-            <Heading justifyContent="left" w="100%" mb={-1}>All users</Heading>
+            <Heading justifyContent="left" w="100%" mb={-1}>All visits</Heading>
             <Heading justifyContent="left" w="100%" fontSize="md" fontWeight="light">You can edit visits here. For admins only.</Heading>
             
             <Container mt={4} p={0}>
@@ -70,7 +78,7 @@ export default function AdminAppointmentPage() {
                         collection: futureCollection,
                         isEditable:     (a) => a.statusData?.status == AppointmentStatusEnum.Pending,
                         isCancelable:   (a) => a.statusData?.status != AppointmentStatusEnum.Completed && a.statusData?.status != AppointmentStatusEnum.Canceled,
-                        isConfirmable:  (a) => a.statusData?.status == AppointmentStatusEnum.Confirmed
+                        isConfirmable:  (a) => a.statusData?.status == AppointmentStatusEnum.Pending
                     },
                     { 
                         value: "past", 

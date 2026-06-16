@@ -9,7 +9,6 @@ import { DogModel } from "@models/DogModel";
 import TimeDisplay from "@components/TimeDisplay";
 import DayDisplay from "@components/DayDisplay";
 
-
 type AppointmentFormProps = {
     dog: DogModel,
     onConfirm: (dog: DogModel, datetime: CalendarDateTime) => void,
@@ -60,7 +59,6 @@ export default function AppointmentForm({ dog, onConfirm, onClose } : Appointmen
             time.hour, 
             time.minute
         )
-        console.log(dateTime)
         onConfirm(dog, dateTime)
     }, [date, time, dog])
 

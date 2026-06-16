@@ -20,7 +20,7 @@ export function AppointmentRating({ rating }: AppointmentRatingProps) {
                     <VStack align="start" gap={0}>
                         <Heading size="sm">{volunteer?.name}</Heading>
                         <Text color="fg.muted" fontSize="xs">
-                            {timestampToDate(rating.createdAt).toLocaleString(locale)}
+                            {timestampToDate(rating.updateAt).toLocaleString(locale)}
                         </Text>
                     </VStack>
 

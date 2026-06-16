@@ -9,6 +9,7 @@ import { getRepositoryOperationErrorMessage, RepositoryOperationErrorEnum } from
 import { getDateCompareOperator, getDateSortOperator, RepositoryDateCompare, RepositoryDateCompareEnum } from "./enums/RepositoryDate";
 import { VolunteerModel } from "@models/VolunteerModel";
 import { DogModel } from "@models/DogModel";
+import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus";
 
 const appointmentConverter: FirestoreDataConverter<AppointmentModel, AppointmentModel> = {
     toFirestore: (data: AppointmentModel) => data,
@@ -127,20 +128,20 @@ function AppointmentRepository({ database } : { database: Firestore }) {
     function createDogRatingQuery(dog: DogModel, dateCompare: RepositoryDateCompare, queryCursor: AppointmentRatingModel | null, queryLimit: number)
         : Query<AppointmentRatingModel, AppointmentRatingModel>
     {
-        if (!queryCursor?.createdAt) {
+        if (!queryCursor?.updateAt) {
             return query(
-                collection(database, collectionName),
+                collection(database, ratingCollectionName),
                 where("dogId", "==", dog?.id),
-                orderBy("createdAt", getDateSortOperator(dateCompare)),
+                orderBy("updateAt", getDateSortOperator(dateCompare)),
                 limit(queryLimit)
             ).withConverter(ratingsConverter)
         }
 
         return query(
-            collection(database, collectionName),
+            collection(database, ratingCollectionName),
             where("dogId", "==", dog?.id),
-            orderBy("createdAt", getDateSortOperator(dateCompare)),
-            startAfter(queryCursor.createdAt),
+            orderBy("updateAt", getDateSortOperator(dateCompare)),
+            startAfter(queryCursor.updateAt),
             limit(queryLimit)
         ).withConverter(ratingsConverter)
     }
@@ -155,9 +156,8 @@ function AppointmentRepository({ database } : { database: Firestore }) {
         })
     }
     
-
-    async function createAppointment(appointment: AppointmentModel, appointmentState: AppointmentStatusModel, operationCallback: RepositoryOperationCallback) {
-        if (!appointment || !appointmentState) {
+    async function createAppointment(appointment: AppointmentModel, operationCallback: RepositoryOperationCallback) {
+        if (!appointment) {
             const e = getRepositoryOperationErrorMessage(RepositoryOperationErrorEnum.UndefinedData)
             operationCallback(RepositoryOperationStatusEnum.Error, e)
             return
@@ -165,7 +165,16 @@ function AppointmentRepository({ database } : { database: Firestore }) {
     
         try {
             const t = await addDoc(collection(database, collectionName), appointment)
-            await setDoc(doc(collection(database, statusCollectionName), t.id), appointmentState)
+
+            const state: AppointmentStatusModel = {
+                appointmentId   : t.id,
+                volunteerId     : appointment.volunteerId,
+                dogId           : appointment.dogId,
+                status          : AppointmentStatusEnum.Pending,
+                updateAt        : Timestamp.now(),
+                updatedBy       : appointment.volunteerId
+            }
+            await setDoc(doc(collection(database, statusCollectionName), t.id), state)
         } catch (error) {
             const e = getRepositoryOperationErrorMessage(error)
             operationCallback(RepositoryOperationStatusEnum.Error, e)
@@ -175,10 +184,7 @@ function AppointmentRepository({ database } : { database: Firestore }) {
         operationCallback(RepositoryOperationStatusEnum.Success)
     }
 
-    async function updateAppointment(
-        appointment: AppointmentModel, 
-        operationCallback: RepositoryOperationCallback
-    ) {
+    async function updateAppointment(appointment: AppointmentModel, operationCallback: RepositoryOperationCallback) {
         if (!appointment?.id) {
             const e = getRepositoryOperationErrorMessage(RepositoryOperationErrorEnum.UndefinedData)
             operationCallback(RepositoryOperationStatusEnum.Error, e)
@@ -197,11 +203,7 @@ function AppointmentRepository({ database } : { database: Firestore }) {
 
         operationCallback(RepositoryOperationStatusEnum.Success)
     }
-    async function updateAppointmentStatus(
-        appointment: AppointmentModel,
-        appointmentState: AppointmentStatusModel,
-        operationCallback: RepositoryOperationCallback
-    ) {
+    async function updateAppointmentStatus(appointment: AppointmentModel, appointmentState: AppointmentStatusModel, operationCallback: RepositoryOperationCallback) {
         if (!appointment?.id || !appointmentState) {
             const e = getRepositoryOperationErrorMessage(RepositoryOperationErrorEnum.UndefinedData)
             operationCallback(RepositoryOperationStatusEnum.Error, e)

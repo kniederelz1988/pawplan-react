@@ -4,7 +4,6 @@ import { VolunteerModel } from "@models/VolunteerModel";
 import { DogModel } from "@models/DogModel";
 
 import { Appointment, AppointmentModel, AppointmentRatingModel, AppointmentStatusModel } from "@models/AppointmentModel";
-import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus";
 
 import { setupAppointments } from "./helpers/AppointmentSort";
 
@@ -13,17 +12,10 @@ import { RepositoryOperationStatusEnum } from "@repos/enums/RepositoryOperationS
 import { RepositoryDateCompare } from "@repos/enums/RepositoryDate";
 
 import { toaster } from "@components/ui/toaster";
-import { Timestamp } from "firebase/firestore";
 
 export function useAppointmentRepository() {
     function createAppointment(appointment: AppointmentModel) {
-        const state: AppointmentStatusModel = {
-            status: AppointmentStatusEnum.Pending,
-            updateAt: Timestamp.now(),
-            updatedBy: appointment.volunteerId
-        }
-
-        appointmentRepository.createAppointment(appointment, state, (state, result) => {
+        appointmentRepository.createAppointment(appointment, (state, result) => {
             switch (state) {
                 case RepositoryOperationStatusEnum.Success:
                     toaster.success({ 

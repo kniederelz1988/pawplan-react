@@ -1,29 +1,88 @@
-import { Appointment } from "@models/AppointmentModel";
-import { DogModel } from "@models/DogModel";
+import { useCallback } from "react";
+import { CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react";
 
-import ConfirmationDialogue, { ConfirmationDialogueData } from "@components/dialogues/ConfirmationDialogue";
+import { Timestamp } from "firebase/firestore";
+
 import { useAppointmentRepository } from "@hooks/AppointmentHooks";
+
+import { AppointmentModel } from "@models/AppointmentModel";
 import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus";
 
-export type AppointmentCompleteDialogueData = ConfirmationDialogueData
-export function createAppointmentCompleteDialogueData(appointment: Appointment, dog: DogModel) 
-    : AppointmentCompleteDialogueData {
-    const repository = useAppointmentRepository()
+import { VolunteerModel } from "@models/VolunteerModel";
+import { DogModel } from "@models/DogModel";
 
-    return { 
-        title: "Complete visit", 
-        description: `Do you really want to complete your visit with ${dog?.name}`,
+import AppointmentRatingForm from "@components/forms/AppointmentRatingForm";
 
-        confirm: "Yes",
-        onConfirm: () => {
-            appointment.statusData.status = AppointmentStatusEnum.Completed
-
-            repository.updateAppointment(appointment)
-         },
-
-        cancel: "No",
-    }
+export type AppointmentCompleteDialogueData = {
+    appointment: AppointmentModel, 
+    volunteer: VolunteerModel, 
+    dog: DogModel
 }
 
-const AppointmentCompleteDialogue = ConfirmationDialogue
-export default AppointmentCompleteDialogue
+type AppointmentCompleteDialogueProps = { 
+    open: boolean, 
+    onClose: () => void,
+    data: AppointmentCompleteDialogueData
+}
+
+export default function AppointmentCompleteDialogue({ open, onClose, data } : AppointmentCompleteDialogueProps) {
+    const repository = useAppointmentRepository()
+
+    const handleConfirm = useCallback((ratingValue: number, commentValue: string) => {
+        if (!data?.appointment?.id || !data?.volunteer.id || !data?.dog.id)
+                return
+
+        const status = {
+            appointmentId   : data.appointment.id,
+            volunteerId     : data.volunteer.id,
+            dogId           : data.dog.id,
+            status          : AppointmentStatusEnum.Completed,
+            updatedBy       : data.volunteer.id,
+            updateAt        : Timestamp.now()
+        }
+        const rating = {
+            appointmentId   : data.appointment.id,
+            volunteerId     : data.volunteer.id,
+            dogId           : data.dog.id, 
+            updateAt        : Timestamp.now(),
+            rating          : ratingValue,
+            comment         : commentValue
+        }
+
+        repository.updateStatus(data.appointment, status)
+        repository.createRating(data.appointment, rating)
+        onClose()
+    }, [data, onClose]);
+    const handleCancel = useCallback(() => {
+        onClose()
+    }, [data, onClose])
+
+    const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
+        if(!e.open) {
+            onClose()
+        }
+    }, [onClose])
+
+    return (
+        <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>
+            <Portal>
+                <Dialog.Backdrop onClick={onClose}/>
+                <Dialog.Positioner>
+                    <Dialog.Content>
+                        <Dialog.Header p="14px">
+                            <Dialog.Title>
+                                Complete visit with {data && data.dog.name}
+                            </Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body>
+                            <AppointmentRatingForm onConfirm={handleConfirm} onClose={handleCancel}/>
+                        </Dialog.Body>
+                        <Dialog.CloseTrigger asChild>
+                            <CloseButton />
+                        </Dialog.CloseTrigger>
+                    </Dialog.Content>
+                </Dialog.Positioner>
+            </Portal>
+        </Dialog.Root>
+    )
+}

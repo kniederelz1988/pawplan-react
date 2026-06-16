@@ -14,8 +14,6 @@ export function setupAppointments(
             ratingData: ratingMap.get(id)
         }
         appointments.push(a)
-
-        console.log(a)
     })
 
     return appointments

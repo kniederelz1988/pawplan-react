@@ -16,7 +16,6 @@ import DogCard from "@components/DogCard"
 import DogEditButton from "@components/DogEditButton"
 import DogFavouriteButton from "@components/DogFavouriteButton"
 import { AppointmentRating } from "@components/AppointmentRating"
-import { Timestamp } from "firebase/firestore"
 
 type DogsDetailsProps = {
 }
