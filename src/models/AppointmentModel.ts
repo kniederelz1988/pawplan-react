@@ -24,6 +24,7 @@ export declare type AppointmentCollection = {
 }
 export declare type PagedAppointmentCollection = {
     appointments: Appointment[],
+    page: number,
     previousPage: () => void, 
     previousPageActive: boolean, 
     nextPage: () => void, 

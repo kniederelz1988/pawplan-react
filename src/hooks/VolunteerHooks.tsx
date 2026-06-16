@@ -180,17 +180,8 @@ export function useVolunteerCollection() {
     const [page, setPage] = useState(0)
     const [pageCursors, setPageCursors] = useState<VolunteerModel[]>([])
 
-    function handleRequestResult(result: VolunteerModel[]) {
-        if (result.length == 0) {
-            setVolunteers([])
-        }
-
-        setVolunteers(result)
-        setPageCursor(result[result.length - 1])
-    }
-
     function setPageCursor(cursor: VolunteerModel) {
-        const p = [...pageCursors.slice(0, page), cursor, ...pageCursors.slice(page)]
+        const p = [...pageCursors.slice(0, page), cursor, ...pageCursors.slice(page + 1)]
         setPageCursors(p)
     }
     function getPageCursor() {
@@ -221,8 +212,19 @@ export function useVolunteerCollection() {
 
     useEffect(() => {
         const pageCursor = getPageCursor()
-        return volunteerRepository.subscribeForAllVolunteers(pageCursor, pageElementLimit, handleRequestResult)
+        return volunteerRepository.subscribeForAllVolunteers(pageCursor, pageElementLimit, (result) => {
+            if (!result?.length) {
+                setVolunteers([])
+                return
+            }
+
+            setVolunteers(result)
+
+            if (result.length >= pageElementLimit) {
+                setPageCursor(result[result.length - 1])
+            }
+        })
     }, [page])
     
-    return { volunteers, previousPage, previousPageActive, nextPage, nextPageActive }
+    return { volunteers, page, previousPage, previousPageActive, nextPage, nextPageActive }
 }

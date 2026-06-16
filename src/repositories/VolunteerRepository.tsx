@@ -60,17 +60,7 @@ function VolunteerRepository({ database } : { database: Firestore }) {
             listener(snap.docs[0].data())
         })
     }
-    
-    function subscribeForAllVolunteers(queryCursor: VolunteerModel | null, queryLimit: number, listener: VolunteerRepositoryListener) {
-        const q = createVolunteerQuery(queryCursor, queryLimit)
-        return onSnapshot(q, (snap) => {
-            if (snap.empty)
-                listener([])
-
-            listener(snap.docs.map(t => t.data()))
-        })
-    }
-    
+        
     function createVolunteerQuery(queryCursor: VolunteerModel | null, queryLimit: number)
         : Query<VolunteerModel, VolunteerModel>
     {
@@ -82,14 +72,22 @@ function VolunteerRepository({ database } : { database: Firestore }) {
             ).withConverter(volunteerConverter)
         }
 
-        const queryCursorRef = doc(database, collectionName, queryCursor.id)
         return query(
             collection(database, collectionName),
             orderBy("name", "desc"),
-            startAfter(queryCursorRef),
+            startAfter(queryCursor.name),
             limit(queryLimit)
         ).withConverter(volunteerConverter)
     }
+
+    function subscribeForAllVolunteers(queryCursor: VolunteerModel | null, queryLimit: number, listener: VolunteerRepositoryListener) {
+        const q = createVolunteerQuery(queryCursor, queryLimit)
+        return onSnapshot(q, (snap) => {
+            const data = snap.docs.map(t => t.data())
+            listener(data)
+        })
+    }
+
 
     async function createVolunteer(volunteer: VolunteerModel, operationCallback: RepositoryOperationCallback) {
         if (volunteer.id) {

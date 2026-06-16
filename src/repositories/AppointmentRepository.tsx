@@ -28,24 +28,23 @@ function AppointmentRepository({ database } : { database: Firestore }) {
     const collectionName = "appointments2";
     const statusCollectionName = "appointmentsStatus"
 
-    function createAppointmentQuery(date: RepositoryDateCompare, queryCursor: AppointmentModel | null, queryLimit: number)
+    function createAppointmentQuery(dateCompare: RepositoryDateCompare, queryCursor: AppointmentModel | null, queryLimit: number)
         : Query<AppointmentModel, AppointmentModel>
     {
         if (!queryCursor?.id) {
             return query(
                 collection(database, collectionName),
-                where("date", getDateCompareOperator(date), Timestamp.now()),
-                orderBy("date", getDateSortOperator(date)),
+                where("date", getDateCompareOperator(dateCompare), Timestamp.now()),
+                orderBy("date", getDateSortOperator(dateCompare)),
                 limit(queryLimit)
             ).withConverter(appointmentConverter)
         }
 
-        const queryCursorRef = doc(database, collectionName, queryCursor.id)
         return query(
             collection(database, collectionName),
-            where("date", getDateCompareOperator(date), Timestamp.now()),
-            orderBy("date", getDateSortOperator(date)),
-            startAfter(queryCursorRef),
+            where("date", getDateCompareOperator(dateCompare), Timestamp.now()),
+            orderBy("date", getDateSortOperator(dateCompare)),
+            startAfter(queryCursor.date),
             limit(queryLimit)
         ).withConverter(appointmentConverter)
     }
