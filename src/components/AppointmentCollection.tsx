@@ -1,5 +1,4 @@
-import { useEffect, useMemo } from "react";
-import { Button, Center, Container, Flex, Text } from "@chakra-ui/react";
+import { Button, Center, Flex, Text } from "@chakra-ui/react";
 
 import { DogModel } from "@models/DogModel";
 
@@ -18,38 +17,29 @@ export type AppointmentCategory = {
 export type AppointmentCollectionProps = {
     collection: PagedAppointmentCollection,
     pageControls?: boolean,
-    createCategories: (appointment: Appointment[]) => AppointmentCategory[]
+ 
+    isEditable?: (appointment: Appointment) => boolean,
+    onEdit?: (appointment: Appointment) => void,
 
-    onEdit: (appointment: Appointment) => void,
-    onConfirm: (appointment: Appointment, dog: DogModel) => void,
-    onCancel: (appontment: Appointment, dog: DogModel) => void
+    isConfirmable?: (appointment: Appointment) => boolean,
+    onConfirm?: (appointment: Appointment, dog: DogModel) => void,
+
+    isCancelable?: (appointment: Appointment) => boolean,
+    onCancel?: (appontment: Appointment, dog: DogModel) => void
 }
 
-export function AppointmentCollection({ collection, pageControls, createCategories, onEdit, onConfirm, onCancel} 
+export function AppointmentCollection({ collection, pageControls, isEditable, onEdit, isConfirmable, onConfirm, isCancelable, onCancel} 
     : AppointmentCollectionProps
 ) {
-    const categories = useMemo(() => {
-        return createCategories(collection.appointments)
-    }, [collection])
-
     return (<>
         <Flex direction={"column"} gap={4}>
         {
-            categories.map((c, i) => 
-                <Container key={c.title+i} p={0}>
-                    {c.title && <Text fontVariant="all-petite-caps">{c.title}</Text>}
-                    <Flex flexDirection="column" maxW="100%" gap={2} mt={2}>
-                        {
-                            c.appointments.map(t => 
-                                <AppointmentCard appointment={t} 
-                                    editable={c.editable} onEdit={onEdit} 
-                                    cancelable={c.cancelable} onCancel={onCancel}
-                                    confirmable={c.confirmable} onConfirm={onConfirm} 
-                                />
-                            )
-                        }
-                    </Flex>
-                </Container>
+            collection.appointments.map((a, _) => 
+                <AppointmentCard appointment={a} 
+                    editable={isEditable?.(a)} onEdit={onEdit} 
+                    cancelable={isCancelable?.(a)} onCancel={onCancel}
+                    confirmable={isConfirmable?.(a)} onConfirm={onConfirm} 
+                />
             )
         }
         </Flex>

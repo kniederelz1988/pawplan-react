@@ -16,7 +16,7 @@ export function createAppointmentCompleteDialogueData(appointment: Appointment, 
 
         confirm: "Yes",
         onConfirm: () => {
-            appointment.metaData.status = AppointmentStatusEnum.Completed
+            appointment.statusData.status = AppointmentStatusEnum.Completed
 
             repository.updateAppointment(appointment)
          },

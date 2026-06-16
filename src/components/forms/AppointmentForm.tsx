@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Button, Grid, HStack, RadioCard, Spacer, Text, VStack } from "@chakra-ui/react";
+import { Button, Grid, HStack, RadioCard, Spacer } from "@chakra-ui/react";
 
 import { getDateFromToday } from "@helpers/TimeHelpers";
 

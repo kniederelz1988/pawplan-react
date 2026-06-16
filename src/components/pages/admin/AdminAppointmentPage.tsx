@@ -19,7 +19,7 @@ import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus"
 import { RepositoryDateCompareEnum } from "@repos/enums/RepositoryDate"
 
 import withTabs from "@components/hocs/withAppointmentCollection"
-import { AppointmentCategory, AppointmentCollection } from "@components/AppointmentCollection"
+import { AppointmentCollection } from "@components/AppointmentCollection"
 
 const AppointmentTabs = withTabs(AppointmentCollection)
 
@@ -29,10 +29,10 @@ export default function AdminAppointmentPage() {
     const { volunteer } = useVolunteer()
     const { role } = useVolunteerRole(volunteer)
 
-    const { updateAppointment } = useAppointmentRepository()
+    const { updateStatus } = useAppointmentRepository()
 
     const pastCollection = useAppointmentCollection(RepositoryDateCompareEnum.Past, 5)
-    const futureCollection = useAppointmentCollection(RepositoryDateCompareEnum.Future, 10)
+    const futureCollection = useAppointmentCollection(RepositoryDateCompareEnum.Future, 5)
 
     const onEditAppointment = useCallback((appointment: Appointment) => {
         const data = createAppointmentEditDialogueData(appointment)
@@ -40,11 +40,14 @@ export default function AdminAppointmentPage() {
     }, [])
 
     const onConfirmAppointment = useCallback((a: Appointment) => {
+        if (!a.statusData)
+            return
+
         if (role != VolunteerRoleEnum.Admin)
             return
 
-        a.metaData.status = AppointmentStatusEnum.Confirmed
-        updateAppointment(a)
+        a.statusData.status = AppointmentStatusEnum.Confirmed
+        updateStatus(a.data, a.statusData)
     }, [volunteer, role])
     const onCancelAppointment = useCallback((appointment: Appointment, dog: DogModel) => {
         if (role != VolunteerRoleEnum.Admin)
@@ -54,35 +57,6 @@ export default function AdminAppointmentPage() {
         dialogue.openDialogue(DialogueTypeEnum.AppointmentCancel, data)
     }, [volunteer, role])
 
-    function createCategoriesByStatus(appointments: Appointment[]) : AppointmentCategory[] {
-        const pendingAppointments   : Appointment[] = []
-        const upcomingAppointments  : Appointment[] = []
-        const completedAppointments : Appointment[] = []
-
-        appointments.forEach( t => {
-            switch (t.metaData.status) {
-                case AppointmentStatusEnum.Confirmed:
-                    upcomingAppointments.push(t)
-                    break
-                case AppointmentStatusEnum.Pending:
-                    pendingAppointments.push(t)
-                    break
-                case AppointmentStatusEnum.Canceled:
-                case AppointmentStatusEnum.Completed:
-                    completedAppointments.push(t)
-            }
-        })
-
-        return [ 
-            { title: "Upcoming", appointments: upcomingAppointments, cancelable: true },
-            { title: "Pending", appointments: pendingAppointments, editable: true, confirmable: true, cancelable: true },
-            { title: "Completed/Canceled", appointments: completedAppointments },
-        ]
-    }
-    function createPastCategory(appointments: Appointment[]) : AppointmentCategory[] {
-        return [ { title: "", appointments: appointments, editable: false, confirmable: false, cancelable: false } ]
-    }
-    
     return (
         <Flex flexDirection="column" m="auto" maxW={850}>
             <Heading justifyContent="left" w="100%" mb={-1}>All users</Heading>
@@ -93,14 +67,18 @@ export default function AdminAppointmentPage() {
                     { 
                         value: "upcoming", 
                         triggerNode: <Text>Upcoming</Text>, 
-                        collection: futureCollection, 
-                        createCategories: createCategoriesByStatus
+                        collection: futureCollection,
+                        isEditable:     (a) => a.statusData?.status == AppointmentStatusEnum.Pending,
+                        isCancelable:   (a) => a.statusData?.status != AppointmentStatusEnum.Completed && a.statusData?.status != AppointmentStatusEnum.Canceled,
+                        isConfirmable:  (a) => a.statusData?.status == AppointmentStatusEnum.Confirmed
                     },
                     { 
                         value: "past", 
                         triggerNode: <Text>Past</Text>, 
-                        collection: pastCollection, 
-                        createCategories: createPastCategory
+                        collection: pastCollection,
+                        isEditable:     (_) => false,
+                        isCancelable:   (_) => false,
+                        isConfirmable:  (_) => false
                     }
                 ]} defaultTab="upcoming" onEdit={onEditAppointment} onConfirm={onConfirmAppointment} onCancel={onCancelAppointment} />
             </Container>

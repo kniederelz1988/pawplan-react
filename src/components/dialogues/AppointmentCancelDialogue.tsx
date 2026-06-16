@@ -16,7 +16,7 @@ export function createAppointmentCancelDialogueData(appointment: Appointment, do
 
         confirm: "Yes",
         onConfirm: () => { 
-            appointment.metaData.status = AppointmentStatusEnum.Canceled
+            appointment.statusData.status = AppointmentStatusEnum.Canceled
 
             repository.updateAppointment(appointment)
         },

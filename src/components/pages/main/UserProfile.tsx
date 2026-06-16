@@ -14,7 +14,6 @@ import { useVolunteerAppointments } from "@hooks/AppointmentHooks";
 import { DialogueTypeEnum } from "@models/enums/DialogueType";
 
 import ProfileBadge from "@components/ProfileBadge";
-import { VolunteerRoleEnum } from "@models/enums/UserRoleType";
 
 export default function UserProfile() {
     const dialogueContext = useDialogueContext()
@@ -23,7 +22,7 @@ export default function UserProfile() {
     const { volunteer, likeCounter } = useVolunteer()
     const { role } = useVolunteerRole(volunteer)
 
-    const { appointments } = useVolunteerAppointments(volunteer)
+    const { appointments } = useVolunteerAppointments(20)
     
     const onEditUserClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
