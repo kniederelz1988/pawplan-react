@@ -25,7 +25,6 @@ export default function Navigation() {
     const { role } = useVolunteerRole(volunteer)
 
     const handleNewDogClick = useCallback(() => {
-        console.log(volunteer, role)
         if (!volunteer || role != VolunteerRoleEnum.Admin)
             return
 

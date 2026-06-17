@@ -4,7 +4,7 @@ import { FaPaw } from "react-icons/fa6";
 export default function Logo() {
     return (
         <HStack m="auto">
-            <Circle background="Highlight" color="HighlightText" w={10} h={10}>
+            <Circle bgColor={"accent.bg"} color={"accent.fg"} w={10} h={10}>
                 <FaPaw />
             </Circle>
             <Text fontFamily={"serif"} fontSize={"lg"} fontWeight={"bold"}>Pawfect Match</Text>

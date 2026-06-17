@@ -32,8 +32,8 @@ export default function DogEditButton({ dog } : DogEditButtonProps) {
         <>
         { 
             volunteer && role == VolunteerRoleEnum.Admin &&
-                <IconButton variant="subtle" borderRadius={24} bgColor={"bg.emphasized"} onClick={onEditDogClick}>
-                    <PiPencil />
+                <IconButton borderRadius={24} bgColor={"accent.200"} _hover={{ bgColor: "accent.100" }} onClick={onEditDogClick}>
+                    <PiPencil color={"black"} />
                 </IconButton>
         }
         </>

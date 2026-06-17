@@ -71,7 +71,7 @@ export default function AppointmentCompleteDialogue({ open, onClose, data } : Ap
                     <Dialog.Content>
                         <Dialog.Header p="14px">
                             <Dialog.Title>
-                                Complete visit with {data && data.dog.name}
+                                Complete visit with {data?.dog && data.dog.name}
                             </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>

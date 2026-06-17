@@ -7,7 +7,7 @@ import UserProfileOverview from "@components/utils/UserProfileOverview";
 
 export default function SidebarContent({ ...props }: StackProps) {
     return (
-        <VStack h="100%" m={0} align="stretch" {...props}>
+        <VStack h="100%" align="stretch" {...props}>
             <Center h={24}>
                 <Logo />
             </Center>

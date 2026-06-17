@@ -8,7 +8,7 @@ type DogCardProps = {
 
 export default function DogCard({ dog } : DogCardProps) {
     return (
-        <Card.Root key={dog.id} overflow="hidden" w="100%">
+        <Card.Root key={dog.id} overflow="hidden" w="100%" variant={"elevated"}>
             <Card.Header p={0}>
                 <AspectRatio ratio={1} h={260}>
                     <Image src={

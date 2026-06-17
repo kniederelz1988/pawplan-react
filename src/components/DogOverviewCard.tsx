@@ -86,7 +86,7 @@ export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
                     </HStack>
                 </Card.Description>
             </Card.Body>
-            <Card.Footer p={4} pt={2}>
+            <Card.Footer p={2}>
                 <VStack w="100%">
                     <Button variant="subtle" w="100%" onClick={onMeetClick}>Meet {dog.name}</Button>
                     <Button variant="solid" w="100%" onClick={onAboutClick}>More</Button>
