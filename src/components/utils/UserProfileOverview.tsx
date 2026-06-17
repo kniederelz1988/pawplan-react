@@ -17,7 +17,7 @@ export default function UserProfileOverview() {
         (user && volunteer) ? (
             <Grid templateColumns="auto 1fr auto" gap={2}>
                 <GridItem>
-                    <Circle w="40px" h="40px" bgColor="Highlight" color="HighlightText">
+                    <Circle w="40px" h="40px" bgColor={"accent.bg"} color={"accent.fg"}>
                         {volunteer.name.substring(0, 1).toUpperCase()}
                     </Circle>
                 </GridItem>
@@ -41,7 +41,7 @@ export default function UserProfileOverview() {
             <>       
                 <Popover.Root positioning={{ placement: "bottom-start" }}>
                     <Popover.Trigger asChild>
-                        <IconButton bgColor={"AccentColor"} color={"AccentColorText"} borderRadius={24}>
+                        <IconButton bgColor={"accent.bg"} color={"accent.fg"} borderRadius={24} fontSize={"sm"} p={2}>
                             <FiLogIn /> LogIn
                         </IconButton>
                     </Popover.Trigger>
@@ -56,8 +56,8 @@ export default function UserProfileOverview() {
                 
                 <Popover.Root positioning={{ placement: "bottom-start" }}>
                     <Popover.Trigger asChild>
-                        <IconButton bgColor={"AccentColor"} color={"AccentColorText"} borderRadius={24}>
-                            <FaUserPlus /> Register
+                        <IconButton bgColor={"accent.bg"} color={"accent.fg"} borderRadius={24} fontSize={"sm"} p={2}>
+                            <FaUserPlus size={"sm"} /> Register
                         </IconButton>
                     </Popover.Trigger>
                     <Popover.Positioner>

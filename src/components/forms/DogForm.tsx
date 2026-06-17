@@ -224,8 +224,8 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
                 <HStack w="100%">
                     <Spacer />
                 
-                    <Button variant="outline" type="reset">Cancel</Button>
-                    <Button type="submit">Confirm</Button>
+                    <Button variant="subtle" w="30%" type="reset">Cancel</Button>
+                    <Button type="submit" w="30%">Confirm</Button>
                 </HStack>
             </VStack>
         </form>

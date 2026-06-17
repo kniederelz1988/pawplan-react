@@ -11,7 +11,7 @@ export default function Sidebar() {
         <>
             <Box display={{ base: "block", md: "none" }}>
                 <Drawer.Root open={open} onOpenChange={(e) => setOpen(e.open)} placement={"start"}>
-                    <Drawer.Trigger position="absolute" left="-5px" top="5px" zIndex={100} bgColor={"white"} m={0} p={0} asChild>
+                    <Drawer.Trigger position="absolute" left="-5px" top="5px" zIndex={100} m={0} p={0} asChild>
                         <Button variant="outline" size="md" m="0">
                             <FiMenu />
                         </Button>
@@ -32,7 +32,7 @@ export default function Sidebar() {
                 </Drawer.Root>
             </Box>
 
-            <Box display={{ base: "none", md: "block"}} borderRight="solid 1px">
+            <Box display={{ base: "none", md: "block"}}>
                 <SidebarContent w="250px" p={4}/>
             </Box>
         </>

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from "react"
 import { useParams } from "react-router-dom"
 
-import { Box, Button, Center, Container, Flex, Grid, GridItem, Heading, HStack, Text, VStack } from "@chakra-ui/react"
+import { Box, Button, Center, Container, Flex, Grid, GridItem, Heading, HStack, Spacer, Text, VStack } from "@chakra-ui/react"
 
 import { useDialogueContext } from "@contexts/DialogueContext"
 import { DialogueTypeEnum } from "@models/enums/DialogueType"
@@ -70,7 +70,7 @@ export default function DogsDetails( { } : DogsDetailsProps) {
         dog &&
             <Flex flexDirection="column" m="auto" maxW={850}>
                 <Flex p={0}>
-                    <Container w="60%" p={0} pr={4}>
+                    <Container w="60%" p={0} pr={4} mt={4}>
                         <HStack>
                             <Heading justifyContent="left" w="100%">More about {dog?.name}</Heading>
                             
@@ -87,18 +87,18 @@ export default function DogsDetails( { } : DogsDetailsProps) {
                         </Text>
                     </Container>
 
-                    <VStack w="40%" bgColor={"bg.info"} borderRadius={8} my={4} p={4} gap={4}>
+                    <VStack w="40%" bgColor={"softAccent.bg/30"} borderRadius={"3xl"} boxShadow={"md"} mt={4} p={4} gap={4}>
                         <DogCard dog={dog} />
 
                         <Grid templateColumns={"repeat(2, 1fr)"} w="full" gap={4}>
-                            <GridItem colSpan={1} bgColor="bg.panel" borderColor="border.panel" borderRadius="md" borderWidth="thin">
+                            <GridItem colSpan={1} bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"}>
                                 <VStack gap={0} m={4}>
                                     <Text fontSize={"md"} fontWeight={"bold"}>{20}</Text>
                                     <Text fontSize={"sm"}>total visits</Text>
                                 </VStack>
                             </GridItem>
                         
-                            <GridItem colSpan={1} bgColor="bg.panel" borderColor="border.panel" borderRadius="md" borderWidth="thin">
+                            <GridItem colSpan={1} bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"}>
                                 <VStack gap={0} m={4}>
                                     <Text fontSize={"md"} fontWeight={"bold"}>{10}</Text>
                                     <Text fontSize={"sm"}>favourited</Text>
@@ -106,11 +106,11 @@ export default function DogsDetails( { } : DogsDetailsProps) {
                             </GridItem>
                         </Grid>
 
-                        <Button variant="solid" w="full" onClick={onMeetClick}>Meet {dog.name}</Button>
+                        <Button variant="solid" w="full" boxShadow={"md"} onClick={onMeetClick}>Meet {dog.name}</Button>
                     </VStack>
                 </Flex>
 
-                <VStack w="full" bgColor={"bg.info"} borderRadius={8} m={0} mt={2} p={4} gap={4}>
+                <VStack w="full" bgColor={"softAccent.bg/30"} borderRadius={"3xl"} boxShadow={"md"} m={0} mt={8} p={4} gap={4}>
                     <Heading w="full">Remarks about {dog.name}</Heading>
                     {   
                         ratingCollection.ratings.length > 0 
@@ -121,9 +121,9 @@ export default function DogsDetails( { } : DogsDetailsProps) {
                                     </VStack>
                                 )
                             :
-                                <Box w="full" bgColor="bg.panel" borderColor="border.panel" borderRadius="md" borderWidth="thin" p={4}>
+                                <Box w="full" bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"} p={4}>
                                     <Center>
-                                        <Text fontSize={"sm"}>No remarks yet...</Text>
+                                        <Text fontSize={"xs"}>No remarks yet...</Text>
                                     </Center>
                                 </Box>
                             

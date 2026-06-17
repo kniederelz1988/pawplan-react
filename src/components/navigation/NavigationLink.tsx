@@ -30,9 +30,9 @@ export default function NavigationLink({ children, active, disabled, onClick } :
             py={2}
             borderRadius={32}
 
-            bgColor="Highlight"
-            color="HighlightText"
-
+            bgColor={"accent.bg"} 
+            color={"accent.fg"} 
+            
             cursor={disabled? "disabled": "pointer"}
             opacity={disabled? 0.6 : 1}
         >

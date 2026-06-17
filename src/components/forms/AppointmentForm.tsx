@@ -90,7 +90,7 @@ export default function AppointmentForm({ dog, onConfirm, onClose } : Appointmen
                     {daySlots.map((item, index) => (
                         <RadioCard.Item key={index} value={index.toString()}>
                             <RadioCard.ItemHiddenInput />
-                            <RadioCard.ItemControl bgColor={"whiteAlpha.700"} p={2}>
+                            <RadioCard.ItemControl p={2}>
                                 <DayDisplay date={item.toDate(getLocalTimeZone())} />
                             </RadioCard.ItemControl>
                         </RadioCard.Item>
@@ -106,7 +106,7 @@ export default function AppointmentForm({ dog, onConfirm, onClose } : Appointmen
                     {timeSlots.map((item, index) => (
                         <RadioCard.Item key={index} value={index.toString()}>
                             <RadioCard.ItemHiddenInput />
-                            <RadioCard.ItemControl bgColor={"whiteAlpha.700"} p={2}>
+                            <RadioCard.ItemControl p={2}>
                                 <TimeDisplay time={item} />
                             </RadioCard.ItemControl>
                         </RadioCard.Item>
@@ -119,7 +119,7 @@ export default function AppointmentForm({ dog, onConfirm, onClose } : Appointmen
             <HStack>
                 <Spacer />
             
-                <Button type="submit" disabled={!time || !date}>Confirm</Button>
+                <Button type="submit" w="30%" disabled={!time || !date}>Confirm</Button>
             </HStack>
         </form>
     )

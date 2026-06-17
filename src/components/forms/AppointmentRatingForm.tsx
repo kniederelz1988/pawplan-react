@@ -54,8 +54,8 @@ export default function AppointmentRatingForm({ onConfirm, onClose} : Appointmen
             <HStack>
                 <Spacer />
             
-                <Button variant="outline" type="reset">Cancel</Button>
-                <Button type="submit">Submit</Button>
+                <Button variant="subtle" w="30%" type="reset">Cancel</Button>
+                <Button type="submit" w="30%">Submit</Button>
             </HStack>
         </form>
     )

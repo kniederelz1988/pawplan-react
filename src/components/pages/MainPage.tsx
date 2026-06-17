@@ -7,7 +7,11 @@ export default function MainPage() {
         <Flex h="vh" overflowY="hidden">
             <Sidebar />
 
-            <Box flex="1" overflowY="auto" px={{ base: 0, md: 6 }} py={6} pl={{ base: 8, md: 0 }} pr={{ base: 6, md: 0}}>
+            <Box flex="1" overflowY="auto"
+                px={{ base: 0, md: 6 }} 
+                py={6} pl={{ base: 8, md: 0 }}
+                pr={{ base: 6, md: 0}}
+            >
                 <Container w="100%" scrollBehavior={"auto"}>
                     <Router />
                 </Container>

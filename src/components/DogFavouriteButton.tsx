@@ -31,8 +31,8 @@ export default function DogFavouriteButton({ dog } : DogFavouriteButtonProps) {
         <>
         { 
             volunteer &&
-                <IconButton variant="subtle" borderRadius={24} bgColor={"bg.emphasized"} onClick={onFavouriteDogClick}>
-                    <HiHeart color={isFavourite(dog) ? "red" : "black"} />
+                <IconButton borderRadius={24} bgColor={"accent.200"} _hover={{ bgColor: "accent.100" }} onClick={onFavouriteDogClick}>
+                    <HiHeart color={isFavourite(dog) ? "red": "black" } />
                 </IconButton>
         }
         </>

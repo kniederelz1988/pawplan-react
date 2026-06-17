@@ -14,7 +14,7 @@ export function AppointmentRating({ rating }: AppointmentRatingProps) {
     const { volunteer } = useVolunteer()
 
     return (
-        <Box w="full" bgColor="bg.panel" borderColor="border.panel" borderRadius="md" borderWidth="thin" p={4}>
+        <Box w="full" bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"}  p={4}>
             <VStack align="stretch" gap={2}>
                 <HStack justify="space-between" align="start">
                     <VStack align="start" gap={0}>

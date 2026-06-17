@@ -24,9 +24,12 @@ export default function AdminUserPage() {
     const { volunteers, page, previousPage, previousPageActive, nextPage, nextPageActive } = useVolunteerCollection()
 
     const onEditVolunteer = useCallback((v: VolunteerModel) => {
+        if (!volunteer?.id && role != VolunteerRoleEnum.Admin)
+            return
+
         const data = createVolunteerEditDialogueData(v)
         dialogueContext.openDialogue(DialogueTypeEnum.UserEdit, data)
-    }, [])
+    }, [volunteer, role])
     const onEditRole = useCallback((v: VolunteerModel, r: VolunteerRole) => {
         if (volunteer?.id == v?.id && role != VolunteerRoleEnum.Admin)
             return
@@ -36,8 +39,8 @@ export default function AdminUserPage() {
 
     return (
         <Flex flexDirection="column" m="auto" maxW={850}>
-            <Heading justifyContent="left" w="100%" mb={-1}>All users</Heading>
-            <Heading justifyContent="left" w="100%" fontSize="md" fontWeight="light">You can edit all users here. For admins only.</Heading>
+            <Heading justifyContent="left" w="100%" fontSize={"2xl"}>All users</Heading>
+            <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight="light">You can edit all users here. For admins only.</Text>
             
             <Flex direction={"column"} gap={4} mt={4}>
                 { volunteers.map(v => <UserAdminCard key={v.id} volunteer={v} onEditVolunteer={onEditVolunteer} onEditRole={onEditRole} disableEditRole={volunteer?.id == v?.id} />) }

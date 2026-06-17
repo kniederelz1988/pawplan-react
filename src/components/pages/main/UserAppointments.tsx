@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { Container, Flex, Heading } from "@chakra-ui/react";
+import { Container, Flex, Heading, Text } from "@chakra-ui/react";
 
 import { useDialogueContext } from "@contexts/DialogueContext";
 import { DialogueTypeEnum } from "@models/enums/DialogueType";
@@ -45,10 +45,10 @@ export default function UserAppointments() {
 
     return (
         <Flex flexDirection="column" m="auto" maxW={850}>
-            <Heading justifyContent="left" w="100%" mb={-1}>Your visits</Heading>
-            <Heading justifyContent="left" w="100%" fontSize="md" fontWeight="light">
+            <Heading justifyContent="left" w="100%" fontSize={"2xl"}>Your visits</Heading>
+            <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight={"light"}>
                 All your scheduled and past shelter visits.
-            </Heading>
+            </Text>
             
             <Container mt={4} p={0}>
                 <AppointmentCollection collection={appointmentCollection}

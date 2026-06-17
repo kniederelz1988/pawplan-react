@@ -37,12 +37,14 @@ export default function UserProfile() {
     return (
         user && volunteer &&
             <Flex flexDirection="column" m="auto" maxW={850}>
-                <Heading justifyContent="left" w="100%" mb={-1}>Your profile</Heading>
-                <Heading justifyContent="left" w="100%" fontSize="md" fontWeight="light">Your volunteer account and activity.</Heading>
+                <Heading justifyContent="left" w="100%" fontSize={"2xl"}>Your profile</Heading>
+                <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight={"light"}>
+                    Your volunteer account and activity.
+                </Text>
                 
-                <Box borderColor="black" borderRadius={16} borderWidth="1px" mt={8} p={6}>
+                <Box bgColor={"primary"} border={"xs"} borderRadius={"3xl"} borderColor={"softAccent.fg"} boxShadow={"md"} mt={8} p={6}>
                     <HStack>
-                        <Circle w="64px" h="64px" fontSize={"3xl"} bgColor="Highlight" color="HighlightText">
+                        <Circle w="64px" h="64px" fontSize={"3xl"} bgColor="accent.bg" color="accent.fg">
                             {volunteer.name.substring(0, 1).toUpperCase()}
                         </Circle>
 
@@ -65,16 +67,16 @@ export default function UserProfile() {
                 <Grid templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(4, 1fr)" }} gap={4} mt={8}>
                     <GridItem colSpan={{ md: 1 }} display={{ base: "none", md: "block"}}></GridItem>
 
-                    <GridItem colSpan={1} justifyContent="center" borderColor="black" borderRadius={16} borderWidth="1px" p={4}>
+                    <GridItem colSpan={1} justifyContent="center" bgColor={"softAccent.bg/10"} color={"softAccent.fg"} borderRadius={"2xl"} border={"xs"} boxShadow={"sm"} p={4}>
                         <VStack gap={0}>
-                            <Text>{appointments.length}</Text>
+                            <Text fontWeight={"bold"}>{appointments.length}</Text>
                             <Text>total visits</Text>
                         </VStack>
                     </GridItem>
 
-                    <GridItem colSpan={1} justifyContent="center" borderColor="black" borderRadius={16} borderWidth="1px" p={4}>
+                    <GridItem colSpan={1} justifyContent="center" bgColor={"softAccent.bg/10"} color={"softAccent.fg"} borderRadius={"2xl"} border={"xs"} boxShadow={"sm"} p={4}>
                         <VStack gap={0}>
-                            <Text>{likeCounter}</Text>
+                            <Text fontWeight={"bold"}>{likeCounter}</Text>
                             <Text>favourites</Text>
                         </VStack>
                     </GridItem>
@@ -82,8 +84,8 @@ export default function UserProfile() {
                     <GridItem colSpan={{ base: 0, md: 1 }}></GridItem>
                 </Grid>
 
-                <Box bgColor="Highlight" borderRadius={16} mt={8} p={6}>
-                    <HStack alignItems="center" color="HighlightText">
+                <Box bgColor={"softAccent.bg/30"} color={"softAccent.fg"} borderRadius={"3xl"} boxShadow={"md"} mt={8} p={6}>
+                    <HStack alignItems="center">
                         <FaMapMarkerAlt />
 
                         <VStack alignItems="stretch" gap={0}>
