@@ -110,13 +110,13 @@ export default function DogsDetails( { } : DogsDetailsProps) {
                     </VStack>
                 </Flex>
 
-                <VStack w="full" bgColor={"softAccent.bg/30"} borderRadius={"3xl"} boxShadow={"md"} m={0} mt={8} p={4} gap={4}>
+                <VStack w="full" bgColor={"softAccent.bg/30"} borderRadius={"3xl"} boxShadow={"md"} m={0} mt={8} px={8} pt={4} pb={8} gap={4}>
                     <Heading w="full">Remarks about {dog.name}</Heading>
                     {   
                         ratingCollection.ratings.length > 0 
                             ? 
                                 ratingCollection.ratings.map(t => 
-                                    <VStack w="full" p={4}>
+                                    <VStack w="full" >
                                         <AppointmentRating rating={t} />
                                     </VStack>
                                 )
