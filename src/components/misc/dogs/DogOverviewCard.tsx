@@ -1,4 +1,6 @@
 import { useCallback } from "react";
+import { NavLink } from 'react-router-dom';
+
 import { Button, Card, HStack, Spacer, Text, VStack } from "@chakra-ui/react";
 
 import { VolunteerRoleEnum } from "@models/enums/UserRoleType";
@@ -8,9 +10,10 @@ import { useDialogueContext } from "@contexts/DialogueContext";
 import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
 
 import { DogModel, getDogAge, getGenderTitle, getSizeTitle} from "@models/DogModel";
-import { useNavigate } from "react-router-dom";
-import DogFavouriteButton from "./DogFavouriteButton";
+
 import DogEditButton from "./DogEditButton";
+import DogFavouriteButton from "./DogFavouriteButton";
+import { creatUserInsufficientRightsDialogueData } from "@components/dialogues/UserInsufficientRightsDialogue";
 
 type DogAppointmentCardProps = {
     dog: DogModel
@@ -21,7 +24,6 @@ export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
     const { role } = useVolunteerRole(volunteer)
 
     const dialogueContext = useDialogueContext()
-    const navigate = useNavigate()
 
     const onMeetClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
@@ -32,27 +34,12 @@ export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
         }
 
         if (role == VolunteerRoleEnum.Observer) {
-            //dialogueContext.openDialogue(DialogueTypeEnum.InsufficientRights)
+            const data = creatUserInsufficientRightsDialogueData()
+            dialogueContext.openDialogue(DialogueTypeEnum.UserInsuffientRights, data)
             return
         }
 
         dialogueContext.openDialogue(DialogueTypeEnum.AppointmentBooking, { dog: dog })
-    }, [volunteer, role, dog])
-    
-    const onAboutClick = useCallback((e: React.MouseEvent) => {
-        e.preventDefault()
-
-        if (!volunteer) {
-            dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
-            return
-        }
-
-        if (role == VolunteerRoleEnum.Observer) {
-            //dialogueContext.openDialogue(DialogueTypeEnum.InsufficientRights)
-            return
-        }
-
-        navigate(`dog/${dog.id}`)
     }, [volunteer, role, dog])
     
     return (
@@ -87,9 +74,13 @@ export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
                 </Card.Description>
             </Card.Body>
             <Card.Footer p={2}>
-                <VStack w="100%">
+                <VStack w="100%" align={"stretch"}>
                     <Button variant="subtle" w="100%" onClick={onMeetClick}>Meet {dog.name}</Button>
-                    <Button variant="solid" w="100%" onClick={onAboutClick}>More</Button>
+                    <Button variant="solid" w="100%" asChild>
+                        <NavLink to={`dog/${dog.id}`}>
+                            More
+                        </NavLink>
+                    </Button>
                 </VStack>   
             </Card.Footer>
         </Card.Root>

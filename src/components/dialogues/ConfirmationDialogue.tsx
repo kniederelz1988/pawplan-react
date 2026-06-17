@@ -43,7 +43,7 @@ export default function ConfirmationDialogue({ open, onClose, data } : Confirmat
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
                     <Dialog.Content>
-                        <Dialog.Header p="14px">
+                        <Dialog.Header>
                             <Dialog.Title>
                                 {data && data.title}
                             </Dialog.Title>

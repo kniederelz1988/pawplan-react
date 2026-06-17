@@ -1,0 +1,16 @@
+import ConfirmationDialogue, { ConfirmationDialogueData } from "./ConfirmationDialogue"
+
+export type UserInsufficientRightsDialogueData = ConfirmationDialogueData
+export function creatUserInsufficientRightsDialogueData() 
+    : UserInsufficientRightsDialogueData {
+    return { 
+        title: "Not enough rights", 
+        description: "You don't have enough right!",
+
+        confirm: "Okidoki :)",
+        cancel: "Ok :(",
+    }
+}
+
+const UserInsufficientRightsDialogue = ConfirmationDialogue
+export default UserInsufficientRightsDialogue
