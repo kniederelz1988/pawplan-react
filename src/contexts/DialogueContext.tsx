@@ -11,6 +11,7 @@ import DogEditDialogue, { DogEditDialogueData } from "@components/dialogues/DogE
 import VolunteerEditDialogue, { VolunteerEditDialogueData } from "@components/dialogues/VolunteerEditDialogue"
 import AppointmentCompleteDialogue, { AppointmentCompleteDialogueData } from "@components/dialogues/AppointmentCompleteDialogue"
 import DogAddDialogue, { DogAddDialogueData } from "@components/dialogues/DogAddDialogue"
+import UserInsufficientRightsDialogue, { UserInsufficientRightsDialogueData } from "@components/dialogues/UserInsufficientRightsDialogue"
 
 type DialogueContextData = {
     openDialogue: (type: DialogueType, data?: any) => void
@@ -81,7 +82,10 @@ export function DialogueProvider({ children } : DialogueProviderProps ) {
 
             <UserLoginDialogue open={dialogueType == DialogueTypeEnum.UserLogin} onClose={onCloseDialogue}/>
             <UserRegisterDialogue open={dialogueType == DialogueTypeEnum.UserRegister} onClose={onCloseDialogue}/>
-            
+            <UserInsufficientRightsDialogue open={dialogueType == DialogueTypeEnum.UserInsuffientRights} onClose={onCloseDialogue}
+                data={dialogueData as UserInsufficientRightsDialogueData}
+            />
+
             <AppointmentBookingDialogue open={dialogueType == DialogueTypeEnum.AppointmentBooking} onClose={onCloseDialogue} 
                 data={dialogueData as AppointmentBookingDialogueData}
             />
