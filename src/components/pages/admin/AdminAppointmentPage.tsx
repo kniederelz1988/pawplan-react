@@ -5,13 +5,13 @@ import { Container, Flex, Heading, Text } from "@chakra-ui/react"
 import { useDialogueContext } from "@contexts/DialogueContext"
 import { createAppointmentEditDialogueData } from "@components/dialogues/AppointmentEditDialogue"
 import { createAppointmentCancelDialogueData } from "@components/dialogues/AppointmentCancelDialogue"
-import { DialogueTypeEnum } from "@models/enums/DialogueType"
+import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
     
 import { DogModel } from "@models/DogModel"
 
 import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
-import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks"
-import { useAppointmentCollection, useAppointmentRepository } from "@hooks/AppointmentHooks"
+import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
+import { useAppointmentCollection, useAppointmentRepository } from "@repos/hooks/AppointmentHooks"
 
 import { Appointment } from "@models/AppointmentModel"
 import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus"
@@ -19,7 +19,8 @@ import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus"
 import { RepositoryDateCompareEnum } from "@repos/enums/RepositoryDate"
 
 import withTabs from "@components/hocs/withAppointmentCollection"
-import { AppointmentCollection } from "@components/AppointmentCollection"
+import { AppointmentCollection } from "@components/misc/appointments/AppointmentCollection"
+
 import { Timestamp } from "firebase/firestore"
 
 const AppointmentTabs = withTabs(AppointmentCollection)

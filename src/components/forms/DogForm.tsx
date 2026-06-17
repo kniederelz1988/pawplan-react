@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { dogFormSchema } from "../../schemas/dogSchemas";
+import { dogFormSchema } from "@schemas/dogSchemas";
 
 import { Button, Field, HStack, Input, Spacer, SwitchControl, SwitchHiddenInput, SwitchLabel, SwitchRoot, VStack } from "@chakra-ui/react";
 

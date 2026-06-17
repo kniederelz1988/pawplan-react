@@ -5,10 +5,10 @@ import { Alert, Center, Field, HStack, IconButton, Input, Link, Spacer, Text } f
 import { FaUserPlus } from "react-icons/fa";
 
 import { useDialogueContext } from "@contexts/DialogueContext";
-import { DialogueTypeEnum } from "@models/enums/DialogueType";
+import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
 
 import useCreateUser from "@hooks/useCreateUser";
-import { userRegisterSchema } from "../../schemas/userSchemas";
+import { userRegisterSchema } from "@schemas/userSchemas";
 
 type UserRegisterFormProps = {
     showLoginHint: boolean

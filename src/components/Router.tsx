@@ -6,7 +6,7 @@ import UserProfile from "@components/pages/main/UserProfile"
 
 import AdminUserPage from "@components/pages/admin/AdminUserPage"
 import AdminAppointmentPage from "@components/pages/admin/AdminAppointmentPage"
-import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks"
+import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
 import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
 import DogsDetails from "@components/pages/main/DogsDetails"
 

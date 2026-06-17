@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { auth } from "@fb/config"
 import { getAuthErrorMessage } from "@fb/FirebaseErrorHelpers"
 
-import { useVolunteerRepository } from "@hooks/VolunteerHooks"
+import { useVolunteerRepository } from "@repos/hooks/VolunteerHooks"
 
 export default function useCreateUser() {
     const { createVolunteer } = useVolunteerRepository()

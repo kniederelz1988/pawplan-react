@@ -1,14 +1,15 @@
 import { useCallback } from "react";
 import { CloseButton, Dialog, DialogOpenChangeDetails, Grid, GridItem, Portal } from "@chakra-ui/react";
 
-import { useDogRepository } from "@hooks/DogHooks";
+import { useDogRepository } from "@repos/hooks/DogHooks";
 import { DogModel } from "@models/DogModel";
 
 import DogForm from "@components/forms/DogForm";
+import DogCard from "@components/misc/dogs/DogCard";
+
 import { Timestamp } from "firebase/firestore";
 import { DogGenderEnum } from "@models/enums/DogGender";
 import { DogSizeEnum } from "@models/enums/DogSize";
-import DogCard from "@components/DogCard";
 
 export type DogAddDialogueData = {
     dog: DogModel

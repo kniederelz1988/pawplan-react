@@ -5,7 +5,7 @@ import { database } from "@fb/config"
 import { AppointmentModel, AppointmentRatingModel, AppointmentStatusModel } from "@models/AppointmentModel";
 import { RepositoryOperationStatusEnum } from "@repos/enums/RepositoryOperationStatus";
 import { RepositoryOperationCallback } from "./utils/RepositoryOperationCallback";
-import { getRepositoryOperationErrorMessage, RepositoryOperationErrorEnum } from "./helpers/RepositoryOperationErrorMessages";
+import { getRepositoryOperationErrorMessage, RepositoryOperationErrorEnum } from "../helpers/RepositoryOperationErrorMessages";
 import { getDateCompareOperator, getDateSortOperator, RepositoryDateCompare, RepositoryDateCompareEnum } from "./enums/RepositoryDate";
 import { VolunteerModel } from "@models/VolunteerModel";
 import { DogModel } from "@models/DogModel";

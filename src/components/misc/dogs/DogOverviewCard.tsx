@@ -2,10 +2,10 @@ import { useCallback } from "react";
 import { Button, Card, HStack, Spacer, Text, VStack } from "@chakra-ui/react";
 
 import { VolunteerRoleEnum } from "@models/enums/UserRoleType";
-import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks";
+import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks";
 
 import { useDialogueContext } from "@contexts/DialogueContext";
-import { DialogueTypeEnum } from "@models/enums/DialogueType";
+import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
 
 import { DogModel, getDogAge, getGenderTitle, getSizeTitle} from "@models/DogModel";
 import { useNavigate } from "react-router-dom";

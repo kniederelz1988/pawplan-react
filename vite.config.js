@@ -18,7 +18,8 @@ export default defineConfig({
       '@fb': path.resolve(__dirname, './src/firebase'),
       '@models': path.resolve(__dirname, './src/models'),
       '@repos': path.resolve(__dirname, './src/repositories'),
-      '@helpers': path.resolve(__dirname, './src/helpers')
+      '@helpers': path.resolve(__dirname, './src/helpers'),
+      '@schemas': path.resolve(__dirname, './src/schemas')
     }
   }
 })

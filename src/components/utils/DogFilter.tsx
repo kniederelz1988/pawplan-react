@@ -34,8 +34,8 @@ export default function DogFilter({ onFilterChanged } : DogFilterProps) {
                 <Input placeholder="Dog name" onChange={(e:any) => {setName(e.target.value)}} />
             </InputGroup>
 
-            <DogSizeSelection value={[size]} defaultValue={AllDogSizes} onValueChanged={handleSizeValueChange} />
-            <DogGenderSelection value={[gender]} defaultValue={AllDogGenders} onValueChanged={handleGenderValueChange} />
+            {/*<DogSizeSelection value={[size]} defaultValue={AllDogSizes} onValueChanged={handleSizeValueChange} />*/}
+            {/*<DogGenderSelection value={[gender]} defaultValue={AllDogGenders} onValueChanged={handleGenderValueChange} />*/}
         </Flex>
     )
 }

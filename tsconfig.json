@@ -20,13 +20,14 @@
         "jsx": "preserve",
 
         "paths": {
-            "@hooks/*": ["./src/hooks/*"],
-            "@components/*": ["./src/components/*"],
-            "@contexts/*": ["./src/contexts/*"],
-            "@fb/*": ["./src/firebase/*"],
-            "@models/*": ["./src/models/*"],
-            "@repos/*": ["./src/repositories/*"],
-            "@helpers/*": ["./src/helpers/*"]
+            "@hooks/*":         ["./src/hooks/*"],
+            "@components/*":    ["./src/components/*"],
+            "@contexts/*":      ["./src/contexts/*"],
+            "@fb/*":            ["./src/firebase/*"],
+            "@models/*":        ["./src/models/*"],
+            "@repos/*":         ["./src/repositories/*"],
+            "@helpers/*":       ["./src/helpers/*"],
+            "@schemas/*":       ["./src/schemas/*"]
         }
     },
 

@@ -3,16 +3,16 @@ import { useEffect } from "react";
 import { Container, Flex, Heading, Text } from "@chakra-ui/react";
 
 import { useDialogueContext } from "@contexts/DialogueContext";
-import { DialogueTypeEnum } from "@models/enums/DialogueType";
+import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
 import { createAppointmentCancelDialogueData } from "@components/dialogues/AppointmentCancelDialogue";
 import { createAppointmentEditDialogueData } from "@components/dialogues/AppointmentEditDialogue";
 
-import { useVolunteer } from "@hooks/VolunteerHooks";
-import { useVolunteerAppointments } from "@hooks/AppointmentHooks";
+import { useVolunteer } from "@repos/hooks/VolunteerHooks";
+import { useVolunteerAppointments } from "@repos/hooks/AppointmentHooks";
 
 import { Appointment } from "@models/AppointmentModel";
 import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus";
-import { AppointmentCollection } from "@components/AppointmentCollection";
+import { AppointmentCollection } from "@components/misc/appointments/AppointmentCollection";
 
 import { DogModel } from "@models/DogModel";
 

@@ -1,6 +1,6 @@
 import { Box, HStack, VStack, Text, Heading, Icon } from "@chakra-ui/react";
 import { timestampToDate } from "@helpers/TimeHelpers";
-import { useVolunteer } from "@hooks/VolunteerHooks";
+import { useVolunteer } from "@repos/hooks/VolunteerHooks";
 import { AppointmentRatingModel } from "@models/AppointmentModel";
 import { LuStar } from "react-icons/lu";
 

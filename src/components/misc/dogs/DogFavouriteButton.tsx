@@ -1,9 +1,9 @@
 import { IconButton } from "@chakra-ui/react";
 import { useDialogueContext } from "@contexts/DialogueContext";
-import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks";
+import { useVolunteer } from "@repos/hooks/VolunteerHooks";
 import { DogModel } from "@models/DogModel";
-import { DialogueTypeEnum } from "@models/enums/DialogueType";
-import { VolunteerRoleEnum } from "@models/enums/UserRoleType";
+import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
+
 import { useCallback } from "react";
 import { HiHeart } from "react-icons/hi";
 

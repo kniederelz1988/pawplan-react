@@ -1,21 +1,20 @@
 import { useCallback, useEffect, useMemo } from "react"
 import { useParams } from "react-router-dom"
 
-import { Box, Button, Center, Container, Flex, Grid, GridItem, Heading, HStack, Spacer, Text, VStack } from "@chakra-ui/react"
+import { Box, Button, Center, Container, Flex, Grid, GridItem, Heading, HStack, Text, VStack } from "@chakra-ui/react"
 
 import { useDialogueContext } from "@contexts/DialogueContext"
-import { DialogueTypeEnum } from "@models/enums/DialogueType"
+import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
 
-import useDogsCollection from "@hooks/DogHooks"
-import { useDogAppointmentRatings } from "@hooks/AppointmentHooks"
+import useDogsCollection from "@repos/hooks/DogHooks"
+import { useDogAppointmentRatings } from "@repos/hooks/AppointmentHooks"
 
-import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks"
+import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
 import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
-
-import DogCard from "@components/DogCard"
-import DogEditButton from "@components/DogEditButton"
-import DogFavouriteButton from "@components/DogFavouriteButton"
-import { AppointmentRating } from "@components/AppointmentRating"
+import DogEditButton from "@components/misc/dogs/DogEditButton"
+import DogFavouriteButton from "@components/misc/dogs/DogFavouriteButton"
+import DogCard from "@components/misc/dogs/DogCard"
+import { AppointmentRating } from "@components/misc/appointments/AppointmentRating"
 
 type DogsDetailsProps = {
 }

@@ -4,8 +4,9 @@ import { CloseButton, Dialog, DialogOpenChangeDetails, Grid, GridItem, Portal } 
 import DogForm from "@components/forms/DogForm";
 
 import { DogModel } from "@models/DogModel";
-import { useDogRepository } from "@hooks/DogHooks";
-import DogCard from "@components/DogCard";
+import DogCard from "@components/misc/dogs/DogCard";
+
+import { useDogRepository } from "@repos/hooks/DogHooks";
 
 export type DogEditDialogueData = {
     dog: DogModel

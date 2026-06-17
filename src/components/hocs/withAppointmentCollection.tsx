@@ -2,7 +2,7 @@ import React from "react"
 import { Tabs } from "@chakra-ui/react"
 
 import { Appointment, PagedAppointmentCollection } from "@models/AppointmentModel"
-import { AppointmentCollectionProps } from "@components/AppointmentCollection"
+import { AppointmentCollectionProps } from "@components/misc/appointments/AppointmentCollection"
 
 type TabProps = {
     value: string,
@@ -25,16 +25,16 @@ export default function withTabs(Component : React.ComponentType<AppointmentColl
             <Tabs.Root lazyMount unmountOnExit variant="line" fitted defaultValue={defaultTab}>
                 <Tabs.List>
                 { 
-                    tabs.map(t => 
-                        <Tabs.Trigger value={t.value}>
+                    tabs.map((t, i) => 
+                        <Tabs.Trigger key={i} value={t.value}>
                             {t.triggerNode}
                         </Tabs.Trigger>
                     )
                 }
                 </Tabs.List>
                 {
-                    tabs.map(t => 
-                        <Tabs.Content value={t.value}>
+                    tabs.map((t, i) => 
+                        <Tabs.Content key={i} value={t.value}>
                             <Component 
                                 collection={t.collection} 
                                 isEditable={t.isEditable}       onEdit={onEdit} 

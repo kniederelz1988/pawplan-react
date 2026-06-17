@@ -8,9 +8,9 @@ import withRouterLink from "@components/hocs/withRouterLink"
 import withButtonLink from "@components/hocs/withButtonLink"
 
 import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
-import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks"
+import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
 
-import { DialogueTypeEnum } from "@models/enums/DialogueType"
+import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
 import { useDialogueContext } from "@contexts/DialogueContext"
 
 import { createDogAddDialogueData } from "@components/dialogues/DogAddDialogue"

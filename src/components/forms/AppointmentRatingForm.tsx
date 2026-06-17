@@ -5,7 +5,7 @@ import { Button, Field, Flex, HStack, Spacer, Text, Textarea } from "@chakra-ui/
 import InputRating from "@components/utils/InputRating"
 
 import { yupResolver } from "@hookform/resolvers/yup"
-import { appointmentRatingSchema } from "../../schemas/appointmentSchemas"
+import { appointmentRatingSchema } from "@schemas/appointmentSchemas"
 
 type AppointmentRatingFormProps = {
     onConfirm: (rating: number, comment: string) => void,

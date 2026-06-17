@@ -4,14 +4,14 @@ import { Button, Center, Flex, Heading, Text } from "@chakra-ui/react"
 
 import { VolunteerModel } from "@models/VolunteerModel"
 import { VolunteerRole, VolunteerRoleEnum } from "@models/enums/UserRoleType"
-import { useVolunteer, useVolunteerCollection, useVolunteerRepository, useVolunteerRole } from "@hooks/VolunteerHooks"
+import { useVolunteer, useVolunteerCollection, useVolunteerRepository, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
 
 import { createVolunteerEditDialogueData } from "@components/dialogues/VolunteerEditDialogue"
 
 import { useDialogueContext } from "@contexts/DialogueContext"
-import { DialogueTypeEnum } from "@models/enums/DialogueType"
+import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
 
-import UserAdminCard from "@components/UserAdminCard"
+import VolunteersAdminCard from "@components/misc/volunteers/VolunteerAdminCard"
 
 export default function AdminUserPage() {
     const dialogueContext = useDialogueContext()
@@ -43,7 +43,7 @@ export default function AdminUserPage() {
             <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight="light">You can edit all users here. For admins only.</Text>
             
             <Flex direction={"column"} gap={4} mt={4}>
-                { volunteers.map(v => <UserAdminCard key={v.id} volunteer={v} onEditVolunteer={onEditVolunteer} onEditRole={onEditRole} disableEditRole={volunteer?.id == v?.id} />) }
+                { volunteers.map(v => <VolunteersAdminCard key={v.id} volunteer={v} onEditVolunteer={onEditVolunteer} onEditRole={onEditRole} disableEditRole={volunteer?.id == v?.id} />) }
             </Flex>
 
             <Center gap={4} mt={4}>

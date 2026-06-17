@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from "react"
 
-import { DialogueType, DialogueTypeEnum } from "@models/enums/DialogueType"
+import { DialogueType, DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
 
 import UserRegisterDialogue from "@components/dialogues/UserRegisterDialogue"
 import UserLoginDialogue from "@components/dialogues/UserLoginDialogue"

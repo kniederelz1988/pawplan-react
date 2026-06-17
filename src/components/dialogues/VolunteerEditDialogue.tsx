@@ -4,8 +4,8 @@ import { CloseButton, Dialog, DialogOpenChangeDetails, HStack, Portal, Spacer } 
 import { VolunteerModel } from "@models/VolunteerModel";
 
 import VolunteerForm from "@components/forms/VolunteerForm";
-import ProfileBadge from "@components/ProfileBadge";
-import { useVolunteerRepository, useVolunteerRole } from "@hooks/VolunteerHooks";
+import ProfileBadge from "@components/misc/profiles/ProfileBadge";
+import { useVolunteerRepository, useVolunteerRole } from "@repos/hooks/VolunteerHooks";
 
 export type VolunteerEditDialogueData = {
     volunteer: VolunteerModel
