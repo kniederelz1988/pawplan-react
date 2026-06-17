@@ -3,7 +3,7 @@ import { CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui
 
 import { Timestamp } from "firebase/firestore";
 
-import { useAppointmentRepository } from "@hooks/AppointmentHooks";
+import { useAppointmentRepository } from "@repos/hooks/AppointmentHooks";
 
 import { AppointmentModel } from "@models/AppointmentModel";
 import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus";

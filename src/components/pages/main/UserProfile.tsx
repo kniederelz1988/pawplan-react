@@ -8,12 +8,12 @@ import { BiPencil } from "react-icons/bi";
 import { useDialogueContext } from "@contexts/DialogueContext";
 import { useAuthContext } from "@contexts/AuthContexts";
 
-import { useVolunteer, useVolunteerRole } from "@hooks/VolunteerHooks";
-import { useVolunteerAppointments } from "@hooks/AppointmentHooks";
+import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks";
+import { useVolunteerAppointments } from "@repos/hooks/AppointmentHooks";
 
-import { DialogueTypeEnum } from "@models/enums/DialogueType";
+import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
 
-import ProfileBadge from "@components/ProfileBadge";
+import ProfileBadge from "@components/misc/profiles/ProfileBadge";
 
 export default function UserProfile() {
     const dialogueContext = useDialogueContext()

@@ -3,7 +3,7 @@ import { Button, Center, Flex, Text } from "@chakra-ui/react";
 import { DogModel } from "@models/DogModel";
 
 import { Appointment, PagedAppointmentCollection } from "@models/AppointmentModel";
-import AppointmentCard from "@components/AppointmentCard";
+import AppointmentCard from "./AppointmentCard";
 
 export type AppointmentCategory = {
     title: string,
@@ -34,8 +34,8 @@ export function AppointmentCollection({ collection, pageControls, isEditable, on
     return (<>
         <Flex direction={"column"} gap={4}>
         {
-            collection.appointments.map((a, _) => 
-                <AppointmentCard appointment={a} 
+            collection.appointments.map((a, i) => 
+                <AppointmentCard key={i} appointment={a} 
                     editable={isEditable?.(a)} onEdit={onEdit} 
                     cancelable={isCancelable?.(a)} onCancel={onCancel}
                     confirmable={isConfirmable?.(a)} onConfirm={onConfirm} 

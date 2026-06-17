@@ -6,8 +6,8 @@ import { getDateFromToday } from "@helpers/TimeHelpers";
 import { CalendarDate, CalendarDateTime, getLocalTimeZone, Time } from "@internationalized/date";
 
 import { DogModel } from "@models/DogModel";
-import TimeDisplay from "@components/TimeDisplay";
-import DayDisplay from "@components/DayDisplay";
+import TimeDisplay from "@components/forms/displays/TimeDisplay";
+import DayDisplay from "@components/forms/displays/DayDisplay";
 
 type AppointmentFormProps = {
     dog: DogModel,

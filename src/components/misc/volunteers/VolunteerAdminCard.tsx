@@ -3,20 +3,20 @@ import { BiPencil } from "react-icons/bi";
 
 import { Button, Card, Flex, Heading, IconButton, Spacer } from "@chakra-ui/react";
 
-import ProfileBadge from "@components/ProfileBadge";
+import ProfileBadge from "@components/misc/profiles/ProfileBadge";
 
-import { useVolunteerRole } from "@hooks/VolunteerHooks";
+import { useVolunteerRole } from "@repos/hooks/VolunteerHooks";
 import { VolunteerModel } from "@models/VolunteerModel";
 import { VolunteerRole, VolunteerRoleEnum } from "@models/enums/UserRoleType";
 
-type UserAdminCardProps = {
+type VolunteersAdminCardProps = {
     volunteer: VolunteerModel,
     onEditVolunteer: (volunteer: VolunteerModel) => void,
     onEditRole: (volunteer: VolunteerModel, role: VolunteerRole) => void,
     disableEditRole: boolean
 }
 
-export default function UserAdminCard({ volunteer, onEditVolunteer, onEditRole, disableEditRole } : UserAdminCardProps) {
+export default function VolunteersAdminCard({ volunteer, onEditVolunteer, onEditRole, disableEditRole } : VolunteersAdminCardProps) {
     const { role } = useVolunteerRole(volunteer)
 
     const onEditUserClick = useCallback((e: React.MouseEvent) => {

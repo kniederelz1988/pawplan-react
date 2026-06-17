@@ -3,11 +3,11 @@ import { PiCalendar, PiCheckBold, PiClock, PiXBold } from "react-icons/pi"
 
 import { Card, Flex, Heading, HStack, Icon, IconButton, Image, Spacer, Text } from "@chakra-ui/react"
 
-import useDogsCollection from "@hooks/DogHooks"
+import useDogsCollection from "@repos/hooks/DogHooks"
 import { DogModel } from "@models/DogModel"
 
 import { Appointment } from "@models/AppointmentModel"
-import AppointmentStateBadge from "@components/AppointmentStateBadge"
+import AppointmentStateBadge from "./AppointmentStateBadge"
 
 type AppointmentCardProps = {
     appointment: Appointment,

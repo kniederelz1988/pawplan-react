@@ -3,7 +3,7 @@ import { FaUserPlus } from "react-icons/fa"
 import { FiLogIn } from "react-icons/fi"
 import { LuLogOut } from "react-icons/lu"
 
-import { useVolunteer } from "@hooks/VolunteerHooks"
+import { useVolunteer } from "@repos/hooks/VolunteerHooks"
 
 import { useAuthContext } from "@contexts/AuthContexts"
 import UserLoginForm from "@components/forms/UserLoginForm"
@@ -57,7 +57,7 @@ export default function UserProfileOverview() {
                 <Popover.Root positioning={{ placement: "bottom-start" }}>
                     <Popover.Trigger asChild>
                         <IconButton bgColor={"accent.bg"} color={"accent.fg"} borderRadius={24} fontSize={"sm"} p={2}>
-                            <FaUserPlus size={"sm"} /> Register
+                            <FaUserPlus /> Register
                         </IconButton>
                     </Popover.Trigger>
                     <Popover.Positioner>

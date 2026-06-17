@@ -1,5 +1,5 @@
 import ConfirmationDialogue, { ConfirmationDialogueData } from "@components/dialogues/ConfirmationDialogue";
-import { useAppointmentRepository } from "@hooks/AppointmentHooks";
+import { useAppointmentRepository } from "@repos/hooks/AppointmentHooks";
 
 import { Timestamp } from "firebase/firestore";
 

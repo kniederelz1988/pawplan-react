@@ -2,7 +2,7 @@ import { Firestore, collection, FirestoreDataConverter, onSnapshot, query, Query
 import { database } from "@fb/config"
 import { DogModel } from "@models/DogModel";
 import { RepositoryOperationCallback } from "./utils/RepositoryOperationCallback";
-import { getRepositoryOperationErrorMessage, RepositoryOperationErrorEnum } from "./helpers/RepositoryOperationErrorMessages";
+import { getRepositoryOperationErrorMessage, RepositoryOperationErrorEnum } from "../helpers/RepositoryOperationErrorMessages";
 import { RepositoryOperationStatusEnum } from "./enums/RepositoryOperationStatus";
 
 const dogConverter: FirestoreDataConverter<DogModel, DogModel> = {

@@ -6,7 +6,7 @@ import { VolunteerModel } from "@models/VolunteerModel";
 import { VolunteerRole, VolunteerRoleEnum } from "@models/enums/UserRoleType";
 import { RepositoryOperationCallback } from "./utils/RepositoryOperationCallback";
 import { RepositoryOperationStatusEnum } from "./enums/RepositoryOperationStatus";
-import { getRepositoryOperationErrorMessage, RepositoryOperationErrorEnum } from "./helpers/RepositoryOperationErrorMessages";
+import { getRepositoryOperationErrorMessage, RepositoryOperationErrorEnum } from "../helpers/RepositoryOperationErrorMessages";
 import { VolunteerRoleModel } from "@models/VolunteerRoleModel";
 
 const volunteerConverter: FirestoreDataConverter<VolunteerModel, VolunteerModel> = {

@@ -7,8 +7,8 @@ import { FiLogIn } from "react-icons/fi";
 import useAuthentification from "@hooks/useAuthentification";
 import { useDialogueContext } from "@contexts/DialogueContext";
 
-import { DialogueTypeEnum } from "@models/enums/DialogueType";
-import { userLoginSchema } from "../../schemas/userSchemas";
+import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
+import { userLoginSchema } from "@schemas/userSchemas";
 
 type UserLoginFormProps = {
     showRegisterLink: boolean

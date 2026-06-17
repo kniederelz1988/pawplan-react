@@ -5,7 +5,7 @@ import { VolunteerDogLikeModel } from "@models/VolunteerLikeModel";
 import { VolunteerModel } from "@models/VolunteerModel";
 import { DogModel } from "@models/DogModel";
 import { RepositoryOperationCallback } from "./utils/RepositoryOperationCallback";
-import { getRepositoryOperationErrorMessage } from "./helpers/RepositoryOperationErrorMessages";
+import { getRepositoryOperationErrorMessage } from "../helpers/RepositoryOperationErrorMessages";
 import { RepositoryOperationStatusEnum } from "./enums/RepositoryOperationStatus";
 
 const modelConverter: FirestoreDataConverter<VolunteerDogLikeModel, VolunteerDogLikeModel> = {

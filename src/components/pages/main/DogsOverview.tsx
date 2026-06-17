@@ -1,7 +1,7 @@
-import { Heading, Grid, Flex, Text, Spacer } from "@chakra-ui/react";
+import { Heading, Grid, Flex, Text } from "@chakra-ui/react";
 
-import DogOverviewCard from "@components/DogOverviewCard";
-import useDogsCollection from "@hooks/DogHooks";
+import useDogsCollection from "@repos/hooks/DogHooks";
+import DogOverviewCard from "@components/misc/dogs/DogOverviewCard";
 
 export default function DogsOverview() {
     const { dogs } = useDogsCollection([])

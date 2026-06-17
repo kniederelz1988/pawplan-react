@@ -5,14 +5,14 @@ import { CalendarDateTime } from "@internationalized/date";
 
 import { CloseButton, Dialog, DialogOpenChangeDetails, Grid, GridItem, Heading, Portal } from "@chakra-ui/react"
 
-import { useAppointmentRepository } from "@hooks/AppointmentHooks";
-import { useVolunteer } from "@hooks/VolunteerHooks";
+import { useAppointmentRepository } from "@repos/hooks/AppointmentHooks";
+import { useVolunteer } from "@repos/hooks/VolunteerHooks";
 
 import { DogModel } from "@models/DogModel"
 import { AppointmentModel } from "@models/AppointmentModel";
 import { AppointmentTypeEnum } from "@models/enums/AppointmentType";
 
-import DogCard from "@components/DogCard";
+import DogCard from "@components/misc/dogs/DogCard";
 import AppointmentForm from "@components/forms/AppointmentForm"
 
 import { dateValueToTimestamp } from "@helpers/TimeHelpers";

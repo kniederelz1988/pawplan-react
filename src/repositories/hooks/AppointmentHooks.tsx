@@ -5,7 +5,7 @@ import { DogModel } from "@models/DogModel";
 
 import { Appointment, AppointmentModel, AppointmentRatingModel, AppointmentStatusModel } from "@models/AppointmentModel";
 
-import { setupAppointments } from "./helpers/AppointmentSort";
+import { setupAppointments } from "../../helpers/AppointmentSort";
 
 import appointmentRepository from "@repos/AppointmentRepository";
 import { RepositoryOperationStatusEnum } from "@repos/enums/RepositoryOperationStatus";
