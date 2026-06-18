@@ -14,6 +14,7 @@ import { DogModel, getDogAge, getGenderTitle, getSizeTitle} from "@models/DogMod
 import DogEditButton from "./DogEditButton";
 import DogFavouriteButton from "./DogFavouriteButton";
 import { creatUserInsufficientRightsDialogueData } from "@components/dialogues/UserInsufficientRightsDialogue";
+import { FaRegCalendar } from "react-icons/fa6";
 
 type DogAppointmentCardProps = {
     dog: DogModel
@@ -43,6 +44,7 @@ export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
     }, [volunteer, role, dog])
     
     return (
+        <NavLink to={`dog/${dog.id}`}>
         <Card.Root key={dog.id} overflow="hidden">
             <Card.Header p={0}>
                 <HStack height={210} 
@@ -74,15 +76,11 @@ export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
                 </Card.Description>
             </Card.Body>
             <Card.Footer p={2}>
-                <VStack w="100%" align={"stretch"}>
-                    <Button variant="subtle" w="100%" onClick={onMeetClick}>Meet {dog.name}</Button>
-                    <Button variant="solid" w="100%" asChild>
-                        <NavLink to={`dog/${dog.id}`}>
-                            More
-                        </NavLink>
-                    </Button>
-                </VStack>   
+                <Button w="100%" onClick={onMeetClick}>
+                    <FaRegCalendar /> Meet {dog.name}
+                </Button>  
             </Card.Footer>
         </Card.Root>
+        </NavLink>
     )
 }
