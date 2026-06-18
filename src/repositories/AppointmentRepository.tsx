@@ -96,6 +96,18 @@ function AppointmentRepository({ database } : { database: Firestore }) {
         })
     }
 
+    function subscribeForAllDogAppointments(dogId: string, listener: AppointmentsListener) {
+        const q = query(
+            collection(database, collectionName),
+            where("dogId", "==", dogId),
+        ).withConverter(appointmentConverter)
+
+        return onSnapshot(q, (snap) => {
+            const data = new Map(snap.docs.map(t => [t.id, t.data()]))
+            listener(data)
+        })
+    }
+
     function subscribeForAppointmentStates(appoinmentIds: string[], listener: AppointmentStatesListener) {
         if (!appoinmentIds.length)
             return
@@ -287,6 +299,7 @@ function AppointmentRepository({ database } : { database: Firestore }) {
     return { 
         subscribeForAllAppointments,
         subscribeForVolunteerAppointments,
+        subscribeForAllDogAppointments,
         subscribeForAppointmentStates,
         subscribeForAppointmentRatings,
         subscribeForDogAppointmentRatings,

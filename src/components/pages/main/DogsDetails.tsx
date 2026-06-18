@@ -6,7 +6,7 @@ import { Box, Button, Center, Flex, Grid, GridItem, Heading, HStack, Text, VStac
 import { useDialogueContext } from "@contexts/DialogueContext"
 import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
 
-import useDogsCollection from "@repos/hooks/DogHooks"
+import useDogsCollection, { useDogAppointmentCount, useDogLikeCount } from "@repos/hooks/DogHooks"
 import { useDogAppointmentRatings } from "@repos/hooks/AppointmentHooks"
 
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
@@ -15,11 +15,12 @@ import DogEditButton from "@components/misc/dogs/DogEditButton"
 import DogFavouriteButton from "@components/misc/dogs/DogFavouriteButton"
 import DogCard from "@components/misc/dogs/DogCard"
 import { AppointmentRating } from "@components/misc/appointments/AppointmentRating"
+import { creatUserInsufficientRightsDialogueData } from "@components/dialogues/UserInsufficientRightsDialogue"
 
 type DogsDetailsProps = {
 }
 
-export default function DogsDetails( { } : DogsDetailsProps) {
+export default function DogsDetails({ } : DogsDetailsProps) {
     const { id } = useParams<string>()
     const { dogs, filterDogsByIds } = useDogsCollection([])
 
@@ -40,9 +41,16 @@ export default function DogsDetails( { } : DogsDetailsProps) {
         return dogs[0] 
     }, [dogs])
 
+    const likeCounter = useDogLikeCount()
+    const appointmentCounter = useDogAppointmentCount()
+
     const ratingCollection = useDogAppointmentRatings(20)
 
-    useEffect(() => { ratingCollection.for(dog) }, [dog])
+    useEffect(() => { 
+        likeCounter.for(dog)
+        appointmentCounter.for(dog)
+        ratingCollection.for(dog)
+    }, [dog])
 
     const { volunteer } = useVolunteer()
     const { role } = useVolunteerRole(volunteer)
@@ -58,7 +66,8 @@ export default function DogsDetails( { } : DogsDetailsProps) {
         }
 
         if (role == VolunteerRoleEnum.Observer) {
-            //dialogueContext.openDialogue(DialogueTypeEnum.InsufficientRights)
+            const data = creatUserInsufficientRightsDialogueData()
+            dialogueContext.openDialogue(DialogueTypeEnum.UserInsuffientRights, data)
             return
         }
 
@@ -76,20 +85,22 @@ export default function DogsDetails( { } : DogsDetailsProps) {
                             <Grid templateColumns={"repeat(2, 1fr)"} w="full" gap={4}>
                                 <GridItem colSpan={1} bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"}>
                                     <VStack gap={0} m={4}>
-                                        <Text fontSize={"md"} fontWeight={"bold"}>{20}</Text>
-                                        <Text fontSize={"sm"}>total visits</Text>
+                                        <Text fontSize={"md"} fontWeight={"bold"}>{appointmentCounter.count}</Text>
+                                        <Text fontSize={"sm"}>visits</Text>
                                     </VStack>
                                 </GridItem>
                             
                                 <GridItem colSpan={1} bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"}>
                                     <VStack gap={0} m={4}>
-                                        <Text fontSize={"md"} fontWeight={"bold"}>{10}</Text>
+                                        <Text fontSize={"md"} fontWeight={"bold"}>{likeCounter.count}</Text>
                                         <Text fontSize={"sm"}>favourited</Text>
                                     </VStack>
                                 </GridItem>
                             </Grid>
 
-                            <Button variant="solid" w="full" boxShadow={"md"} onClick={onMeetClick}>Meet {dog.name}</Button>
+                            <Button variant="solid" w="full" boxShadow={"md"} onClick={onMeetClick}>
+                                Meet {dog.name}
+                            </Button>
                         </Flex>
                     </GridItem>
 
