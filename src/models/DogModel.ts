@@ -13,7 +13,8 @@ export declare type DogModel = {
     breed: string
     gender: DogGender
     size: DogSize
-    imageURL: string
+    imageURL: string,
+    description: string
 }
 
 export function getBreedTitle(breed: string) {

@@ -3,7 +3,7 @@ import { Controller, useForm, useWatch } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { dogFormSchema } from "@schemas/dogSchemas";
 
-import { Button, Field, HStack, Input, Spacer, SwitchControl, SwitchHiddenInput, SwitchLabel, SwitchRoot, VStack } from "@chakra-ui/react";
+import { Button, Field, HStack, Input, Spacer, SwitchControl, SwitchHiddenInput, SwitchLabel, SwitchRoot, Textarea, VStack } from "@chakra-ui/react";
 
 import { DogModel } from "@models/DogModel";
 import { DogGender, DogGenderEnum } from "@models/enums/DogGender";
@@ -32,7 +32,8 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
             adoptionDateValid: false,
             adoptionDate: dateToday(),
             gender: [DogGenderEnum.Female],
-            size: [DogSizeEnum.Small]
+            size: [DogSizeEnum.Small],
+            description: ""
         },
         resolver: yupResolver(dogFormSchema)
     })
@@ -48,6 +49,7 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
             form.resetField("adoptionDate")
             form.resetField("gender")
             form.resetField("size")
+            form.resetField("description")
             return
         }
 
@@ -58,7 +60,8 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
             "adoptionDateValid": dog.adoptionDateValid,
             "adoptionDate": timestampToDate(dog.adoptionDate),
             "gender": [dog.gender],
-            "size": [dog.size]
+            "size": [dog.size],
+            "description": dog.description
         })
     }, [dog])
 
@@ -80,6 +83,8 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
 
         dog.gender = data.gender[0] as DogGender
         dog.size = data.size[0] as DogSize
+
+        dog.description = data.description
 
         onSubmit(dog)
     }, [dog, onSubmit])
@@ -220,6 +225,14 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
                         </Field.Root>
                     )}
                 />
+
+                <Field.Root invalid={!!form.formState.errors.description}>
+                    <Textarea {...form.register("description")} placeholder="Write your something about the dog..." rows={6} />
+                    <Field.ErrorText>
+                        <Field.ErrorIcon />
+                        {form.formState.errors.description?.message}
+                    </Field.ErrorText>
+                </Field.Root>
 
                 <HStack w="100%">
                     <Spacer />
