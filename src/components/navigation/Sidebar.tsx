@@ -12,7 +12,7 @@ export default function Sidebar() {
             <Box display={{ base: "block", md: "none" }}>
                 <Drawer.Root open={open} onOpenChange={(e) => setOpen(e.open)} placement={"start"}>
                     <Drawer.Trigger position="absolute" left="-5px" top="5px" zIndex={100} m={0} p={0} asChild>
-                        <Button variant="outline" size="md" m="0">
+                        <Button variant="outline" size="md" m="0" borderRadius={0} bgColor={"accent.bg"} color={"accent.fg"}>
                             <FiMenu />
                         </Button>
                     </Drawer.Trigger>

@@ -25,7 +25,8 @@ export function createDogAddDialogueData() : DogAddDialogueData {
             breed: "",
             gender: DogGenderEnum.Female,
             size: DogSizeEnum.Small,
-            imageURL: ""
+            imageURL: "",
+            description: ""
         }
     }
 }

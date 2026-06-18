@@ -68,8 +68,32 @@ export default function DogsDetails( { } : DogsDetailsProps) {
     return (
         dog &&
             <Flex flexDirection="column" m="auto" maxW={850}>
-                <Flex p={0}>
-                    <Container w="60%" p={0} pr={4} mt={4}>
+                <Grid templateColumns={{ base: "repeat(1, 1fr)", lg: "repeat(10, 1fr)"}} mt={4} p={0} gap={4}>
+                    <GridItem colSpan={{ base: 1, lg: 4}}>
+                        <Flex direction={"column"} bgColor={"softAccent.bg/30"} borderRadius={"3xl"} boxShadow={"md"} p={4} gap={4}>
+                            <DogCard dog={dog} />
+
+                            <Grid templateColumns={"repeat(2, 1fr)"} w="full" gap={4}>
+                                <GridItem colSpan={1} bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"}>
+                                    <VStack gap={0} m={4}>
+                                        <Text fontSize={"md"} fontWeight={"bold"}>{20}</Text>
+                                        <Text fontSize={"sm"}>total visits</Text>
+                                    </VStack>
+                                </GridItem>
+                            
+                                <GridItem colSpan={1} bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"}>
+                                    <VStack gap={0} m={4}>
+                                        <Text fontSize={"md"} fontWeight={"bold"}>{10}</Text>
+                                        <Text fontSize={"sm"}>favourited</Text>
+                                    </VStack>
+                                </GridItem>
+                            </Grid>
+
+                            <Button variant="solid" w="full" boxShadow={"md"} onClick={onMeetClick}>Meet {dog.name}</Button>
+                        </Flex>
+                    </GridItem>
+
+                    <GridItem colSpan={{ base: 1, lg: 6}}>
                         <HStack>
                             <Heading justifyContent="left" w="100%">More about {dog?.name}</Heading>
                             
@@ -77,37 +101,11 @@ export default function DogsDetails( { } : DogsDetailsProps) {
                             <DogFavouriteButton dog={dog} />
                         </HStack>
                             
-                        <Text textAlign={"justify"} mt={4}>
-                            Luna is a 3-year-old mixed-breed dog with a bright personality and a heart full of love. She arrived at the shelter after being found as a stray in a local park, where she had been spotted for several days. Despite efforts to locate her owners, no one came forward, and Luna began her journey toward finding a new forever home.<br />
-                            <br />
-                            Since arriving at the shelter, Luna has quickly become a favorite among staff and volunteers. She greets everyone with a wagging tail and an eager smile, always ready for attention and affection. Luna enjoys daily walks, playtime with toys, and exploring new surroundings with curiosity and enthusiasm.<br />
-                            <br />
-                            She is friendly, intelligent, and eager to please, making her a wonderful companion for a variety of households. Luna loves spending time with people and is happiest when included in family activities. She is looking for a loving home where she can share her loyalty, affection, and joyful spirit for years to come.
+                        <Text textAlign={"justify"} whiteSpace="pre-line" mt={4}>
+                            { dog?.description }
                         </Text>
-                    </Container>
-
-                    <VStack w="40%" bgColor={"softAccent.bg/30"} borderRadius={"3xl"} boxShadow={"md"} mt={4} p={4} gap={4}>
-                        <DogCard dog={dog} />
-
-                        <Grid templateColumns={"repeat(2, 1fr)"} w="full" gap={4}>
-                            <GridItem colSpan={1} bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"}>
-                                <VStack gap={0} m={4}>
-                                    <Text fontSize={"md"} fontWeight={"bold"}>{20}</Text>
-                                    <Text fontSize={"sm"}>total visits</Text>
-                                </VStack>
-                            </GridItem>
-                        
-                            <GridItem colSpan={1} bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"}>
-                                <VStack gap={0} m={4}>
-                                    <Text fontSize={"md"} fontWeight={"bold"}>{10}</Text>
-                                    <Text fontSize={"sm"}>favourited</Text>
-                                </VStack>
-                            </GridItem>
-                        </Grid>
-
-                        <Button variant="solid" w="full" boxShadow={"md"} onClick={onMeetClick}>Meet {dog.name}</Button>
-                    </VStack>
-                </Flex>
+                    </GridItem>
+                </Grid>
 
                 <VStack w="full" bgColor={"softAccent.bg/30"} borderRadius={"3xl"} boxShadow={"md"} m={0} mt={8} px={8} pt={4} pb={8} gap={4}>
                     <Heading w="full">Remarks about {dog.name}</Heading>

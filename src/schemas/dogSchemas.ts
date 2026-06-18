@@ -33,5 +33,11 @@ export const dogFormSchema = yup.object({
         .array()
         .min(1, "min 1 size")
         .max(1, "max 1 size")
-        .required("Size is required")
+        .required("Size is required"),
+
+    description: yup
+        .string()
+        .min(500, "Description must be at least 500 characters")
+        .max(1800, "Description must be 1800 character max")
+        .required("Description is required")
 })
