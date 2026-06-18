@@ -118,8 +118,8 @@ export default function DogsDetails({ } : DogsDetailsProps) {
                     </GridItem>
                 </Grid>
 
-                <VStack w="full" bgColor={"softAccent.bg/30"} borderRadius={"3xl"} boxShadow={"md"} m={0} mt={8} px={8} pt={4} pb={8} gap={4}>
-                    <Heading w="full">Remarks about {dog.name}</Heading>
+                <VStack w="full" bgColor={"softAccent.bg/30"} borderRadius={"3xl"} boxShadow={"md"} m={0} mt={8} px={4} pt={4} pb={4} gap={4}>
+                    <Heading w="full" pl={4}>Remarks about {dog.name}</Heading>
                     {   
                         ratingCollection.ratings.length > 0 
                             ? 
