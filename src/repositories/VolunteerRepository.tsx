@@ -166,12 +166,13 @@ function VolunteerRepository({ database } : { database: Firestore }) {
     
     async function createVolunteerIfNonExistant(user: User, name: string, operationCallback: RepositoryOperationCallback) {
         const unsubcribe = subscribeForVolunteer(user.uid, (result) => {
+            unsubcribe()
+
             if (result?.length) {
                 const volunteer = result[0]
                 volunteer.name = name
 
                 updateVolunteer(volunteer, operationCallback)
-                unsubcribe()
                 return
             }
             
@@ -181,10 +182,7 @@ function VolunteerRepository({ database } : { database: Firestore }) {
                 volunteerSince: Timestamp.now(),
                 name: name,
             }
-            createVolunteer(volunteer, (state, result) => {
-                operationCallback(state, result)
-                unsubcribe()
-            })
+            createVolunteer(volunteer, operationCallback)
         })
     }
 

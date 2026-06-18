@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from "react"
 import { useParams } from "react-router-dom"
 
-import { Box, Button, Center, Container, Flex, Grid, GridItem, Heading, HStack, Text, VStack } from "@chakra-ui/react"
+import { Box, Button, Center, Flex, Grid, GridItem, Heading, HStack, Text, VStack } from "@chakra-ui/react"
 
 import { useDialogueContext } from "@contexts/DialogueContext"
 import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
