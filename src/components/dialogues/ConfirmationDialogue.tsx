@@ -52,7 +52,10 @@ export default function ConfirmationDialogue({ open, onClose, data } : Confirmat
                                 {data && data.description}
                         </Dialog.Body>
                         <Dialog.Footer>
-                            <Button variant="outline" onClick={handleCancel}>{data?.cancel}</Button>
+                            { 
+                                data?.cancel && 
+                                    <Button variant="outline" onClick={handleCancel}>{data.cancel}</Button>
+                            }
                             <Dialog.ActionTrigger asChild>
                                 <Button onClick={handleConfirm}>{data?.confirm}</Button>
                             </Dialog.ActionTrigger>

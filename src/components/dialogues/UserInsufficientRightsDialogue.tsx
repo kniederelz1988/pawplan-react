@@ -5,10 +5,10 @@ export function creatUserInsufficientRightsDialogueData()
     : UserInsufficientRightsDialogueData {
     return { 
         title: "Not enough rights", 
-        description: "You don't have enough right!",
+        description: "You don't have enough right! Please contact your animal shelter",
 
-        confirm: "Okidoki :)",
-        cancel: "Ok :(",
+        confirm: "Okay",
+        cancel: "",
     }
 }
 

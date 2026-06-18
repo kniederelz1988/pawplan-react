@@ -4,6 +4,8 @@ import dogRepository from "@repos/DogsRepository";
 import { DogModel } from "@models/DogModel";
 import { RepositoryOperationStatusEnum } from "@repos/enums/RepositoryOperationStatus";
 import { toaster } from "@components/ui/toaster";
+import volunteerDogLikesRepository from "@repos/VolunteerDogLikesRepository";
+import appointmentRepository from "@repos/AppointmentRepository";
 
 export function useDogRepository() {
     function createDog(dog: DogModel) {
@@ -60,4 +62,34 @@ export default function useDogsCollection(dogIds: string[]) {
     }, [filterByIds])
 
     return { dogs, filterDogsByIds }
+}
+export function useDogLikeCount() {
+    const [dog, setDog] = useState<DogModel | null>(null)
+    const [likeCount, setLikeCount] = useState(0)
+
+    useEffect(() => {
+        if (!dog?.id)
+            return
+
+        return volunteerDogLikesRepository.subscribeForDogLikes(dog.id, (r) => {
+            setLikeCount(r.length)
+        })
+    }, [dog])
+
+    return { count: likeCount, for: setDog }
+}
+export function useDogAppointmentCount() {
+    const [dog, setDog] = useState<DogModel | null>(null)
+    const [appointmentCount, setAppointmentCount] = useState(0)
+
+    useEffect(() => {
+        if (!dog?.id)
+            return
+
+        return appointmentRepository.subscribeForAllDogAppointments(dog.id, (r) => {
+            setAppointmentCount(r.size)
+        })
+    }, [dog])
+
+    return { count: appointmentCount, for: setDog }
 }

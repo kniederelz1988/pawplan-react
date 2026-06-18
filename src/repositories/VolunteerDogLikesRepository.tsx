@@ -15,15 +15,23 @@ const modelConverter: FirestoreDataConverter<VolunteerDogLikeModel, VolunteerDog
     }
 }
 
-type VolunteerDogLikedRepositoryListener = (result: VolunteerDogLikeModel[]) => void
+type VolunteerDogLikesRepositoryListener = (result: VolunteerDogLikeModel[]) => void
 
 function VolunteerDogLikesRepository({ database } : { database: Firestore }) {
     const collectionName = "volunteerDogLikes";
 
-    function subscribeForVolunteerLikes(volunteerId: string, listener: VolunteerDogLikedRepositoryListener) {
+    function subscribeForVolunteerLikes(volunteerId: string, listener: VolunteerDogLikesRepositoryListener) {
         const q = query(
             collection(database, collectionName),
             where("volunteerId", "==", volunteerId),
+        ).withConverter(modelConverter)
+
+        return onSnapshot(q, (snap) => listener(snap.docs.map(t => t.data())))
+    }
+    function subscribeForDogLikes(dogId: string, listener: VolunteerDogLikesRepositoryListener) {
+        const q = query(
+            collection(database, collectionName),
+            where("dogId", "==", dogId),
         ).withConverter(modelConverter)
 
         return onSnapshot(q, (snap) => listener(snap.docs.map(t => t.data())))
@@ -71,7 +79,7 @@ function VolunteerDogLikesRepository({ database } : { database: Firestore }) {
         operationCallback(RepositoryOperationStatusEnum.Success)
     }
 
-    return { subscribeForVolunteerLikes, addLike, removeLike }
+    return { subscribeForVolunteerLikes, subscribeForDogLikes, addLike, removeLike }
 }
 
 const volunteerDogLikesRepository = VolunteerDogLikesRepository({ database })
