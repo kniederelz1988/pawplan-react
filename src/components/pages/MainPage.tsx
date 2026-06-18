@@ -8,10 +8,10 @@ export default function MainPage() {
             <Sidebar />
 
             <Box flex="1" overflowY="auto"
-                px={{ base: 0, md: 6 }} 
-                py={6} 
+                pt={6} 
+                pb={24}
                 pl={{ base: 6, md: 0 }}
-                pr={{ base: 0, md: 0}}
+                pr={{ base: 0, md: 0 }}
             >
                 <Container w="100%" scrollBehavior={"auto"}>
                     <Router />
