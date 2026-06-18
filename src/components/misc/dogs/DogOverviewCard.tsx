@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { NavLink } from 'react-router-dom';
 
-import { Button, Card, HStack, Spacer, Text, VStack } from "@chakra-ui/react";
+import { Button, Card, HStack, Spacer, Text } from "@chakra-ui/react";
 
 import { VolunteerRoleEnum } from "@models/enums/UserRoleType";
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks";
