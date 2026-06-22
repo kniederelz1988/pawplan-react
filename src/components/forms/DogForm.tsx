@@ -96,151 +96,166 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
 
     return (
         <form onSubmit={form.handleSubmit(handleFormSubmit)} onReset={handleFormReset}>
-            <VStack align={"flex-start"} gap={4}>
-                <Field.Root invalid={!!form.formState.errors.name}>
-                    <Field.Label>Name</Field.Label>
-                    <Input type="text" placeholder="Waldi" {...form.register("name")} />
-                    <Field.ErrorText>
-                        <Field.ErrorIcon />
-                        {form.formState.errors.name?.message}
-                    </Field.ErrorText>
-                </Field.Root>
+            <Field.Root invalid={!!form.formState.errors.name}>
+                <Field.Label>Name</Field.Label>
+                <Input type="text" placeholder="Waldi" {...form.register("name")} />
+                <Field.ErrorText>
+                    <Field.ErrorIcon />
+                    {form.formState.errors.name?.message}
+                </Field.ErrorText>
+            </Field.Root>
 
-                <Controller name="birthday" control={form.control}
-                    render={({ field }) => (
-                        <Field.Root invalid={!!form.formState.errors.birthday}>
-                            <DatePicker 
-                                value={birthdayValue ? [dateToDateValue(birthdayValue)] : []}
-                                onValueChange={(d) => {
-                                    if (!d.value.length) {
-                                        field.onChange(null)
-                                        return
-                                    }
+            <Spacer h={4} />
 
-                                    field.onChange(dateValueToDate(d.value[0]))
-                                }}
-                                onBlur={() => field.onBlur()}
-                            >
-                                Birthday
-                            </DatePicker>
-                            <Field.ErrorText>
-                                <Field.ErrorIcon />
-                                {form.formState.errors.birthday?.message}
-                            </Field.ErrorText>
-                        </Field.Root>
-                    )}
-                />
-                
-                <Controller name="shelterday" control={form.control}
-                    render={({ field }) => (
-                        <Field.Root invalid={!!form.formState.errors.shelterday}>
-                            <DatePicker 
-                                value={shelterdayValue ? [dateToDateValue(shelterdayValue)] : []}
-                                onValueChange={(d) => {
-                                    if (!d.value.length) {
-                                        field.onChange(null)
-                                        return
-                                    }
+            <Controller name="birthday" control={form.control}
+                render={({ field }) => (
+                    <Field.Root invalid={!!form.formState.errors.birthday}>
+                        <DatePicker 
+                            value={birthdayValue ? [dateToDateValue(birthdayValue)] : []}
+                            onValueChange={(d) => {
+                                if (!d.value.length) {
+                                    field.onChange(null)
+                                    return
+                                }
 
-                                    field.onChange(dateValueToDate(d.value[0]))
-                                }}
-                                onBlur={() => field.onBlur()}
-                            >
-                                Sheltered date
-                            </DatePicker>
-                            <Field.ErrorText>
-                                <Field.ErrorIcon />
-                                {form.formState.errors.shelterday?.message}
-                            </Field.ErrorText>
-                        </Field.Root>
-                    )}
-                />
-
-                <VStack w="100%" gap={0}>
-                    <Field.Root>
-                        <SwitchRoot {...form.register("adoptionDateValid")} h="40px">
-                            <SwitchHiddenInput />
-                            <SwitchControl />
-                            <SwitchLabel>Was adopted</SwitchLabel>
-                        </SwitchRoot>
+                                field.onChange(dateValueToDate(d.value[0]))
+                            }}
+                            onBlur={() => field.onBlur()}
+                        >
+                            Birthday
+                        </DatePicker>
+                        <Field.ErrorText>
+                            <Field.ErrorIcon />
+                            {form.formState.errors.birthday?.message}
+                        </Field.ErrorText>
                     </Field.Root>
-        
-                    {
-                        form.getValues("adoptionDateValid") &&
-                            <Controller name="adoptionDate" control={form.control}
-                                render={({ field }) => (
-                                    <Field.Root invalid={!!form.formState.errors.adoptionDate}>
-                                        <DatePicker 
-                                            value={adoptionDateValue ? [dateToDateValue(adoptionDateValue)] : []}
-                                            onValueChange={(d) => {
-                                                if (!d.value.length) {
-                                                    field.onChange(null)
-                                                    return
-                                                }
+                )}
+            />
 
-                                                field.onChange(dateValueToDate(d.value[0]))
-                                            }}
-                                            onBlur={() => field.onBlur()}
-                                        />
-                                        <Field.ErrorText>
-                                            <Field.ErrorIcon />
-                                            {form.formState.errors.adoptionDate?.message}
-                                        </Field.ErrorText>
-                                    </Field.Root>
-                                )}
-                            />
-                    }
-                </VStack>
+            <Spacer h={4} />
 
-                <Controller name="gender" control={form.control}
-                    render={({ field }) => (
-                        <Field.Root invalid={!!form.formState.errors.gender}>
-                            <DogGenderSelection 
-                                values={genderValue as DogGender[]}
-                                onValueChanged={field.onChange}
-                            >
-                                Gender
-                            </DogGenderSelection>
-                            <Field.ErrorText>
-                                <Field.ErrorIcon />
-                                {form.formState.errors.gender?.message}
-                            </Field.ErrorText>
-                        </Field.Root>
-                    )}
-                />
+            <Controller name="shelterday" control={form.control}
+                render={({ field }) => (
+                    <Field.Root invalid={!!form.formState.errors.shelterday}>
+                        <DatePicker 
+                            value={shelterdayValue ? [dateToDateValue(shelterdayValue)] : []}
+                            onValueChange={(d) => {
+                                if (!d.value.length) {
+                                    field.onChange(null)
+                                    return
+                                }
 
-                <Controller name="size" control={form.control}
-                    render={({ field }) => (
-                        <Field.Root invalid={!!form.formState.errors.size}>
-                            <DogSizeSelection 
-                                values={sizeValue as DogSize[]} 
-                                onValueChanged={field.onChange}
-                            >
-                                Size
-                            </DogSizeSelection>
-                            <Field.ErrorText>
-                                <Field.ErrorIcon />
-                                {form.formState.errors.size?.message}
-                            </Field.ErrorText>
-                        </Field.Root>
-                    )}
-                />
+                                field.onChange(dateValueToDate(d.value[0]))
+                            }}
+                            onBlur={() => field.onBlur()}
+                        >
+                            Sheltered date
+                        </DatePicker>
+                        <Field.ErrorText>
+                            <Field.ErrorIcon />
+                            {form.formState.errors.shelterday?.message}
+                        </Field.ErrorText>
+                    </Field.Root>
+                )}
+            />
 
-                <Field.Root invalid={!!form.formState.errors.description}>
-                    <Textarea {...form.register("description")} placeholder="Write your something about the dog..." rows={6} />
-                    <Field.ErrorText>
-                        <Field.ErrorIcon />
-                        {form.formState.errors.description?.message}
-                    </Field.ErrorText>
+            <Spacer h={4} />
+
+            <VStack w="100%" gap={0}>
+                <Field.Root>
+                    <Field.Label>Adopted</Field.Label>
+                    <SwitchRoot {...form.register("adoptionDateValid")} w="100%" h="40px" pl={2}>
+                        <SwitchHiddenInput />
+                        <SwitchControl />
+                        {
+                            form.getValues("adoptionDateValid") &&
+                                <Controller name="adoptionDate" control={form.control}
+                                    render={({ field }) => (
+                                        <VStack w="100%" pl={2}>
+                                            <Field.Root>
+                                                <DatePicker 
+                                                    value={adoptionDateValue ? [dateToDateValue(adoptionDateValue)] : []}
+                                                    onValueChange={(d) => {
+                                                        if (!d.value.length) {
+                                                            field.onChange(null)
+                                                            return
+                                                        }
+
+                                                        field.onChange(dateValueToDate(d.value[0]))
+                                                    }}
+                                                    onBlur={() => field.onBlur()}
+                                                />
+                                                <Field.ErrorText>
+                                                    <Field.ErrorIcon />
+                                                    {form.formState.errors.adoptionDate?.message}
+                                                </Field.ErrorText>
+                                            </Field.Root>
+                                        </VStack>
+                                    )}
+                                />
+                        }
+                    </SwitchRoot>
                 </Field.Root>
-
-                <HStack w="100%">
-                    <Spacer />
+    
                 
-                    <Button variant="subtle" w="30%" type="reset">Cancel</Button>
-                    <Button type="submit" w="30%">Confirm</Button>
-                </HStack>
             </VStack>
+
+            <Spacer h={4} />
+
+            <Controller name="gender" control={form.control}
+                render={({ field }) => (
+                    <Field.Root invalid={!!form.formState.errors.gender}>
+                        <DogGenderSelection 
+                            values={genderValue as DogGender[]}
+                            onValueChanged={field.onChange}
+                        >
+                            Gender
+                        </DogGenderSelection>
+                        <Field.ErrorText>
+                            <Field.ErrorIcon />
+                            {form.formState.errors.gender?.message}
+                        </Field.ErrorText>
+                    </Field.Root>
+                )}
+            />
+
+            <Spacer h={4} />
+
+            <Controller name="size" control={form.control}
+                render={({ field }) => (
+                    <Field.Root invalid={!!form.formState.errors.size}>
+                        <DogSizeSelection 
+                            values={sizeValue as DogSize[]} 
+                            onValueChanged={field.onChange}
+                        >
+                            Size
+                        </DogSizeSelection>
+                        <Field.ErrorText>
+                            <Field.ErrorIcon />
+                            {form.formState.errors.size?.message}
+                        </Field.ErrorText>
+                    </Field.Root>
+                )}
+            />
+
+            <Spacer h={4} />
+
+            <Field.Root invalid={!!form.formState.errors.description}>
+                <Textarea {...form.register("description")} placeholder="Write your something about the dog..." rows={6} />
+                <Field.ErrorText>
+                    <Field.ErrorIcon />
+                    {form.formState.errors.description?.message}
+                </Field.ErrorText>
+            </Field.Root>
+
+            <Spacer h={4} />
+
+            <HStack mx={0} mt={2}>
+                <Spacer />
+            
+                <Button variant="subtle" w="30%" type="reset">Cancel</Button>
+                <Button type="submit" w="30%">Confirm</Button>
+            </HStack>
         </form>
     )
 }

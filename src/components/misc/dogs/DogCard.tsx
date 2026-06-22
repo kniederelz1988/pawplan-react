@@ -10,7 +10,7 @@ export default function DogCard({ dog } : DogCardProps) {
     return (
         <Card.Root key={dog.id} overflow="hidden" w="100%" variant={"elevated"}>
             <Card.Header p={0}>
-                <AspectRatio ratio={1} h={260}>
+                <AspectRatio minH={210} ratio={{ base: 1.5, md: 1 }}>
                     <Image src={
                         `${dog.imageURL ? dog.imageURL : 'https://meredith.nhcrafts.org/wp-content/uploads/dog-placeholder.jpg'}`
                     } />

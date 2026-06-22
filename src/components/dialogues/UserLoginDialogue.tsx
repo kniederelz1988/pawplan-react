@@ -1,8 +1,6 @@
-import { useCallback, useEffect } from "react"
-import { CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react"
+import DialogueBox from "@components/hocs/withDialogueBox"
 
 import UserLoginForm from "@components/forms/UserLoginForm"
-import { useAuthContext } from "@contexts/AuthContexts"
 
 type UserLoginDialogueProps = { 
     open: boolean, 
@@ -10,42 +8,9 @@ type UserLoginDialogueProps = {
 }
 
 export default function UserLoginDialogue({ open, onClose } : UserLoginDialogueProps) {
-    const user = useAuthContext()
-
-    useEffect(() => {
-        if(!user) {
-            return
-        }
-
-        onClose()
-    }, [user, onClose])
-
-    const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
-        if(!e.open) {
-            onClose()
-        }
-    }, [onClose])
-
     return (
-        <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>
-            <Portal>
-                <Dialog.Backdrop onClick={onClose}/>
-                <Dialog.Positioner>
-                    <Dialog.Content>
-                        <Dialog.Header p="14px">
-                            <Dialog.Title>
-                                Login
-                            </Dialog.Title>
-                        </Dialog.Header>
-                        <Dialog.Body>
-                            <UserLoginForm showRegisterLink={true} />
-                        </Dialog.Body>
-                        <Dialog.CloseTrigger asChild>
-                            <CloseButton />
-                        </Dialog.CloseTrigger>
-                    </Dialog.Content>
-                </Dialog.Positioner>
-            </Portal>
-        </Dialog.Root>
+        <DialogueBox open={open} title="Login" onClose={onClose}>
+            <UserLoginForm showRegisterLink={true} />
+        </DialogueBox>
     )
 }

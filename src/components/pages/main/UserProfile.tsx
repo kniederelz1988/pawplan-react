@@ -43,48 +43,47 @@ export default function UserProfile() {
                 </Text>
                 
                 <Box bgColor={"primary"} border={"xs"} borderRadius={"3xl"} borderColor={"softAccent.fg"} boxShadow={"md"} mt={8} p={0}>
-                    <HStack gap={4} p={4} align={"stretch"}>
-                        <Circle w="80px" h="80px" fontSize={"3xl"} bgColor="accent.bg" color="accent.fg">
-                            {volunteer.name.substring(0, 1).toUpperCase()}
-                        </Circle>
+                    <Grid templateColumns="auto 1fr auto auto" gap={4} p={4}>
+                        <GridItem>
+                            <Circle w="80px" h="80px" fontSize={"3xl"} bgColor="accent.bg" color="accent.fg">
+                                {volunteer.name.substring(0, 1).toUpperCase()}
+                            </Circle>
+                        </GridItem>
 
-                        <VStack m={"auto"} gap={0}>
-                            <Text fontSize="md" fontWeight="bold" w="100%">
+                        <GridItem m={"auto"} w="100%" minW={0} overflow={"clip"} gap={0}>
+                            <Text fontSize="md" fontWeight="bold" w="100%" overflow={"hidden"} truncate>
                                 {volunteer.name}
-                                <ProfileBadge role={role} />
+                                <ProfileBadge role={role}/>
                             </Text>
-                            <Text fontSize="sm" w="100%">
+                            <Text fontSize="sm" w="100%" overflow={"hidden"} truncate>
                                 {user.email}
                             </Text>
-                        </VStack>
+                        </GridItem>
 
-                        <Spacer />
-                        <Spacer />
+                        <GridItem>
+                            <Grid templateColumns={"repeat(2, 1fr)"} gap={2} p={0} display={{ base: "none", md: "grid"}}>
+                                <GridItem colSpan={1} bgColor={"softAccent.bg/10"} color={"softAccent.fg"} borderRadius={"2xl"} border={"xs"} boxShadow={"sm"}>
+                                    <VStack align={"center"} gap={0} p={4}>
+                                        <Text fontWeight={"bold"}>{appointments.length}</Text>
+                                        <Text>visits</Text>
+                                    </VStack>
+                                </GridItem>
 
-                        <Grid templateColumns={"repeat(2, 1fr)"} gap={2} p={0} display={{ base: "none", md: "grid"}}>
-                            <GridItem colSpan={1} bgColor={"softAccent.bg/10"} color={"softAccent.fg"} borderRadius={"2xl"} border={"xs"} boxShadow={"sm"}>
-                                <VStack align={"center"} gap={0} p={4}>
-                                    <Text fontWeight={"bold"}>{appointments.length}</Text>
-                                    <Text>visits</Text>
-                                </VStack>
-                            </GridItem>
-
-                            <GridItem colSpan={1} bgColor={"softAccent.bg/10"} color={"softAccent.fg"} borderRadius={"2xl"} border={"xs"} boxShadow={"sm"}>
-                                <VStack align={"center"} gap={0} p={4}>
-                                    <Text fontWeight={"bold"}>{likeCounter}</Text>
-                                    <Text>favourites</Text>
-                                </VStack>
-                            </GridItem>
-                        </Grid>
-                        
-                        <Spacer />
-
-                        <VStack m={"auto"} gap={0}>
+                                <GridItem colSpan={1} bgColor={"softAccent.bg/10"} color={"softAccent.fg"} borderRadius={"2xl"} border={"xs"} boxShadow={"sm"}>
+                                    <VStack align={"center"} gap={0} p={4}>
+                                        <Text fontWeight={"bold"}>{likeCounter}</Text>
+                                        <Text>favourites</Text>
+                                    </VStack>
+                                </GridItem>
+                            </Grid>
+                        </GridItem>
+                            
+                        <GridItem m={"auto"}>
                             <IconButton variant="subtle" borderRadius={24} onClick={onEditUserClick}>
                                 <BiPencil />
                             </IconButton>
-                        </VStack>
-                    </HStack>
+                        </GridItem>
+                    </Grid>
                 </Box>
 
                 <Box bgColor={"softAccent.bg/30"} color={"softAccent.fg"} borderRadius={"3xl"} boxShadow={"md"} mt={8} p={6}>

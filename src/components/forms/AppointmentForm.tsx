@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Button, Grid, HStack, RadioCard, Spacer } from "@chakra-ui/react";
+import { AspectRatio, Button, Grid, HStack, RadioCard, Spacer } from "@chakra-ui/react";
 
 import { getDateFromToday } from "@helpers/TimeHelpers";
 
@@ -84,8 +84,8 @@ export default function AppointmentForm({ dog, onConfirm, onClose } : Appointmen
     
     return (
         <form onSubmit={handleSubmit} onReset={handleReset}>
-            <RadioCard.Root onValueChange={onDayOffsetChanged}>
-                <RadioCard.Label>Choose a date</RadioCard.Label>
+            <RadioCard.Root name="day" onValueChange={onDayOffsetChanged}>
+                <RadioCard.Label fontWeight={"bold"}>Choose a date</RadioCard.Label>
                 <Grid templateColumns="repeat(7, 1fr)" gap={2}>
                     {daySlots.map((item, index) => (
                         <RadioCard.Item key={index} value={index.toString()}>
@@ -101,7 +101,7 @@ export default function AppointmentForm({ dog, onConfirm, onClose } : Appointmen
             <Spacer h={4} />
 
             <RadioCard.Root name="time" onValueChange={onTimeChanged}>
-                <RadioCard.Label>Choose a time</RadioCard.Label>
+                <RadioCard.Label fontWeight={"bold"}>Choose a time</RadioCard.Label>
                 <Grid templateColumns="repeat(5, 1fr)" gap={4}>
                     {timeSlots.map((item, index) => (
                         <RadioCard.Item key={index} value={index.toString()}>
@@ -116,7 +116,7 @@ export default function AppointmentForm({ dog, onConfirm, onClose } : Appointmen
             
             <Spacer h={4} />
 
-            <HStack>
+            <HStack mx={0} mt={2}>
                 <Spacer />
             
                 <Button type="submit" w="30%" disabled={!time || !date}>Confirm</Button>

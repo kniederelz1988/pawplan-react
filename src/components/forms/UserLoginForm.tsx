@@ -19,7 +19,7 @@ export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps)
     const { error, signInUser } = useAuthentification()
 
     const { handleSubmit, register, formState: { errors } } = useForm({
-        mode: "onBlur",
+        mode: "onSubmit",
         reValidateMode: "onChange",
         resolver: yupResolver(userLoginSchema)
     })
@@ -68,9 +68,11 @@ export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps)
 
             <Spacer h={4} />
 
-            <IconButton type="submit" w="100%">
-                <FiLogIn />Sign in
-            </IconButton>
+            <HStack mx={0} mt={2}>
+                <IconButton type="submit" w="100%">
+                    <FiLogIn />Sign in
+                </IconButton>
+            </HStack>
 
             { 
                 showRegisterLink &&

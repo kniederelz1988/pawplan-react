@@ -31,6 +31,7 @@ type DialogueData =
     AppointmentBookingDialogueData |
     AppointmentCancelDialogueData | 
     AppointmentEditDialogueData | 
+    DogAddDialogueData |
     DogEditDialogueData |
     VolunteerEditDialogueData |
     null

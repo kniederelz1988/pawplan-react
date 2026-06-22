@@ -1,9 +1,10 @@
 import React, { useCallback } from "react"
-import { Button, CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react"
+import { Button, CloseButton, Dialog, DialogOpenChangeDetails, Heading, Portal } from "@chakra-ui/react"
 
 import { AppointmentModel } from "@models/AppointmentModel"
 
 import { toaster } from "@components/ui/toaster"
+import DialogueBox from "@components/hocs/withDialogueBox"
 
 export type AppointmentEditDialogueData = {
     appointment: AppointmentModel
@@ -29,39 +30,13 @@ export default function AppointmentEditDialogue({ open, onClose, data } : Appoin
     const handleCancel = useCallback((_e: React.MouseEvent) => {
         onClose()
     }, [data, onClose])
-
-    const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
-        if(!e.open) {
-            onClose()
-        }
-    }, [onClose])
-
+    
     return (
-        <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>
-            <Portal>
-                <Dialog.Backdrop onClick={onClose}/>
-                <Dialog.Positioner>
-                    <Dialog.Content>
-                        <Dialog.Header p="14px">
-                            <Dialog.Title>
-                                Edit appointment
-                            </Dialog.Title>
-                        </Dialog.Header>
-                        <Dialog.Body>
-                            
-                        </Dialog.Body>
-                        <Dialog.Footer>
-                            <Button variant="outline" onClick={handleCancel}>Cancel</Button>
-                            <Dialog.ActionTrigger asChild>
-                                <Button onClick={handleConfirm}>Submit</Button>
-                            </Dialog.ActionTrigger>
-                        </Dialog.Footer>
-                        <Dialog.CloseTrigger asChild>
-                            <CloseButton />
-                        </Dialog.CloseTrigger>
-                    </Dialog.Content>
-                </Dialog.Positioner>
-            </Portal>
-        </Dialog.Root>
+        <DialogueBox open={open} title="Edit appointment" onClose={onClose}>
+            {/* Form is missing, this dialogue isnt used yet, but will be in the future */}
+
+            <Button variant="outline" onClick={handleCancel}>Cancel</Button>
+            <Button onClick={handleConfirm}>Submit</Button>
+        </DialogueBox>
     )
 }

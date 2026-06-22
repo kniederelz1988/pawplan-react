@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { NavLink } from 'react-router-dom';
 
-import { Button, Card, HStack, Spacer, Text } from "@chakra-ui/react";
+import { AspectRatio, Button, Card, HStack, Spacer, Text } from "@chakra-ui/react";
 
 import { VolunteerRoleEnum } from "@models/enums/UserRoleType";
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks";
@@ -45,42 +45,42 @@ export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
     
     return (
         <NavLink to={`dog/${dog.id}`}>
-        <Card.Root key={dog.id} overflow="hidden">
-            <Card.Header p={0}>
-                <HStack height={210} 
-                    align="start" bgImage={`url(${dog.imageURL ? dog.imageURL : 'https://meredith.nhcrafts.org/wp-content/uploads/dog-placeholder.jpg'})`} bgSize="cover" bgPos="center"
-                    p={2}
-                >   
-                    <DogEditButton dog={dog} />
-                    <Spacer />
-                    <DogFavouriteButton dog={dog} />
-                </HStack>
-            </Card.Header>
-            <Card.Body gap={0} p={4} pb={2}>
-                <Card.Title lineHeight={1.5}>
-                    <HStack>
-                        {dog.name}
+            <Card.Root key={dog.id} overflow="hidden">
+                <Card.Header p={0}>
+                    <HStack minH={210} aspectRatio={{ base: 1.5, md: 1 }}
+                        align="start" bgImage={`url(${dog.imageURL ? dog.imageURL : 'https://meredith.nhcrafts.org/wp-content/uploads/dog-placeholder.jpg'})`} bgSize="cover" bgPos="center"
+                        p={2}
+                    >   
+                        <DogEditButton dog={dog} />
                         <Spacer />
-                        <Text fontSize={"sm"}>{getGenderTitle(dog.gender)}</Text>
+                        <DogFavouriteButton dog={dog} />
                     </HStack>
-                </Card.Title>
-                <Card.Description as="div">
-                    <HStack>
-                        {/*getBreedTitle(dog.breed)*/}
-                        {/*<LuDot style={{ padding: 0, margin: -6 }}/>*/}
-                        {getDogAge(dog)}
-                        <Spacer />
-                        {/*<LuDot style={{ padding: 0, margin: -6 }}/>*/}
-                        {getSizeTitle(dog.size)}
-                    </HStack>
-                </Card.Description>
-            </Card.Body>
-            <Card.Footer p={2}>
-                <Button w="100%" onClick={onMeetClick}>
-                    <FaRegCalendar /> Meet {dog.name}
-                </Button>  
-            </Card.Footer>
-        </Card.Root>
+                </Card.Header>
+                <Card.Body gap={0} p={4} pb={2}>
+                    <Card.Title lineHeight={1.5}>
+                        <HStack>
+                            {dog.name}
+                            <Spacer />
+                            <Text fontSize={"sm"}>{getGenderTitle(dog.gender)}</Text>
+                        </HStack>
+                    </Card.Title>
+                    <Card.Description as="div">
+                        <HStack>
+                            {/*getBreedTitle(dog.breed)*/}
+                            {/*<LuDot style={{ padding: 0, margin: -6 }}/>*/}
+                            {getDogAge(dog)}
+                            <Spacer />
+                            {/*<LuDot style={{ padding: 0, margin: -6 }}/>*/}
+                            {getSizeTitle(dog.size)}
+                        </HStack>
+                    </Card.Description>
+                </Card.Body>
+                <Card.Footer p={2}>
+                    <Button w="100%" onClick={onMeetClick}>
+                        <FaRegCalendar /> Meet {dog.name}
+                    </Button>  
+                </Card.Footer>
+            </Card.Root>
         </NavLink>
     )
 }

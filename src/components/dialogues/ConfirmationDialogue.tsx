@@ -1,5 +1,6 @@
-import { Button, CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react"
-import React, { useCallback } from "react"
+import { Box, Button, CloseButton, Dialog, DialogOpenChangeDetails, Heading, HStack, Portal, Spacer } from "@chakra-ui/react"
+import DialogueBox from "@components/hocs/withDialogueBox"
+import React, { useCallback, useMemo } from "react"
 
 export type ConfirmationDialogueData = {
     title: React.ReactNode,
@@ -37,35 +38,19 @@ export default function ConfirmationDialogue({ open, onClose, data } : Confirmat
         }
     }, [onClose])
 
+    const title = useMemo(() => {
+        return data ? data.title : ""
+    }, [data])
+
     return (
-        <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>
-            <Portal>
-                <Dialog.Backdrop />
-                <Dialog.Positioner>
-                    <Dialog.Content>
-                        <Dialog.Header>
-                            <Dialog.Title>
-                                {data && data.title}
-                            </Dialog.Title>
-                        </Dialog.Header>
-                        <Dialog.Body>
-                                {data && data.description}
-                        </Dialog.Body>
-                        <Dialog.Footer>
-                            { 
-                                data?.cancel && 
-                                    <Button variant="outline" onClick={handleCancel}>{data.cancel}</Button>
-                            }
-                            <Dialog.ActionTrigger asChild>
-                                <Button onClick={handleConfirm}>{data?.confirm}</Button>
-                            </Dialog.ActionTrigger>
-                        </Dialog.Footer>
-                        <Dialog.CloseTrigger asChild>
-                            <CloseButton />
-                        </Dialog.CloseTrigger>
-                    </Dialog.Content>
-                </Dialog.Positioner>
-            </Portal>
-        </Dialog.Root>
+        <DialogueBox open={open} title={title} onClose={onClose}>
+            { data && data.description }
+
+            <HStack pt={2}>
+                <Spacer />
+                { data?.cancel && <Button variant="subtle" onClick={handleCancel}>{data.cancel}</Button> }
+                { data?.confirm && <Button onClick={handleConfirm}>{data?.confirm}</Button> }
+            </HStack>
+        </DialogueBox>
     )
 }
