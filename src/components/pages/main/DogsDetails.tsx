@@ -16,6 +16,7 @@ import DogFavouriteButton from "@components/misc/dogs/DogFavouriteButton"
 import DogCard from "@components/misc/dogs/DogCard"
 import { AppointmentRating } from "@components/misc/appointments/AppointmentRating"
 import { creatUserInsufficientRightsDialogueData } from "@components/dialogues/UserInsufficientRightsDialogue"
+import { FaRegCalendar } from "react-icons/fa6"
 
 type DogsDetailsProps = {
 }
@@ -99,7 +100,7 @@ export default function DogsDetails({ } : DogsDetailsProps) {
                             </Grid>
 
                             <Button variant="solid" w="full" boxShadow={"md"} onClick={onMeetClick}>
-                                Meet {dog.name}
+                                <FaRegCalendar /> Meet {dog.name}
                             </Button>
                         </Flex>
                     </GridItem>

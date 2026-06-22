@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import { CloseButton, Dialog, DialogOpenChangeDetails, Heading, Portal } from "@chakra-ui/react";
 
 import { Timestamp } from "firebase/firestore";
 
@@ -12,6 +11,7 @@ import { VolunteerModel } from "@models/VolunteerModel";
 import { DogModel } from "@models/DogModel";
 
 import AppointmentRatingForm from "@components/forms/AppointmentRatingForm";
+import DialogueBox from "@components/hocs/withDialogueBox";
 
 export type AppointmentCompleteDialogueData = {
     appointment: AppointmentModel, 
@@ -57,32 +57,9 @@ export default function AppointmentCompleteDialogue({ open, onClose, data } : Ap
         onClose()
     }, [data, onClose])
 
-    const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
-        if(!e.open) {
-            onClose()
-        }
-    }, [onClose])
-
     return (
-        <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>
-            <Portal>
-                <Dialog.Backdrop onClick={onClose}/>
-                <Dialog.Positioner>
-                    <Dialog.Content>
-                        <Dialog.Header p={4}>
-                            <Dialog.Title>
-                                <Heading px={4}>Complete visit with {data?.dog && data.dog.name}</Heading>
-                            </Dialog.Title>
-                        </Dialog.Header>
-                        <Dialog.Body px={4} pt={2} pb={4}>
-                            <AppointmentRatingForm onConfirm={handleConfirm} onClose={handleCancel}/>
-                        </Dialog.Body>
-                        <Dialog.CloseTrigger asChild>
-                            <CloseButton />
-                        </Dialog.CloseTrigger>
-                    </Dialog.Content>
-                </Dialog.Positioner>
-            </Portal>
-        </Dialog.Root>
+        <DialogueBox open={open} title={`Complete visit with ${data?.dog && data.dog.name}`} onClose={onClose}>
+            <AppointmentRatingForm onConfirm={handleConfirm} onClose={handleCancel}/>
+        </DialogueBox>
     )
 }

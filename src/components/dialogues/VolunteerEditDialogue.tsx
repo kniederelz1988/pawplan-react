@@ -1,11 +1,10 @@
 import { useCallback } from "react";
-import { CloseButton, Dialog, DialogOpenChangeDetails, Heading, HStack, Portal, Spacer } from "@chakra-ui/react";
 
 import { VolunteerModel } from "@models/VolunteerModel";
-
 import VolunteerForm from "@components/forms/VolunteerForm";
-import ProfileBadge from "@components/misc/profiles/ProfileBadge";
-import { useVolunteerRepository, useVolunteerRole } from "@repos/hooks/VolunteerHooks";
+import { useVolunteerRepository } from "@repos/hooks/VolunteerHooks";
+
+import DialogueBox from "@components/hocs/withDialogueBox";
 
 export type VolunteerEditDialogueData = {
     volunteer: VolunteerModel
@@ -22,48 +21,15 @@ type VolunteerEditDialogueProps = {
 
 export default function VolunteerEditDialogue({ open, onClose, data } : VolunteerEditDialogueProps) {
     const volunteerRepository = useVolunteerRepository()
-    const { role } = useVolunteerRole(data?.volunteer)
-    
+
     const handleSubmit = useCallback((volunteer: VolunteerModel) => {
         volunteerRepository.updateVolunteer(volunteer)
         onClose()
     }, [data, onClose]);
 
-    const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
-        if(!e.open) {
-            onClose()
-        }
-    }, [onClose])
-
     return (
-        <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange}>
-            <Portal>
-                <Dialog.Backdrop onClick={onClose}/>
-                <Dialog.Positioner>
-                    <Dialog.Content>
-                        <Dialog.Header p={4}>
-                            <Dialog.Title>
-                                <HStack>
-                                    <Heading px={4}>Edit volunteer</Heading>
-
-                                    <Spacer />
-
-                                    { <ProfileBadge role={role} /> }
-                                </HStack>
-                            </Dialog.Title>
-                        </Dialog.Header>
-                        <Dialog.Body px={4} pt={2} pb={4}>
-                            { 
-                                data?.volunteer &&
-                                    <VolunteerForm volunteer={data.volunteer} onSubmit={handleSubmit} onReset={onClose} />
-                            }
-                        </Dialog.Body>
-                        <Dialog.CloseTrigger asChild>
-                            <CloseButton />
-                        </Dialog.CloseTrigger>
-                    </Dialog.Content>
-                </Dialog.Positioner>
-            </Portal>
-        </Dialog.Root>
+        <DialogueBox open={open} title="Edit volunteer" onClose={onClose}>
+            { data?.volunteer && <VolunteerForm volunteer={data.volunteer} onSubmit={handleSubmit} onReset={onClose} /> }
+        </DialogueBox>
     )
 }

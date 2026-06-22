@@ -43,7 +43,7 @@ export default function VolunteerForm({ volunteer, onSubmit, onReset } : Volunte
     const handleFormSubmit = useCallback((data: any) => {
         volunteer.name = data.name
         volunteer.birthday = dateToTimestamp(data.birthday)
-        console.log(volunteer)
+
         onSubmit(volunteer)
     }, [volunteer, onSubmit])
     const handleFormReset = useCallback((e: React.SyntheticEvent) => {

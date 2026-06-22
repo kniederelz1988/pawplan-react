@@ -10,6 +10,7 @@ import DogCard from "@components/misc/dogs/DogCard";
 import { Timestamp } from "firebase/firestore";
 import { DogGenderEnum } from "@models/enums/DogGender";
 import { DogSizeEnum } from "@models/enums/DogSize";
+import DialogueBox from "@components/hocs/withDialogueBox";
 
 export type DogAddDialogueData = {
     dog: DogModel
@@ -51,40 +52,17 @@ export default function DogAddDialogue({ open, onClose, data } : DogAddDialogueP
         onClose()
     }, [data, onClose])
 
-    const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
-        if(!e.open) {
-            onClose()
-        }
-    }, [onClose])
-
     return (
-        <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange} size="xl">
-            <Portal>
-                <Dialog.Backdrop onClick={onClose}/>
-                <Dialog.Positioner>
-                    <Dialog.Content>
-                        <Dialog.Header p={4}>
-                            <Dialog.Title>
-                                <Heading px={4}>Add dog</Heading>
-                            </Dialog.Title>
-                        </Dialog.Header>
-                        <Dialog.Body px={4} pt={2} pb={4}>
-                            <Grid templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(5, 1fr)" }} gap={6}>
-                                <GridItem colSpan={{ base: 2, md: 2 }} alignContent={"start"}>
-                                    { data?.dog && <DogCard dog={data.dog} /> }
-                                </GridItem>
+        <DialogueBox open={open} title="Add dog" size="xl" onClose={onClose}>
+            <Grid templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(5, 1fr)" }} gap={6}>
+                <GridItem colSpan={{ base: 2, md: 2 }} alignContent={"start"}>
+                    { data?.dog && <DogCard dog={data.dog} /> }
+                </GridItem>
 
-                                <GridItem colSpan={{ base: 2, md: 3 }}  alignContent={"center"}>
-                                    { data?.dog && <DogForm dog={data.dog} onSubmit={handleConfirm} onReset={handleCancel}/> }
-                                </GridItem>
-                            </Grid>
-                        </Dialog.Body>
-                        <Dialog.CloseTrigger asChild>
-                            <CloseButton />
-                        </Dialog.CloseTrigger>
-                    </Dialog.Content>
-                </Dialog.Positioner>
-            </Portal>
-        </Dialog.Root>
+                <GridItem colSpan={{ base: 2, md: 3 }}  alignContent={"center"}>
+                    { data?.dog && <DogForm dog={data.dog} onSubmit={handleConfirm} onReset={handleCancel}/> }
+                </GridItem>
+            </Grid>
+        </DialogueBox>
     )
 }

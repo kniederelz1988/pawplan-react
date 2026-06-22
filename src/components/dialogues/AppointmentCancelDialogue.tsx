@@ -9,7 +9,6 @@ import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus";
 import { VolunteerModel } from "@models/VolunteerModel";
 import { DogModel } from "@models/DogModel";
 
-
 export type AppointmentCancelDialogueData = ConfirmationDialogueData
 export function createAppointmentCancelDialogueData(appointment: AppointmentModel, volunteer: VolunteerModel, dog: DogModel) 
     : AppointmentCancelDialogueData {
