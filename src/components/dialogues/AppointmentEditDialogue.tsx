@@ -1,5 +1,5 @@
 import React, { useCallback } from "react"
-import { Button, CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react"
+import { Button, CloseButton, Dialog, DialogOpenChangeDetails, Heading, Portal } from "@chakra-ui/react"
 
 import { AppointmentModel } from "@models/AppointmentModel"
 
@@ -42,12 +42,12 @@ export default function AppointmentEditDialogue({ open, onClose, data } : Appoin
                 <Dialog.Backdrop onClick={onClose}/>
                 <Dialog.Positioner>
                     <Dialog.Content>
-                        <Dialog.Header p="14px">
+                        <Dialog.Header p={4}>
                             <Dialog.Title>
-                                Edit appointment
+                                <Heading px={4}>Edit appointment</Heading>
                             </Dialog.Title>
                         </Dialog.Header>
-                        <Dialog.Body>
+                        <Dialog.Body px={4} pt={2} pb={4}>
                             
                         </Dialog.Body>
                         <Dialog.Footer>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react"
-import { CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react"
+import { CloseButton, Dialog, DialogOpenChangeDetails, Heading, Portal } from "@chakra-ui/react"
 
 import UserLoginForm from "@components/forms/UserLoginForm"
 import { useAuthContext } from "@contexts/AuthContexts"
@@ -32,12 +32,12 @@ export default function UserLoginDialogue({ open, onClose } : UserLoginDialogueP
                 <Dialog.Backdrop onClick={onClose}/>
                 <Dialog.Positioner>
                     <Dialog.Content>
-                        <Dialog.Header p="14px">
+                        <Dialog.Header p={4}>
                             <Dialog.Title>
-                                Login
+                                <Heading px={4}>Login</Heading>
                             </Dialog.Title>
                         </Dialog.Header>
-                        <Dialog.Body>
+                        <Dialog.Body px={4} pt={2} pb={4}>
                             <UserLoginForm showRegisterLink={true} />
                         </Dialog.Body>
                         <Dialog.CloseTrigger asChild>

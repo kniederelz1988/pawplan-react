@@ -42,7 +42,7 @@ export default function UserProfileOverview() {
                 <Popover.Root positioning={{ placement: "bottom-start" }}>
                     <Popover.Trigger asChild>
                         <IconButton bgColor={"accent.bg"} color={"accent.fg"} borderRadius={24} fontSize={"sm"} p={2}>
-                            <FiLogIn /> LogIn
+                            <FiLogIn /> Sign in
                         </IconButton>
                     </Popover.Trigger>
                     <Popover.Positioner>

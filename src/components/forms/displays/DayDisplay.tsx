@@ -6,7 +6,7 @@ type DayProps = {
 
 export default function DayDisplay({ date } : DayProps) {
     return (
-        <VStack m="auto" gap="0">
+        <VStack m="auto" gap={0}>
             <Text fontSize="xs">{date.toLocaleDateString(navigator.language, { weekday: "short" })}</Text>
             <Text fontSize="sm" fontWeight="bold">{date.getDate()}</Text>
         </VStack>

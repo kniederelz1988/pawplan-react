@@ -20,7 +20,7 @@ export default function UserRegisterForm({ showLoginHint } : UserRegisterFormPro
     const { error, createUser } = useCreateUser()
 
     const { handleSubmit, register, formState: { errors } } = useForm({
-        mode: "onBlur",
+        mode: "onSubmit",
         reValidateMode: "onChange",
         resolver: yupResolver(userRegisterSchema)
     })
@@ -80,9 +80,11 @@ export default function UserRegisterForm({ showLoginHint } : UserRegisterFormPro
 
             <Spacer h={4} />
 
-            <IconButton type="submit" w="100%">
-                <FaUserPlus /> Create account
-            </IconButton>
+            <HStack mx={0} mt={2}>
+                <IconButton type="submit" w="100%">
+                    <FaUserPlus /> Create account
+                </IconButton>
+            </HStack>
 
             {
                 showLoginHint &&

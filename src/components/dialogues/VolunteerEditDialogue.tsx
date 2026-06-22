@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { CloseButton, Dialog, DialogOpenChangeDetails, HStack, Portal, Spacer } from "@chakra-ui/react";
+import { CloseButton, Dialog, DialogOpenChangeDetails, Heading, HStack, Portal, Spacer } from "@chakra-ui/react";
 
 import { VolunteerModel } from "@models/VolunteerModel";
 
@@ -41,10 +41,10 @@ export default function VolunteerEditDialogue({ open, onClose, data } : Voluntee
                 <Dialog.Backdrop onClick={onClose}/>
                 <Dialog.Positioner>
                     <Dialog.Content>
-                        <Dialog.Header p="14px">
+                        <Dialog.Header p={4}>
                             <Dialog.Title>
                                 <HStack>
-                                    Edit volunteer
+                                    <Heading px={4}>Edit volunteer</Heading>
 
                                     <Spacer />
 
@@ -52,7 +52,7 @@ export default function VolunteerEditDialogue({ open, onClose, data } : Voluntee
                                 </HStack>
                             </Dialog.Title>
                         </Dialog.Header>
-                        <Dialog.Body>
+                        <Dialog.Body px={4} pt={2} pb={4}>
                             { 
                                 data?.volunteer &&
                                     <VolunteerForm volunteer={data.volunteer} onSubmit={handleSubmit} onReset={onClose} />

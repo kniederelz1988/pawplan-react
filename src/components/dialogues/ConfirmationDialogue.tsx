@@ -1,4 +1,4 @@
-import { Button, CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react"
+import { Button, CloseButton, Dialog, DialogOpenChangeDetails, Heading, Portal } from "@chakra-ui/react"
 import React, { useCallback } from "react"
 
 export type ConfirmationDialogueData = {
@@ -43,18 +43,18 @@ export default function ConfirmationDialogue({ open, onClose, data } : Confirmat
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
                     <Dialog.Content>
-                        <Dialog.Header>
+                        <Dialog.Header p={4}>
                             <Dialog.Title>
-                                {data && data.title}
+                                {data && <Heading px={4}>{data.title}</Heading>}
                             </Dialog.Title>
                         </Dialog.Header>
-                        <Dialog.Body>
+                        <Dialog.Body px={4} pt={2} pb={4}>
                                 {data && data.description}
                         </Dialog.Body>
-                        <Dialog.Footer>
+                        <Dialog.Footer px={4} pt={2} pb={4}>
                             { 
                                 data?.cancel && 
-                                    <Button variant="outline" onClick={handleCancel}>{data.cancel}</Button>
+                                    <Button variant="subtle" onClick={handleCancel}>{data.cancel}</Button>
                             }
                             <Dialog.ActionTrigger asChild>
                                 <Button onClick={handleConfirm}>{data?.confirm}</Button>

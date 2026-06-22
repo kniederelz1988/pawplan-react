@@ -1,4 +1,4 @@
-import { CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react";
+import { CloseButton, Dialog, DialogOpenChangeDetails, Heading, Portal } from "@chakra-ui/react";
 
 import { useCallback } from "react";
 import UserRegisterForm from "@components/forms/UserRegisterForm";
@@ -21,12 +21,12 @@ export default function UserRegisterDialogue({ open, onClose } : UserRegisterDia
                 <Dialog.Backdrop onClick={onClose}/>
                 <Dialog.Positioner>
                     <Dialog.Content>
-                        <Dialog.Header p="14px">
+                        <Dialog.Header p={4}>
                             <Dialog.Title>
-                                Register new account
+                                <Heading px={4}>Register new account</Heading>
                             </Dialog.Title>
                         </Dialog.Header>
-                        <Dialog.Body>
+                        <Dialog.Body px={4} pt={2} pb={4}>
                             <UserRegisterForm showLoginHint={true} />
                         </Dialog.Body>
                         <Dialog.CloseTrigger asChild>

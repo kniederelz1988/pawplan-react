@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { CloseButton, Dialog, DialogOpenChangeDetails, Portal } from "@chakra-ui/react";
+import { CloseButton, Dialog, DialogOpenChangeDetails, Heading, Portal } from "@chakra-ui/react";
 
 import { Timestamp } from "firebase/firestore";
 
@@ -69,12 +69,12 @@ export default function AppointmentCompleteDialogue({ open, onClose, data } : Ap
                 <Dialog.Backdrop onClick={onClose}/>
                 <Dialog.Positioner>
                     <Dialog.Content>
-                        <Dialog.Header p="14px">
+                        <Dialog.Header p={4}>
                             <Dialog.Title>
-                                Complete visit with {data?.dog && data.dog.name}
+                                <Heading px={4}>Complete visit with {data?.dog && data.dog.name}</Heading>
                             </Dialog.Title>
                         </Dialog.Header>
-                        <Dialog.Body>
+                        <Dialog.Body px={4} pt={2} pb={4}>
                             <AppointmentRatingForm onConfirm={handleConfirm} onClose={handleCancel}/>
                         </Dialog.Body>
                         <Dialog.CloseTrigger asChild>

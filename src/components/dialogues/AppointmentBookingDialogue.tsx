@@ -58,14 +58,18 @@ export default function AppointmentBookingDialogue({ open, onClose, data } : App
                 <Dialog.Backdrop onClick={onClose}/>
                 <Dialog.Positioner>
                     <Dialog.Content>
-                        <Dialog.Body p={4} mx={2} my={2}>
-                            <Grid templateColumns="repeat(5, 1fr)" gap={6}>
-                                <GridItem colSpan={2} alignContent={"start"}>
+                        <Dialog.Header p={4}>
+                            <Dialog.Title>
+                                <Heading px={4}>Your appointment</Heading>
+                            </Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body px={4} pt={2} pb={4}>
+                            <Grid templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(5, 1fr)" }} gap={6}>
+                                <GridItem colSpan={{ base: 2, md: 2 }} alignContent={"start"}>
                                     { data?.dog && <DogCard dog={data.dog} /> }
                                 </GridItem>
 
-                                <GridItem colSpan={3} alignContent={"center"}>
-                                    <Heading py={2}>Your appointment</Heading>
+                                <GridItem colSpan={{ base: 2, md: 3 }} alignContent={"center"}>
                                     { data?.dog && <AppointmentForm dog={data.dog} onConfirm={handleConfirm} onClose={onClose}/> }
                                 </GridItem>
                             </Grid>

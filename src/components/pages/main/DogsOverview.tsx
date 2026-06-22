@@ -1,4 +1,4 @@
-import { Heading, Grid, Flex, Text } from "@chakra-ui/react";
+import { Heading, Grid, Flex, Text, GridItem } from "@chakra-ui/react";
 
 import useDogsCollection from "@repos/hooks/DogHooks";
 import DogOverviewCard from "@components/misc/dogs/DogOverviewCard";
