@@ -1,18 +1,16 @@
-# React + Vite
+PawPlan
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Paw Plan ist wie Tinder nur mit Hunden. Es ist eine Single Page Application die für Tierheime konzipiert wurde. Freiwillige Helfer:innen können so Termine mit dem Tierheim vereinbaren.
+Das Problem
 
-Currently, two official plugins are available:
+Hunde die im Tierheim untergebracht sind brauchen Auslauf und haben in der Vergangenheit oftmals Trauma erlitten. Viele Hunde sind aufgrund ihrer Vergangenheit daher sehr verunsichert und/oder verängstigt. Diese Unsicherheit/Angst soll den Hunden genommen werden, indem sie neuen/fremden Umgebungen, Menschen oder Situationen ausgesetzt sind. Die Hunde sollen sich so Hunde an die neue Situationen gewöhnen.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Meist helfen dabei ehrenamtliche Helfer:innen. Diese sollen regelmäßig mit den Hunden spazieren gehen. Um die Planungs- und Verwaltungsarbeit für das Tierheim möglichst gering halten, finden diese Spaziergänge zu festen Zeiten statt. Hierbei ist jedoch oft das Problem, dass die Helfer:innen an den vorgegebenen Zeitslots aufgrund persönlicher Verpflichtungen daran gehindert werden mit den Hunden rauszugehen - zum Leid der Tiere.
+Die Idee
 
-## React Compiler
+Eine App soll dem Tierheim dabei helfen die zur Verfügung stehenden ehrenamtlichen Arbeitskräfte optimaler einzusetzen, indem Helfer:innen diese Spaziergänge mit den Hunden buchen können. Zu einem Zeitpunkt der es ihnen erlaubt ihre Verpflichtungen nachzukommen und mit den Hunden Zeit zu verbringen.
+Stand/Umsetzung
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+Umgesetzt wurde App mit React/TypeScript & Chakra UI, als Backend kommt zur Zeit Firestore zum Einsatz. Das Deployment funktioniert derzeit autmatisiert über Vercel.
 
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Derzeit ist die App noch in Arbeit und noch nicht ganz auf einem Stand mit dem ich zufrieden bin -> https://pawplan-react.vercel.app/ Interessenten können sich via kevinniederelz+pawplan@gmail.com bei mir melden.
