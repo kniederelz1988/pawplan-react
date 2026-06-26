@@ -6,6 +6,8 @@ export const AppointmentStatusEnum = {
 } as const
 export type AppointmentStatus = typeof AppointmentStatusEnum[keyof typeof AppointmentStatusEnum]
 
+export const AppointmentStatusAll = [AppointmentStatusEnum.Pending, AppointmentStatusEnum.Confirmed, AppointmentStatusEnum.Canceled, AppointmentStatusEnum.Completed]
+
 export function getAppointmentStatusTitle(status: AppointmentStatus): string {
     switch (status) {
         case AppointmentStatusEnum.Pending:

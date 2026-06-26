@@ -1,13 +1,16 @@
-import { useCallback, useMemo } from "react"
+import { useCallback, useEffect, useMemo } from "react"
 import { PiCalendar, PiCheckBold, PiClock, PiXBold } from "react-icons/pi"
 
 import { Card, Flex, Heading, HStack, Icon, IconButton, Image, Spacer, Text } from "@chakra-ui/react"
+
+import { useVolunteerById } from "@repos/hooks/VolunteerHooks"
 
 import useDogsCollection from "@repos/hooks/DogHooks"
 import { DogModel } from "@models/DogModel"
 
 import { Appointment } from "@models/AppointmentModel"
 import AppointmentStateBadge from "./AppointmentStateBadge"
+
 
 type AppointmentCardProps = {
     appointment: Appointment,
@@ -21,6 +24,16 @@ type AppointmentCardProps = {
 
 export default function AppointmentCard({ appointment, editable, onEdit, confirmable, onConfirm, cancelable, onCancel }: AppointmentCardProps) {
     const { dogs } = useDogsCollection([appointment.data.dogId])
+
+    const createdBy = useVolunteerById(null)
+    const updatedBy = useVolunteerById(null)
+
+    useEffect(() => {
+        createdBy.forId(appointment.data.volunteerId)
+    }, [appointment.data.volunteerId])
+    useEffect(() => {
+        updatedBy.forId(appointment.statusData?.updatedBy ?? null)
+    }, [appointment.statusData?.updatedBy])
 
     const dog = useMemo<DogModel | null>(() => {
         if (!dogs?.length)
@@ -59,24 +72,45 @@ export default function AppointmentCard({ appointment, editable, onEdit, confirm
                         }
 
                         <Flex direction="column" w="100%">
-                            <Heading fontSize="md" fontWeight="bold">{dog?.name}</Heading>
+                            <Heading fontSize="md" fontWeight="bold" lineHeight={"1.2em"}>{dog?.name}</Heading>
                             <Text fontSize="xs">{/*dog && getBreedTitle(dog.breed)*/}</Text>
                         
                             <Flex direction="row">
                                 <Icon size="sm" my="auto">
                                     <PiCalendar display="inline-block"/>
                                 </Icon>
-                                <Text fontSize="xs" h="16px" ml={1}>
-                                    {appointment.data.date.toDate().toLocaleDateString(navigator.language)}
+                                <Text fontSize="xs" ml={1}>
+                                    { appointment.data.date && appointment.data.date.toDate().toLocaleDateString(navigator.language) }
                                 </Text>
 
-                                <Icon size="sm" ml={4}>
+                                <Icon size="sm" ml={4} my="auto">
                                     <PiClock display="inline-block" />
                                 </Icon>
-                                <Text fontSize="xs" h="16px" ml={1}>
-                                    {appointment.data.date.toDate().toLocaleTimeString(navigator.language)}
+                                <Text fontSize="xs" ml={1}>
+                                    { appointment.data.date && appointment.data.date.toDate().toLocaleTimeString(navigator.language) }
                                 </Text>
-                                
+                            </Flex>
+
+                            <Spacer />
+
+                            <Flex direction="column">
+                                <Text fontSize={"xs"} lineHeight={1.3}>
+                                    {
+                                        createdBy.volunteer &&
+                                            `Created by: ${createdBy.volunteer.name}`
+                                    }
+                                </Text>
+                                <Text fontSize={"xs"} lineHeight={1.3}>
+                                    { 
+                                        appointment.statusData && 
+                                            `Last update: ${appointment.statusData.updateAt.toDate().toLocaleDateString(navigator.language)}`
+                                    }
+                                    {
+                                        updatedBy.volunteer &&
+                                            ` by ${updatedBy.volunteer?.name}`
+                                    }
+                                </Text>
+                                <Spacer h="6px" />
                             </Flex>
                         </Flex>
 

@@ -9,7 +9,7 @@ import { getRepositoryOperationErrorMessage, RepositoryOperationErrorEnum } from
 import { getDateCompareOperator, getDateSortOperator, RepositoryDateCompare, RepositoryDateCompareEnum } from "./enums/RepositoryDate";
 import { VolunteerModel } from "@models/VolunteerModel";
 import { DogModel } from "@models/DogModel";
-import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus";
+import { AppointmentStatus, AppointmentStatusEnum } from "@models/enums/AppointmentStatus";
 
 const appointmentConverter: FirestoreDataConverter<AppointmentModel, AppointmentModel> = {
     toFirestore: (data: AppointmentModel) => data,
@@ -60,14 +60,61 @@ function AppointmentRepository({ database } : { database: Firestore }) {
     function subscribeForAllAppointments(date: RepositoryDateCompare, queryCursor: AppointmentModel | null, queryLimit: number, listener: AppointmentsListener) {
         const q = createAllAppointmentQuery(date, queryCursor, queryLimit)
         return onSnapshot(q, (snap) => {
-            const data = new Map( snap.docs.map(t => [t.id, t.data()]) )
+            const data = new Map(snap.docs.map(t => [t.id, t.data()]))
+            listener(data)
+        })
+    }
+
+    function createAppointmentStatusQuery(status: AppointmentStatus[], volunteer: VolunteerModel | null, queryCursor: AppointmentStatusModel | null, queryLimit: number)
+        : Query<AppointmentStatusModel, AppointmentStatusModel> {
+        if (!queryCursor) {
+            if (!volunteer?.id) {
+                return query(
+                    collection(database, statusCollectionName),
+                    where("status", "in", status),
+                    orderBy("updateAt", "asc"),
+                    limit(queryLimit)
+                ).withConverter(statusConverter)
+            }
+
+            return query(
+                collection(database, statusCollectionName),
+                where("status", "in", status),
+                where("volunteerId", "==", volunteer.id),
+                orderBy("updateAt", "asc"),
+                limit(queryLimit)
+            ).withConverter(statusConverter)
+        }
+
+        if (!volunteer?.id) {
+            return query(
+                collection(database, statusCollectionName),
+                where("status", "in", status),
+                orderBy("updateAt", "asc"),
+                startAfter(queryCursor.updateAt),
+                limit(queryLimit)
+            ).withConverter(statusConverter)
+        }
+
+        return query(
+            collection(database, statusCollectionName),
+            where("status", "in", status),
+            where("volunteerId", "==", volunteer.id),
+            orderBy("updateAt", "asc"),
+            startAfter(queryCursor.updateAt),
+            limit(queryLimit)
+        ).withConverter(statusConverter)
+    }
+    function subscribeForAppointmentStatus(status: AppointmentStatus[], volunteer: VolunteerModel | null, queryCursor: AppointmentStatusModel | null, queryLimit: number, listener: AppointmentStatesListener) {
+        const q = createAppointmentStatusQuery(status, volunteer, queryCursor, queryLimit)
+        return onSnapshot(q, (snap) => {
+            const data = new Map(snap.docs.map(t => [t.id, t.data()]))
             listener(data)
         })
     }
 
     function createVolunteerAppointmentQuery(volunteer: VolunteerModel, queryCursor: AppointmentModel | null, queryLimit: number)
-        : Query<AppointmentModel, AppointmentModel>
-    {
+        : Query<AppointmentModel, AppointmentModel> {
         if (!queryCursor?.id) {
             return query(
                 collection(database, collectionName),
@@ -108,6 +155,20 @@ function AppointmentRepository({ database } : { database: Firestore }) {
         })
     }
 
+    function subscribeForAppointments(appointmentIds: string[], listener: AppointmentsListener) {
+        if (!appointmentIds.length)
+            return
+
+        const q = query(
+            collection(database, collectionName),
+            where(documentId(), "in", appointmentIds)
+        ).withConverter(appointmentConverter)
+
+        return onSnapshot(q, (snap) => {
+            const data = new Map(snap.docs.map(t => [t.id, t.data()]))
+            listener(data)
+        })
+    }
     function subscribeForAppointmentStates(appoinmentIds: string[], listener: AppointmentStatesListener) {
         if (!appoinmentIds.length)
             return
@@ -138,8 +199,7 @@ function AppointmentRepository({ database } : { database: Firestore }) {
     }
 
     function createDogRatingQuery(dog: DogModel, dateCompare: RepositoryDateCompare, queryCursor: AppointmentRatingModel | null, queryLimit: number)
-        : Query<AppointmentRatingModel, AppointmentRatingModel>
-    {
+        : Query<AppointmentRatingModel, AppointmentRatingModel> {
         if (!queryCursor?.updateAt) {
             return query(
                 collection(database, ratingCollectionName),
@@ -298,8 +358,10 @@ function AppointmentRepository({ database } : { database: Firestore }) {
 
     return { 
         subscribeForAllAppointments,
+        subscribeForAppointmentStatus,
         subscribeForVolunteerAppointments,
         subscribeForAllDogAppointments,
+        subscribeForAppointments,
         subscribeForAppointmentStates,
         subscribeForAppointmentRatings,
         subscribeForDogAppointmentRatings,

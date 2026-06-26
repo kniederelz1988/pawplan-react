@@ -7,7 +7,7 @@ import { useDialogueContext } from "@contexts/DialogueContext"
 import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
 
 import useDogsCollection, { useDogAppointmentCount, useDogLikeCount } from "@repos/hooks/DogHooks"
-import { useDogAppointmentRatings } from "@repos/hooks/AppointmentHooks"
+import { useAppointmentRatingsFilteredByDog } from "@repos/hooks/AppointmentHooks"
 
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
 import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
@@ -45,7 +45,7 @@ export default function DogsDetails({ } : DogsDetailsProps) {
     const likeCounter = useDogLikeCount()
     const appointmentCounter = useDogAppointmentCount()
 
-    const ratingCollection = useDogAppointmentRatings(20)
+    const ratingCollection = useAppointmentRatingsFilteredByDog(5)
 
     useEffect(() => { 
         likeCounter.for(dog)
@@ -124,11 +124,24 @@ export default function DogsDetails({ } : DogsDetailsProps) {
                     {   
                         ratingCollection.ratings.length > 0 
                             ? 
-                                ratingCollection.ratings.map(t => 
-                                    <VStack w="full" >
-                                        <AppointmentRating rating={t} />
-                                    </VStack>
-                                )
+                                <> 
+                                {
+                                    ratingCollection.ratings.map(t => 
+                                        <VStack w="full" >
+                                            <AppointmentRating rating={t} />
+                                        </VStack>
+                                    )
+                                }
+                                    <Center gap={4}>
+                                        <Button onClick={ratingCollection.previousPage} disabled={!ratingCollection.previousPageActive}>
+                                            Prev
+                                        </Button>
+                                        <Text w={16} textAlign={"center"} fontSize={"sm"} fontWeight={"bold"}>{ratingCollection.page + 1}</Text>
+                                        <Button onClick={ratingCollection.nextPage} disabled={!ratingCollection.nextPageActive}>
+                                            Next
+                                        </Button>
+                                    </Center>
+                                </>
                             :
                                 <Box w="full" bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"} p={4}>
                                     <Center>

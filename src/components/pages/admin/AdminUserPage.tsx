@@ -21,7 +21,7 @@ export default function AdminUserPage() {
 
     const { updateVolunteerRole } = useVolunteerRepository()
 
-    const { volunteers, page, previousPage, previousPageActive, nextPage, nextPageActive } = useVolunteerCollection()
+    const { volunteers, page, previousPage, previousPageActive, nextPage, nextPageActive } = useVolunteerCollection(5)
 
     const onEditVolunteer = useCallback((v: VolunteerModel) => {
         if (!volunteer?.id && role != VolunteerRoleEnum.Admin)
