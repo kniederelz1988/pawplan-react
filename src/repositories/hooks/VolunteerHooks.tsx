@@ -11,6 +11,7 @@ import { DogModel } from "@models/DogModel"
 import { VolunteerRole, VolunteerRoleEnum } from "@models/enums/UserRoleType"
 import { RepositoryOperationStatusEnum } from "@repos/enums/RepositoryOperationStatus"
 import { toaster } from "@components/ui/toaster"
+import { usePages } from "@repos/hooks/GenericHooks"
 
 export function useVolunteerRepository() {
     function createVolunteer(user: User, name: string) {
@@ -134,7 +135,7 @@ export function useVolunteer() {
             return
         }
 
-        return volunteerRepository.subscribeForVolunteer(user.uid, (t) => {
+        return volunteerRepository.subscribeForVolunteerByUserId(user.uid, (t) => {
             if (!t.length)
                 return
 
@@ -172,47 +173,36 @@ export function useVolunteerRole(volunteer: VolunteerModel | null) {
     return { role }
 }
 
-export function useVolunteerCollection() {
-    const pageElementLimit = 3
-
-    const [volunteers, setVolunteers] = useState<VolunteerModel[]>([])
-
-    const [page, setPage] = useState(0)
-    const [pageCursors, setPageCursors] = useState<VolunteerModel[]>([])
-
-    function setPageCursor(cursor: VolunteerModel) {
-        const p = [...pageCursors.slice(0, page), cursor, ...pageCursors.slice(page + 1)]
-        setPageCursors(p)
-    }
-    function getPageCursor() {
-        if (page <= 0)
-            return null
-
-        if (page >= pageCursors.length)
-            return pageCursors[pageCursors.length - 1]
-
-        return pageCursors[page - 1]
-    }
-
-    function previousPage() {
-        if (page == 0)
-            return
-
-        setPage(page - 1)
-    }
-    const previousPageActive = useMemo(() => page >= 1, [page])
-    
-    function nextPage() {
-        if (page >= pageCursors.length)
-            return
-        
-        setPage(page + 1)
-    }
-    const nextPageActive = useMemo(() => volunteers.length == pageElementLimit, [volunteers] )
+export function useVolunteerById(id: string | null) {
+    const [volunteerId, setVolunteerId] = useState(id)
+    const [volunteer, setVolunteer] = useState<VolunteerModel | null>(null)
 
     useEffect(() => {
-        const pageCursor = getPageCursor()
-        return volunteerRepository.subscribeForAllVolunteers(pageCursor, pageElementLimit, (result) => {
+        if (!volunteerId) {
+            setVolunteer(null)
+            return
+        }
+
+        return volunteerRepository.subscribeForVolunteer(volunteerId, (t) => {
+            if (!t.length) {
+                setVolunteer(null)
+                return
+            }
+
+            setVolunteer(t[0])
+        })
+    }, [volunteerId])
+    
+    return { volunteer, forId: setVolunteerId }
+}
+
+export function useVolunteerCollection(elementLimit: number) {
+    const [volunteers, setVolunteers]       = useState<VolunteerModel[]>([])
+    const { page, pageControls, pageCursor }= usePages<VolunteerModel>()
+
+    useEffect(() => {
+        const cursor = pageCursor.get()
+        return volunteerRepository.subscribeForAllVolunteers(cursor, elementLimit, (result) => {
             if (!result?.length) {
                 setVolunteers([])
                 return
@@ -220,11 +210,11 @@ export function useVolunteerCollection() {
 
             setVolunteers(result)
 
-            if (result.length >= pageElementLimit) {
-                setPageCursor(result[result.length - 1])
+            if (result.length >= elementLimit) {
+                pageCursor.set(result[result.length - 1])
             }
         })
     }, [page])
     
-    return { volunteers, page, previousPage, previousPageActive, nextPage, nextPageActive }
+    return { volunteers, page, ...pageControls }
 }

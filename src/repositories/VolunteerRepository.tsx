@@ -29,7 +29,7 @@ function VolunteerRepository({ database } : { database: Firestore }) {
     const collectionName = "volunteers2";
     const roleCollectionName = "volunteerRoles"
 
-    function subscribeForVolunteer(userId: string, listener: VolunteerRepositoryListener) {
+    function subscribeForVolunteerByUserId(userId: string, listener: VolunteerRepositoryListener) {
         const q = query(
             collection(database, collectionName),
             where("userId", "==", userId),
@@ -46,6 +46,22 @@ function VolunteerRepository({ database } : { database: Firestore }) {
             listener([snap.docs[0].data()])
         })
     }
+    function subscribeForVolunteer(volunteerId: string, listener: VolunteerRepositoryListener) {
+        const q = query(
+            collection(database, collectionName),
+            where(documentId(), "==", volunteerId),
+            limit(1)
+        ).withConverter(volunteerConverter)
+
+        return onSnapshot(q, (snap) => {
+            if (snap.empty) {
+                listener([])
+                return
+            }
+
+            listener([snap.docs[0].data()])
+        })
+    }
     function subscribeForVolunteerRole(volunteerId: string, listener: VolunteerRoleRepositoryListener) {
         const q = query(
             collection(database, roleCollectionName),
@@ -54,7 +70,7 @@ function VolunteerRepository({ database } : { database: Firestore }) {
         ).withConverter(roleConverter)
 
         return onSnapshot(q, (snap) => {
-            if(snap.empty)
+            if (snap.empty)
                 return
 
             listener(snap.docs[0].data())
@@ -165,7 +181,7 @@ function VolunteerRepository({ database } : { database: Firestore }) {
     }
     
     async function createVolunteerIfNonExistant(user: User, name: string, operationCallback: RepositoryOperationCallback) {
-        const unsubcribe = subscribeForVolunteer(user.uid, (result) => {
+        const unsubcribe = subscribeForVolunteerByUserId(user.uid, (result) => {
             unsubcribe()
 
             if (result?.length) {
@@ -186,7 +202,17 @@ function VolunteerRepository({ database } : { database: Firestore }) {
         })
     }
 
-    return { subscribeForVolunteer, subscribeForAllVolunteers, subscribeForVolunteerRole, createVolunteer, updateVolunteer, updateVolunteerRole, deleteVolunteer, createVolunteerIfNonExistant }
+    return {
+        subscribeForAllVolunteers,
+        subscribeForVolunteerByUserId, 
+        subscribeForVolunteer, 
+        subscribeForVolunteerRole, 
+        createVolunteer,
+        updateVolunteer, 
+        updateVolunteerRole,
+        deleteVolunteer, 
+        createVolunteerIfNonExistant
+    }
 }
 
 const volunteerRepository = VolunteerRepository({ database })

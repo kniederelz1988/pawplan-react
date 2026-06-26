@@ -11,12 +11,10 @@ import { DogModel } from "@models/DogModel"
 
 import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
-import { useAppointmentCollection, useAppointmentRepository } from "@repos/hooks/AppointmentHooks"
+import { useAppointmentRepository, useAppointmentStatusCollection } from "@repos/hooks/AppointmentHooks"
 
 import { Appointment } from "@models/AppointmentModel"
 import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus"
-
-import { RepositoryDateCompareEnum } from "@repos/enums/RepositoryDate"
 
 import withTabs from "@components/hocs/withAppointmentCollection"
 import { AppointmentCollection } from "@components/misc/appointments/AppointmentCollection"
@@ -31,10 +29,12 @@ export default function AdminAppointmentPage() {
     const { volunteer } = useVolunteer()
     const { role } = useVolunteerRole(volunteer)
 
-    const repository = useAppointmentRepository()
+    const repository    = useAppointmentRepository()
 
-    const pastCollection = useAppointmentCollection(RepositoryDateCompareEnum.Past, 5)
-    const futureCollection = useAppointmentCollection(RepositoryDateCompareEnum.Future, 10)
+    const confirmed     = useAppointmentStatusCollection([AppointmentStatusEnum.Confirmed], 10)
+    const pending       = useAppointmentStatusCollection([AppointmentStatusEnum.Pending],   10)
+    const canceled      = useAppointmentStatusCollection([AppointmentStatusEnum.Canceled],  10)
+    const completed     = useAppointmentStatusCollection([AppointmentStatusEnum.Completed], 10)
 
     const onEditAppointment = useCallback((appointment: Appointment) => {
         const data = createAppointmentEditDialogueData(appointment.data)
@@ -76,19 +76,35 @@ export default function AdminAppointmentPage() {
                     { 
                         value: "upcoming", 
                         triggerNode: <Text>Upcoming</Text>, 
-                        collection: futureCollection,
-                        isEditable:     (a) => a.statusData?.status == AppointmentStatusEnum.Pending,
-                        isCancelable:   (a) => a.statusData?.status != AppointmentStatusEnum.Completed && a.statusData?.status != AppointmentStatusEnum.Canceled,
-                        isConfirmable:  (a) => a.statusData?.status == AppointmentStatusEnum.Pending
+                        collection: confirmed,
+                        isEditable:     (_) => false,
+                        isCancelable:   (_) => true,
+                        isConfirmable:  (_) => false
                     },
                     { 
-                        value: "past", 
-                        triggerNode: <Text>Past</Text>, 
-                        collection: pastCollection,
+                        value: "pending", 
+                        triggerNode: <Text>Pending</Text>, 
+                        collection: pending,
+                        isEditable:     (_) => true,
+                        isCancelable:   (_) => false,
+                        isConfirmable:  (_) => true
+                    },
+                    { 
+                        value: "canceled", 
+                        triggerNode: <Text>Canceled</Text>, 
+                        collection: canceled,
                         isEditable:     (_) => false,
                         isCancelable:   (_) => false,
                         isConfirmable:  (_) => false
-                    }
+                    },
+                    { 
+                        value: "completed", 
+                        triggerNode: <Text>Completed</Text>, 
+                        collection: completed,
+                        isEditable:     (_) => false,
+                        isCancelable:   (_) => false,
+                        isConfirmable:  (_) => false
+                    },
                 ]} defaultTab="upcoming" onEdit={onEditAppointment} onConfirm={onConfirmAppointment} onCancel={onCancelAppointment} />
             </Container>
         </Flex>

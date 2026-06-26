@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { VolunteerModel } from "@models/VolunteerModel";
 import { DogModel } from "@models/DogModel";
@@ -9,9 +9,10 @@ import { setupAppointments } from "../../helpers/AppointmentSort";
 
 import appointmentRepository from "@repos/AppointmentRepository";
 import { RepositoryOperationStatusEnum } from "@repos/enums/RepositoryOperationStatus";
-import { RepositoryDateCompare } from "@repos/enums/RepositoryDate";
 
 import { toaster } from "@components/ui/toaster";
+import { AppointmentStatus } from "@models/enums/AppointmentStatus";
+import { usePages } from "./GenericHooks";
 
 export function useAppointmentRepository() {
     function createAppointment(appointment: AppointmentModel) {
@@ -124,84 +125,7 @@ export function useAppointmentRepository() {
     return { createAppointment, updateAppointment, deleteAppointment, updateStatus, createRating, updateRating }
 }
 
-function useAppointments() {
-    const [appointmentModels,   setAppointmentModels]   = useState(new Map<string, AppointmentModel>())
-    const [statusModels,        setStatusModels]        = useState(new Map<string, AppointmentStatusModel>())
-    const [ratingModels,        setRatingModels]        = useState(new Map<string, AppointmentRatingModel>())
-
-    const [appointments,        setAppointments]  = useState<Appointment[]>([])
-
-    useEffect(() => {
-        if (!appointmentModels) {
-            setStatusModels(new Map<string, AppointmentStatusModel>())
-            return
-        }
-
-        const keys = Array.from(appointmentModels.keys())
-        return appointmentRepository.subscribeForAppointmentStates(keys, setStatusModels)
-    }, [appointmentModels])
-
-    useEffect(() => {
-        if (!appointmentModels) {
-            setRatingModels(new Map<string, AppointmentRatingModel>())
-            return
-        }
-
-        const keys = Array.from(appointmentModels.keys())
-        return appointmentRepository.subscribeForAppointmentRatings(keys, setRatingModels)
-    }, [appointmentModels])
-
-    useEffect(() => {
-        const t = setupAppointments(appointmentModels, statusModels, ratingModels)
-        setAppointments(t)
-    }, [appointmentModels, statusModels, ratingModels])
-
-    return { appointments, setAppointmentModels }
-}
-
-function usePages<T>() {
-    const [page, setPage] = useState(0)
-    const [pageCursors, setPageCursors] = useState<T[]>([])
-
-    function setPageCursor(pageCursor: T) {
-        const p = [...pageCursors.slice(0, page), pageCursor, ...pageCursors.slice(page + 1)]
-        setPageCursors(p)
-    }
-    function getPageCursor() {
-        if (page <= 0)
-            return null
-
-        if (page >= pageCursors.length)
-            return pageCursors[pageCursors.length - 1]
-
-        return pageCursors[page - 1]
-    }
-
-    function previousPage() {
-        if (page == 0)
-            return
-
-        setPage(page - 1)
-    }
-    const previousPageActive = useMemo(() => page >= 1, [page])
-    
-    function nextPage() {
-        if (page >= pageCursors.length)
-            return
-        
-        setPage(page + 1)
-    }
-    const nextPageActive = useMemo(() => page < pageCursors.length, [page, pageCursors])
-
-    return { 
-        page:           page,
-        pageControls:   { previousPage, previousPageActive, nextPage, nextPageActive },
-        pageCursor:     { set: setPageCursor, get: getPageCursor }
-    }
-}
-
-export function useVolunteerAppointments(elementLimit: number) 
-{
+export function useAppointmentsFilteredByVolunteer(elementLimit: number) {
     const [volunteer, setVolunteer] = useState<VolunteerModel | null>(null)
 
     const { appointments, setAppointmentModels } = useAppointments()
@@ -224,10 +148,9 @@ export function useVolunteerAppointments(elementLimit: number)
         }
     }, [appointments])
 
-
     return { appointments, page, ...pageControls, for: setVolunteer }
 }
-export function useDogAppointmentRatings(elementLimit: number) 
+export function useAppointmentRatingsFilteredByDog(elementLimit: number) 
 {
     const [dog, setDog] = useState<DogModel | null>(null)
 
@@ -245,7 +168,7 @@ export function useDogAppointmentRatings(elementLimit: number)
             const ratings = Array.from(r.values()) 
             setRatings(ratings) 
         })
-    }, [dog])
+    }, [dog, page])
 
     useEffect(() => {
         if (ratings.length >= elementLimit) {
@@ -257,22 +180,67 @@ export function useDogAppointmentRatings(elementLimit: number)
     return { ratings, page, ...pageControls, for: setDog }
 }
 
-export function useAppointmentCollection(dateCompare: RepositoryDateCompare, elementLimit: number)
-{
-    const { appointments, setAppointmentModels }    = useAppointments()
-    const { page, pageControls, pageCursor }        = usePages<AppointmentModel>()
+function useAppointments() {
+    const [appointmentModels,   setAppointmentModels]       = useState(new Map<string, AppointmentModel>())
+    const [statusModels,        setAppointmentStatusModels] = useState(new Map<string, AppointmentStatusModel>())
+    const [ratingModels,        setAppointmentRatingModels] = useState(new Map<string, AppointmentRatingModel>())
+
+    const [appointments,        setAppointments]            = useState<Appointment[]>([])
 
     useEffect(() => {
-        const c = pageCursor.get()
-        return appointmentRepository.subscribeForAllAppointments(dateCompare, c, elementLimit, setAppointmentModels)
-    }, [page])
+        const t = setupAppointments(appointmentModels, statusModels, ratingModels)
+        setAppointments(t)
+    }, [appointmentModels, statusModels, ratingModels])
+
+    return { appointments, appointmentModels, setAppointmentModels, statusModels, setAppointmentStatusModels, ratingModels, setAppointmentRatingModels }
+}
+
+export function useAppointmentStatusCollection(states: AppointmentStatus[], elementLimit: number) {
+    const [filterByStates, setFilterByStates]       = useState<AppointmentStatus[]>(states)
+    const [filterByVolunteer, setFilterByVolunteer] = useState<VolunteerModel | null>(null)
+
+    const collection                                = useAppointments()
+    const { page, pageControls, pageCursor }        = usePages<AppointmentStatusModel>()
 
     useEffect(() => {
-        if (appointments.length >= elementLimit) {
-            const t = appointments[appointments.length - 1]
-            pageCursor.set(t.data)
+        if (!filterByStates.length) {
+            collection.setAppointmentStatusModels(new Map<string, AppointmentStatusModel>())
+            return
         }
-    }, [appointments])
 
-    return { appointments, page, ...pageControls }
+        const cursor = pageCursor.get()
+        return appointmentRepository.subscribeForAppointmentStatus(filterByStates, filterByVolunteer, cursor, elementLimit, collection.setAppointmentStatusModels)
+    }, [filterByStates, filterByVolunteer, page])
+
+    useEffect(() => {
+        if (!collection.statusModels) {
+            collection.setAppointmentModels(new Map<string, AppointmentModel>())
+            return
+        }
+
+        const keys = Array.from(collection.statusModels.keys())
+        return appointmentRepository.subscribeForAppointments(keys, collection.setAppointmentModels)
+    }, [collection.statusModels])
+
+    useEffect(() => {
+        if (!collection.statusModels) {
+            collection.setAppointmentRatingModels(new Map<string, AppointmentRatingModel>())
+            return
+        }
+
+        const keys = Array.from(collection.statusModels.keys())
+        return appointmentRepository.subscribeForAppointmentRatings(keys, collection.setAppointmentRatingModels)
+    }, [collection.statusModels])
+
+    useEffect(() => {
+        if (collection.appointments.length >= elementLimit) {
+            const t = collection.appointments[collection.appointments.length - 1]
+            if (!t.statusData)
+                return
+
+            pageCursor.set(t.statusData)
+        }
+    }, [collection.appointments])
+
+    return { appointments: collection.appointments, with: setFilterByStates, for: setFilterByVolunteer, page, ...pageControls }
 }

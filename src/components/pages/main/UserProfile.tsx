@@ -1,6 +1,6 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
-import { AspectRatio, Box, Circle, Container, Flex, Grid, GridItem, Heading, HStack, IconButton, Link, Spacer, Text, VStack } from "@chakra-ui/react";
+import { Box, Circle, Flex, Grid, GridItem, Heading, HStack, IconButton, Link, Text, VStack } from "@chakra-ui/react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { FiLogIn } from "react-icons/fi";
 import { BiPencil } from "react-icons/bi";
@@ -9,7 +9,7 @@ import { useDialogueContext } from "@contexts/DialogueContext";
 import { useAuthContext } from "@contexts/AuthContexts";
 
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks";
-import { useVolunteerAppointments } from "@repos/hooks/AppointmentHooks";
+import { useAppointmentsFilteredByVolunteer } from "@repos/hooks/AppointmentHooks";
 
 import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
 
@@ -22,7 +22,11 @@ export default function UserProfile() {
     const { volunteer, likeCounter } = useVolunteer()
     const { role } = useVolunteerRole(volunteer)
 
-    const { appointments } = useVolunteerAppointments(20)
+    const appointments = useAppointmentsFilteredByVolunteer(20)
+
+    useEffect(() => {
+        appointments.for(volunteer)
+    }, [volunteer])
     
     const onEditUserClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
@@ -64,7 +68,9 @@ export default function UserProfile() {
                             <Grid templateColumns={"repeat(2, 1fr)"} gap={2} p={0} display={{ base: "none", md: "grid"}}>
                                 <GridItem colSpan={1} bgColor={"softAccent.bg/10"} color={"softAccent.fg"} borderRadius={"2xl"} border={"xs"} boxShadow={"sm"}>
                                     <VStack align={"center"} gap={0} p={4}>
-                                        <Text fontWeight={"bold"}>{appointments.length}</Text>
+                                        <Text fontWeight={"bold"}>
+                                            {appointments.appointments.length > 20 ? "+20" : appointments.appointments.length}
+                                        </Text>
                                         <Text>visits</Text>
                                     </VStack>
                                 </GridItem>
