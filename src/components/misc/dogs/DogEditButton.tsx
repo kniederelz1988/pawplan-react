@@ -3,7 +3,6 @@ import { useDialogueContext } from "@contexts/DialogueContext"
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
 import { DogModel } from "@models/DogModel"
 import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
-import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
 import { useCallback } from "react"
 import { PiPencil } from "react-icons/pi"
 
@@ -13,7 +12,7 @@ type DogEditButtonProps = {
 
 export default function DogEditButton({ dog } : DogEditButtonProps) {
     const { volunteer } = useVolunteer()
-    const { role } = useVolunteerRole(volunteer)
+    const role = useVolunteerRole()
 
     const dialogueContext = useDialogueContext()
 
@@ -31,7 +30,7 @@ export default function DogEditButton({ dog } : DogEditButtonProps) {
     return (
         <>
         { 
-            volunteer && role == VolunteerRoleEnum.Admin &&
+            volunteer && role == "admin" &&
                 <IconButton borderRadius={24} bgColor={"accent.200"} _hover={{ bgColor: "accent.100" }} onClick={onEditDogClick}>
                     <PiPencil color={"black"} />
                 </IconButton>

@@ -9,7 +9,6 @@ import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
     
 import { DogModel } from "@models/DogModel"
 
-import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
 import { useAppointmentRepository, useAppointmentStatusCollection } from "@repos/hooks/AppointmentHooks"
 
@@ -27,7 +26,7 @@ export default function AdminAppointmentPage() {
     const dialogue = useDialogueContext()
 
     const { volunteer } = useVolunteer()
-    const { role } = useVolunteerRole(volunteer)
+    const role = useVolunteerRole()
 
     const repository    = useAppointmentRepository()
 
@@ -42,7 +41,7 @@ export default function AdminAppointmentPage() {
     }, [])
 
     const onConfirmAppointment = useCallback((appointment: Appointment) => {
-        if (!volunteer?.id || role != VolunteerRoleEnum.Admin)
+        if (!volunteer?.id || role != "admin")
             return
 
         if (!appointment.data?.id)
@@ -59,7 +58,7 @@ export default function AdminAppointmentPage() {
         repository.updateStatus(appointment.data, status)
     }, [volunteer, role])
     const onCancelAppointment = useCallback((appointment: Appointment, dog: DogModel) => {
-        if (!volunteer?.id || role != VolunteerRoleEnum.Admin)
+        if (!volunteer?.id || role != "admin")
             return
 
         const data = createAppointmentCancelDialogueData(appointment.data, volunteer, dog)

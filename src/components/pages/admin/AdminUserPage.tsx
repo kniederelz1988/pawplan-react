@@ -3,7 +3,7 @@ import { useCallback } from "react"
 import { Button, Center, Flex, Heading, Text } from "@chakra-ui/react"
 
 import { VolunteerModel } from "@models/VolunteerModel"
-import { VolunteerRole, VolunteerRoleEnum } from "@models/enums/UserRoleType"
+import { VolunteerRole } from "@models/enums/UserRoleType"
 import { useVolunteer, useVolunteerCollection, useVolunteerRepository, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
 
 import { createVolunteerEditDialogueData } from "@components/dialogues/VolunteerEditDialogue"
@@ -24,14 +24,14 @@ export default function AdminUserPage() {
     const { volunteers, page, previousPage, previousPageActive, nextPage, nextPageActive } = useVolunteerCollection(5)
 
     const onEditVolunteer = useCallback((v: VolunteerModel) => {
-        if (!volunteer?.id && role != VolunteerRoleEnum.Admin)
+        if (!volunteer?.id && role != "admin")
             return
 
         const data = createVolunteerEditDialogueData(v)
         dialogueContext.openDialogue(DialogueTypeEnum.UserEdit, data)
     }, [volunteer, role])
     const onEditRole = useCallback((v: VolunteerModel, r: VolunteerRole) => {
-        if (volunteer?.id == v?.id && role != VolunteerRoleEnum.Admin)
+        if (volunteer?.id == v?.id && role != "admin")
             return
 
         updateVolunteerRole(v, r)

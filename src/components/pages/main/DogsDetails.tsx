@@ -10,7 +10,7 @@ import useDogsCollection, { useDogAppointmentCount, useDogLikeCount } from "@rep
 import { useAppointmentRatingsFilteredByDog } from "@repos/hooks/AppointmentHooks"
 
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
-import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
+
 import DogEditButton from "@components/misc/dogs/DogEditButton"
 import DogFavouriteButton from "@components/misc/dogs/DogFavouriteButton"
 import DogCard from "@components/misc/dogs/DogCard"
@@ -66,7 +66,7 @@ export default function DogsDetails({ } : DogsDetailsProps) {
             return
         }
 
-        if (role == VolunteerRoleEnum.Observer) {
+        if (role == "observer") {
             const data = creatUserInsufficientRightsDialogueData()
             dialogueContext.openDialogue(DialogueTypeEnum.UserInsuffientRights, data)
             return

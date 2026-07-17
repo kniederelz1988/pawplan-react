@@ -6,13 +6,11 @@ import UserProfile from "@components/pages/main/UserProfile"
 
 import AdminUserPage from "@components/pages/admin/AdminUserPage"
 import AdminAppointmentPage from "@components/pages/admin/AdminAppointmentPage"
-import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
-import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
+import { useVolunteerRole } from "@repos/hooks/VolunteerHooks"
 import DogsDetails from "@components/pages/main/DogsDetails"
 
 export default function Router() {
-    const { volunteer } = useVolunteer()
-    const { role } = useVolunteerRole(volunteer)
+    const role = useVolunteerRole()
 
     return (
         <Routes>
@@ -22,7 +20,7 @@ export default function Router() {
             <Route path="userProfile" element={<UserProfile />} />
 
             { 
-                role == VolunteerRoleEnum.Admin &&
+                role == "admin" &&
                     <>
                         <Route path="admin/users" element={<AdminUserPage />} />
                         <Route path="admin/appointments" element={<AdminAppointmentPage />} />

@@ -20,7 +20,7 @@ export default function UserProfile() {
 
     const { user, signOut }  = useAuthContext()
     const { volunteer, likeCounter } = useVolunteer()
-    const { role } = useVolunteerRole(volunteer)
+    const role = useVolunteerRole()
 
     const appointments = useAppointmentsFilteredByVolunteer(20)
 

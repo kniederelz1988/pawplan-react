@@ -3,7 +3,7 @@ import { addDoc, collection, deleteDoc, doc, documentId, Firestore, FirestoreDat
 
 import { database } from "@fb/config"
 import { VolunteerModel } from "@models/VolunteerModel";
-import { VolunteerRole, VolunteerRoleEnum } from "@models/enums/UserRoleType";
+import { VolunteerRole } from "@models/enums/UserRoleType";
 import { RepositoryOperationCallback } from "./utils/RepositoryOperationCallback";
 import { RepositoryOperationStatusEnum } from "./enums/RepositoryOperationStatus";
 import { getRepositoryOperationErrorMessage, RepositoryOperationErrorEnum } from "../helpers/RepositoryOperationErrorMessages";
@@ -113,7 +113,7 @@ function VolunteerRepository({ database } : { database: Firestore }) {
         }
             
         try {
-            const role = { role: VolunteerRoleEnum.Observer }
+            const role = { role: "observer" }
 
             const t = await addDoc(collection(database, collectionName), volunteer)
             await setDoc(doc(collection(database, roleCollectionName), t.id), role)

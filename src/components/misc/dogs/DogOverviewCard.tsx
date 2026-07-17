@@ -1,9 +1,8 @@
 import { useCallback } from "react";
 import { NavLink } from 'react-router-dom';
 
-import { AspectRatio, Button, Card, HStack, Spacer, Text } from "@chakra-ui/react";
+import { Button, Card, HStack, Spacer, Text } from "@chakra-ui/react";
 
-import { VolunteerRoleEnum } from "@models/enums/UserRoleType";
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks";
 
 import { useDialogueContext } from "@contexts/DialogueContext";
@@ -22,7 +21,7 @@ type DogAppointmentCardProps = {
 
 export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
     const { volunteer } = useVolunteer()
-    const { role } = useVolunteerRole(volunteer)
+    const role = useVolunteerRole()
 
     const dialogueContext = useDialogueContext()
 
@@ -34,7 +33,7 @@ export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
             return
         }
 
-        if (role == VolunteerRoleEnum.Observer) {
+        if (role == "observer") {
             const data = creatUserInsufficientRightsDialogueData()
             dialogueContext.openDialogue(DialogueTypeEnum.UserInsuffientRights, data)
             return

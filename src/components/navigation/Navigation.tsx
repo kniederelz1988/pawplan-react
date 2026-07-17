@@ -7,7 +7,6 @@ import NavigationLink from "@components/navigation/NavigationLink"
 import withRouterLink from "@components/hocs/withRouterLink"
 import withButtonLink from "@components/hocs/withButtonLink"
 
-import { VolunteerRoleEnum } from "@models/enums/UserRoleType"
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
 
 import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
@@ -22,10 +21,10 @@ export default function Navigation() {
     const dialogueContext = useDialogueContext()
 
     const { volunteer } = useVolunteer()
-    const { role } = useVolunteerRole(volunteer)
+    const role = useVolunteerRole()
 
     const handleNewDogClick = useCallback(() => {
-        if (!volunteer || role != VolunteerRoleEnum.Admin)
+        if (!volunteer || role != "admin")
             return
 
         const data = createDogAddDialogueData()
@@ -37,7 +36,7 @@ export default function Navigation() {
             <RouterNavigationLink target="/">
                 <FaMagnifyingGlass /> Discover
             </RouterNavigationLink>
-            <RouterNavigationLink target="/userAppointments" disabled={!volunteer || role == VolunteerRoleEnum.Observer}>
+            <RouterNavigationLink target="/userAppointments" disabled={!volunteer || role == "observer"}>
                 <FaRegCalendar /> Visits
             </RouterNavigationLink>
             <RouterNavigationLink target="/userProfile" disabled={!volunteer}>
@@ -48,15 +47,15 @@ export default function Navigation() {
 
             <Text fontVariant="all-petite-caps">Admin</Text>
             
-            <ButtonLink onClick={handleNewDogClick} disabled={!volunteer || role != VolunteerRoleEnum.Admin}>
+            <ButtonLink onClick={handleNewDogClick} disabled={!volunteer || role != "admin"}>
                 <FaPaw /> New dog
             </ButtonLink>
 
-            <RouterNavigationLink target="/admin/users" disabled={!volunteer || role != VolunteerRoleEnum.Admin}>
+            <RouterNavigationLink target="/admin/users" disabled={!volunteer || role != "admin"}>
                 <FaUsers /> Users
             </RouterNavigationLink>
 
-            <RouterNavigationLink target="/admin/appointments" disabled={!volunteer || role != VolunteerRoleEnum.Admin}>
+            <RouterNavigationLink target="/admin/appointments" disabled={!volunteer || role != "admin"}>
                 <FaRegCalendar /> Visits
             </RouterNavigationLink>
 

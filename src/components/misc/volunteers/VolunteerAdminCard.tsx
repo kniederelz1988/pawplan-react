@@ -7,7 +7,7 @@ import ProfileBadge from "@components/misc/profiles/ProfileBadge";
 
 import { useVolunteerRole } from "@repos/hooks/VolunteerHooks";
 import { VolunteerModel } from "@models/VolunteerModel";
-import { VolunteerRole, VolunteerRoleEnum } from "@models/enums/UserRoleType";
+import { VolunteerRole } from "@models/enums/UserRoleType";
 
 type VolunteersAdminCardProps = {
     volunteer: VolunteerModel,
@@ -26,16 +26,16 @@ export default function VolunteersAdminCard({ volunteer, onEditVolunteer, onEdit
 
     const handleObserverClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
-        onEditRole(volunteer, VolunteerRoleEnum.Observer)
+        onEditRole(volunteer, "observer")
     }, [volunteer])
 
     const handleVolunteerClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
-        onEditRole(volunteer, VolunteerRoleEnum.Volunteer)
+        onEditRole(volunteer, "volunteer")
     }, [volunteer])
     const handleAdminClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
-        onEditRole(volunteer, VolunteerRoleEnum.Admin)
+        onEditRole(volunteer, "admin")
     }, [volunteer])
 
     return (
@@ -56,15 +56,15 @@ export default function VolunteersAdminCard({ volunteer, onEditVolunteer, onEdit
                             
                             <Spacer />
 
-                            <Button size={"xs"} ml={2} onClick={handleObserverClick} disabled={disableEditRole || role == VolunteerRoleEnum.Observer}>
+                            <Button size={"xs"} ml={2} onClick={handleObserverClick} disabled={disableEditRole || role == "observer"}>
                                 Make observer
                             </Button>
 
-                            <Button size={"xs"} colorPalette={"green"} ml={2} onClick={handleVolunteerClick} disabled={disableEditRole || role == VolunteerRoleEnum.Volunteer}>
+                            <Button size={"xs"} colorPalette={"green"} ml={2} onClick={handleVolunteerClick} disabled={disableEditRole || role == "volunteer"}>
                                 Make volunteer
                             </Button>
 
-                            <Button size={"xs"} colorPalette={"red"} ml={2} onClick={handleAdminClick} disabled={disableEditRole || role == VolunteerRoleEnum.Admin}>
+                            <Button size={"xs"} colorPalette={"red"} ml={2} onClick={handleAdminClick} disabled={disableEditRole || role == "admin"}>
                                 Make admin
                             </Button>
                         </Flex>

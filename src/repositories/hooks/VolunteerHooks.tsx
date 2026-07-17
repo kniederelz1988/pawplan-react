@@ -4,11 +4,11 @@ import { User } from "firebase/auth"
 import { useAuthContext } from "@contexts/AuthContexts"
 
 import volunteerDogLikesRepository from "@repos/VolunteerDogLikesRepository"
+import { VolunteerRole } from "@models/enums/UserRoleType"
 import { VolunteerModel } from "@models/VolunteerModel"
 import volunteerRepository from "@repos/VolunteerRepository"
 
 import { DogModel } from "@models/DogModel"
-import { VolunteerRole, VolunteerRoleEnum } from "@models/enums/UserRoleType"
 import { RepositoryOperationStatusEnum } from "@repos/enums/RepositoryOperationStatus"
 import { toaster } from "@components/ui/toaster"
 import { usePages } from "@repos/hooks/GenericHooks"
@@ -156,12 +156,13 @@ export function useVolunteer() {
 
     return { volunteer, isFavourite, toggleFavourite, likeCounter }
 }
-export function useVolunteerRole(volunteer: VolunteerModel | null) {
-    const [role, setRole] = useState<VolunteerRole>(VolunteerRoleEnum.Observer)
-        
+export function useVolunteerRole() {
+    const [role, setRole] = useState<VolunteerRole>("observer")
+    const { volunteer } = useVolunteer()
+
     useEffect(() => {
         if (!volunteer?.id) {
-            setRole(VolunteerRoleEnum.Observer)
+            setRole("observer")
             return
         }
 
@@ -170,7 +171,7 @@ export function useVolunteerRole(volunteer: VolunteerModel | null) {
         })
     }, [volunteer])
 
-    return { role }
+    return role
 }
 
 export function useVolunteerById(id: string | null) {
