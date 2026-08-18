@@ -2,13 +2,15 @@ import { Heading, Grid, Flex, Text, GridItem } from "@chakra-ui/react";
 
 import useDogsCollection from "@repos/hooks/DogHooks";
 import DogOverviewCard from "@components/misc/dogs/DogOverviewCard";
+import { PageHeading } from "@components/misc/PageHeading";
 
 export default function DogsOverview() {
     const { dogs } = useDogsCollection([])
 
     return (
         <Flex flexDirection="column" m="auto" maxW={850}>
-            <Heading as="h1" justifyContent="left" w="100%" fontSize={"2xl"}>Dogs Overview</Heading>
+            <PageHeading>Dogs Overview</PageHeading>
+            
             <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight="light">Find a shelter companion to spend time with today.</Text>
             
             <Text fontVariant="all-petite-caps" mt={2}>{dogs.length} dogs available</Text>

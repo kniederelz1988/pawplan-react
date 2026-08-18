@@ -94,7 +94,9 @@ export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps)
                         <Center>
                             <HStack>
                                 <Text>New volunteer?</Text>
-                                <Button as="span" onClick={handleRegister}>Create an account</Button>
+                                <Button variant="plain" textDecoration="underline" onClick={handleRegister}>
+                                    Create an account
+                                </Button>
                             </HStack>
                         </Center>
                     </>

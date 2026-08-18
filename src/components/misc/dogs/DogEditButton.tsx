@@ -12,7 +12,7 @@ type DogEditButtonProps = {
 
 export default function DogEditButton({ dog } : DogEditButtonProps) {
     const { volunteer } = useVolunteer()
-    const role = useVolunteerRole()
+    const role = useVolunteerRole(volunteer)
 
     const dialogueContext = useDialogueContext()
 

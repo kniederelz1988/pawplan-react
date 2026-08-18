@@ -21,7 +21,7 @@ type DogAppointmentCardProps = {
 
 export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
     const { volunteer } = useVolunteer()
-    const role = useVolunteerRole()
+    const role = useVolunteerRole(volunteer)
 
     const dialogueContext = useDialogueContext()
 

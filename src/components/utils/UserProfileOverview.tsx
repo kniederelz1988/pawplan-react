@@ -16,7 +16,7 @@ export default function UserProfileOverview() {
     return (
         (user && volunteer) ? (
             <Grid templateColumns="auto 1fr auto" gap={2}>
-                <GridItem>
+                <GridItem aria-hidden="true">
                     <Circle w="40px" h="40px" bgColor={"accent.bg"} color={"accent.fg"}>
                         {volunteer.name.substring(0, 1).toUpperCase()}
                     </Circle>
@@ -32,7 +32,8 @@ export default function UserProfileOverview() {
                     </VStack>
                 </GridItem>
                 <GridItem>
-                    <IconButton variant={"subtle"} borderRadius={24} onClick={signOut}>
+                    <IconButton variant={"subtle"} borderRadius={24} aria-label="Sign out"
+                        onClick={signOut}>
                         <LuLogOut />
                     </IconButton>
                 </GridItem>
@@ -42,7 +43,7 @@ export default function UserProfileOverview() {
                 <Popover.Root positioning={{ placement: "bottom-start" }}>
                     <Popover.Trigger asChild>
                         <IconButton bgColor={"accent.bg"} color={"accent.fg"} borderRadius={24} fontSize={"sm"} p={2}>
-                            <FiLogIn /> Sign in
+                            <FiLogIn aria-hidden="true" /> Sign in
                         </IconButton>
                     </Popover.Trigger>
                     <Popover.Positioner>
@@ -57,7 +58,7 @@ export default function UserProfileOverview() {
                 <Popover.Root positioning={{ placement: "bottom-start" }}>
                     <Popover.Trigger asChild>
                         <IconButton bgColor={"accent.bg"} color={"accent.fg"} borderRadius={24} fontSize={"sm"} p={2}>
-                            <FaUserPlus /> Register
+                            <FaUserPlus aria-hidden="true" /> Register
                         </IconButton>
                     </Popover.Trigger>
                     <Popover.Positioner>

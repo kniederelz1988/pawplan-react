@@ -62,17 +62,19 @@ export default function AppointmentCard({ appointment, editable, onEdit, confirm
     }, [appointment, confirmable, dog])
 
     return (
-        <Card.Root key={appointment.data.id} w="100%" overflow="hidden">
+        <Card.Root key={appointment.data.id} w="100%" overflow="hidden" as="article" aria-label={`Appointment with ${dog?.name}`}>
             <Card.Body gap={0} p={4}>
                 <Card.Description as="div">
                     <Flex direction="row" gap={4}>
                         {
                             dog &&
-                                <Image w={20} h={20} aspectRatio={1} borderRadius={16} src={dog.imageURL ? dog.imageURL : "https://meredith.nhcrafts.org/wp-content/uploads/dog-placeholder.jpg" } />
+                                <Image w={20} h={20} aspectRatio={1} borderRadius={16} 
+                                    src={dog.imageURL ? dog.imageURL : "https://meredith.nhcrafts.org/wp-content/uploads/dog-placeholder.jpg" } 
+                                    alt={`Photo of ${dog.name}`} />
                         }
 
                         <Flex direction="column" w="100%">
-                            <Heading fontSize="md" fontWeight="bold" lineHeight={"1.2em"}>{dog?.name}</Heading>
+                            <Heading as="h2" fontSize="md" fontWeight="bold" lineHeight={"1.2em"}>{dog?.name}</Heading>
                             <Text fontSize="xs">{/*dog && getBreedTitle(dog.breed)*/}</Text>
                         
                             <Flex direction="row">
@@ -130,15 +132,20 @@ export default function AppointmentCard({ appointment, editable, onEdit, confirm
 
                                     {
                                         cancelable &&
-                                            <IconButton variant="solid" colorPalette="red" onClick={handleCancelAppointment}>
-                                                <PiXBold />
+                                            <IconButton variant="solid" colorPalette="red" 
+                                                aria-label="Cancel appointment"
+                                                onClick={handleCancelAppointment}>
+                                                <PiXBold aria-hidden="true" />
                                             </IconButton>
                                     }
 
                                     {
                                         confirmable &&
-                                            <IconButton variant="solid" colorPalette="green" onClick={handleConfirmableAppointment}>
-                                                <PiCheckBold />
+                                            <IconButton 
+                                                variant="solid" colorPalette="green" 
+                                                aria-label="Confirm appointment"
+                                                onClick={handleConfirmableAppointment}>
+                                                <PiCheckBold aria-hidden="true" />
                                             </IconButton>
                                     }
                                     </HStack>

@@ -156,9 +156,8 @@ export function useVolunteer() {
 
     return { volunteer, isFavourite, toggleFavourite, likeCounter }
 }
-export function useVolunteerRole() {
+export function useVolunteerRole(volunteer: VolunteerModel | null) {
     const [role, setRole] = useState<VolunteerRole>("observer")
-    const { volunteer } = useVolunteer()
 
     useEffect(() => {
         if (!volunteer?.id) {
@@ -170,6 +169,10 @@ export function useVolunteerRole() {
             setRole(r.role)
         })
     }, [volunteer])
+
+    useEffect(() => {
+        console.log(role)
+    }, [role])
 
     return role
 }

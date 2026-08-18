@@ -27,7 +27,7 @@ export default function AdminAppointmentPage() {
     const dialogue = useDialogueContext()
 
     const { volunteer } = useVolunteer()
-    const role = useVolunteerRole()
+    const role = useVolunteerRole(volunteer)
 
     const repository    = useAppointmentRepository()
 
