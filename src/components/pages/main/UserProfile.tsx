@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
 
-import { Box, Circle, Flex, Grid, GridItem, Heading, HStack, IconButton, Link, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Circle, Flex, Grid, GridItem, Heading, HStack, IconButton, Link, Text, VStack } from "@chakra-ui/react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { FiLogIn } from "react-icons/fi";
 import { BiPencil } from "react-icons/bi";
@@ -21,7 +21,7 @@ export default function UserProfile() {
 
     const { user, signOut }  = useAuthContext()
     const { volunteer, likeCounter } = useVolunteer()
-    const role = useVolunteerRole()
+    const role = useVolunteerRole(volunteer)
 
     const appointments = useAppointmentsFilteredByVolunteer(20)
 
@@ -50,16 +50,16 @@ export default function UserProfile() {
                 
                 <Box bgColor={"primary"} border={"xs"} borderRadius={"3xl"} borderColor={"softAccent.fg"} boxShadow={"md"} mt={8} p={0}>
                     <Grid templateColumns="auto 1fr auto auto" gap={4} p={4}>
-                        <GridItem>
+                        <GridItem aria-hidden="true">
                             <Circle w="80px" h="80px" fontSize={"3xl"} bgColor="accent.bg" color="accent.fg">
                                 {volunteer.name.substring(0, 1).toUpperCase()}
                             </Circle>
                         </GridItem>
 
                         <GridItem m={"auto"} w="100%" minW={0} overflow={"clip"} gap={0}>
+                            <ProfileBadge role={role}/>
                             <Text fontSize="md" fontWeight="bold" w="100%" overflow={"hidden"} truncate>
                                 {volunteer.name}
-                                <ProfileBadge role={role}/>
                             </Text>
                             <Text fontSize="sm" w="100%" overflow={"hidden"} truncate>
                                 {user.email}
@@ -87,8 +87,9 @@ export default function UserProfile() {
                         </GridItem>
                             
                         <GridItem m={"auto"}>
-                            <IconButton variant="subtle" borderRadius={24} onClick={onEditUserClick}>
-                                <BiPencil />
+                            <IconButton variant="subtle" borderRadius={24} aria-label="Edit profile" 
+                                onClick={onEditUserClick}>
+                                <BiPencil aria-hidden="true" />
                             </IconButton>
                         </GridItem>
                     </Grid>
@@ -106,9 +107,9 @@ export default function UserProfile() {
                     </HStack>
                 </Box>
 
-                <Link mt={8} asChild onClick={signOut}>
-                    <Text fontSize="sm" fontWeight="medium"><FiLogIn />Sign out</Text>
-                </Link>
+                <IconButton w={"min-content"} mt={8} p={4} variant={"plain"} fontSize="sm" fontWeight="medium" onClick={signOut}>
+                    <FiLogIn aria-hidden="true"/>Sign out
+                </IconButton>
             </Flex>
     )
 }

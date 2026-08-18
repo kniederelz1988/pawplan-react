@@ -17,7 +17,7 @@ export default function Navigation() {
     const dialogueContext = useDialogueContext()
 
     const { volunteer } = useVolunteer()
-    const role = useVolunteerRole()
+    const role = useVolunteerRole(volunteer)
 
     const handleNewDogClick = useCallback(() => {
         if (!volunteer || role != "admin")

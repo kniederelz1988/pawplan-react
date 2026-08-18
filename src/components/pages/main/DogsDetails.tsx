@@ -55,7 +55,7 @@ export default function DogsDetails({ } : DogsDetailsProps) {
     }, [dog])
 
     const { volunteer } = useVolunteer()
-    const role = useVolunteerRole()
+    const role = useVolunteerRole(volunteer)
 
     const dialogueContext = useDialogueContext()
 
@@ -102,7 +102,7 @@ export default function DogsDetails({ } : DogsDetailsProps) {
                                 </Grid>
 
                                 <Button variant="solid" w="full" boxShadow={"md"} onClick={onMeetClick}>
-                                    <FaRegCalendar /> Meet {dog.name}
+                                    <FaRegCalendar aria-hidden="true" /> Meet {dog.name}
                                 </Button>
                             </Flex>
                         </GridItem>

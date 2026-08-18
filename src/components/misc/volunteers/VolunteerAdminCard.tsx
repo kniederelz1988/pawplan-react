@@ -17,7 +17,7 @@ type VolunteersAdminCardProps = {
 }
 
 export default function VolunteersAdminCard({ volunteer, onEditVolunteer, onEditRole, disableEditRole } : VolunteersAdminCardProps) {
-    const { role } = useVolunteerRole(volunteer)
+    const role = useVolunteerRole(volunteer)
 
     const onEditUserClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
@@ -50,8 +50,8 @@ export default function VolunteersAdminCard({ volunteer, onEditVolunteer, onEdit
                         </Flex>
 
                         <Flex direction="row" w="100%" my={1}>
-                            <IconButton size="sm" variant="subtle" borderRadius={24} onClick={onEditUserClick}>
-                                <BiPencil />
+                            <IconButton size="sm" variant="subtle" borderRadius={24} aria-label="Edit profile" onClick={onEditUserClick}>
+                                <BiPencil aria-hidden="true" />
                             </IconButton>
                             
                             <Spacer />

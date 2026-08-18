@@ -45,7 +45,10 @@ export default function AdminUserPage() {
             <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight="light">You can edit all users here. For admins only.</Text>
             
             <Flex direction={"column"} gap={4} mt={4}>
-                { volunteers.map(v => <VolunteersAdminCard key={v.id} volunteer={v} onEditVolunteer={onEditVolunteer} onEditRole={onEditRole} disableEditRole={volunteer?.id == v?.id} />) }
+                { 
+                    volunteers.map(v => 
+                        <VolunteersAdminCard key={v.id} volunteer={v} onEditVolunteer={onEditVolunteer} onEditRole={onEditRole} disableEditRole={volunteer?.id == v?.id} />) 
+                }
             </Flex>
 
             <Center gap={4} mt={4}>

@@ -108,7 +108,9 @@ export default function UserRegisterForm({ showLoginHint } : UserRegisterFormPro
                         <Center>
                             <HStack>
                                 <Text>Already volunteering?</Text>
-                                <Button as="span" onClick={handleLogin}>Use existing account</Button>
+                                <Button variant="plain" textDecoration="underline" onClick={handleLogin}>
+                                    Use existing account
+                                </Button>
                             </HStack>
                         </Center>
                     </>
