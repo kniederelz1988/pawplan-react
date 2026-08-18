@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { NavLink } from 'react-router-dom';
 
-import { Button, Card, HStack, Spacer, Text } from "@chakra-ui/react";
+import { Button, Card, HStack, IconButton, Link, Spacer, Span, Text, VStack } from "@chakra-ui/react";
 
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks";
 
@@ -13,7 +13,7 @@ import { DogModel, getDogAge, getGenderTitle, getSizeTitle} from "@models/DogMod
 import DogEditButton from "./DogEditButton";
 import DogFavouriteButton from "./DogFavouriteButton";
 import { creatUserInsufficientRightsDialogueData } from "@components/dialogues/UserInsufficientRightsDialogue";
-import { FaRegCalendar } from "react-icons/fa6";
+import { FaMagnifyingGlass, FaRegCalendar } from "react-icons/fa6";
 
 type DogAppointmentCardProps = {
     dog: DogModel
@@ -43,43 +43,48 @@ export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
     }, [volunteer, role, dog])
     
     return (
-        <NavLink to={`dog/${dog.id}`}>
-            <Card.Root key={dog.id} overflow="hidden">
-                <Card.Header p={0}>
-                    <HStack minH={210} aspectRatio={{ base: 1.5, md: 1 }}
-                        align="start" bgImage={`url(${dog.imageURL ? dog.imageURL : 'https://meredith.nhcrafts.org/wp-content/uploads/dog-placeholder.jpg'})`} bgSize="cover" bgPos="center"
-                        p={2}
-                    >   
-                        <DogEditButton dog={dog} />
+        <Card.Root key={dog.id} overflow="hidden" as="article" aria-label={dog.name}>
+            <Card.Header p={0}>
+                <HStack minH={210} aspectRatio={{ base: 1.5, md: 1 }}
+                    align="start" bgImage={`url(${dog.imageURL ? dog.imageURL : 'https://meredith.nhcrafts.org/wp-content/uploads/dog-placeholder.jpg'})`} bgSize="cover" bgPos="center"
+                    p={2}
+                >   
+                    <DogEditButton dog={dog} />
+                    <Spacer />
+                    <DogFavouriteButton dog={dog} />
+                </HStack>
+            </Card.Header>
+            <Card.Body gap={0} p={4} pb={2}>
+                <Card.Title lineHeight={1.5} as="div">
+                    <HStack>
+                        <Span as="p" aria-hidden="true">{dog.name}</Span>
                         <Spacer />
-                        <DogFavouriteButton dog={dog} />
+                        <Text fontSize={"sm"}>{getGenderTitle(dog.gender)}</Text>
                     </HStack>
-                </Card.Header>
-                <Card.Body gap={0} p={4} pb={2}>
-                    <Card.Title lineHeight={1.5}>
-                        <HStack>
-                            {dog.name}
-                            <Spacer />
-                            <Text fontSize={"sm"}>{getGenderTitle(dog.gender)}</Text>
-                        </HStack>
-                    </Card.Title>
-                    <Card.Description as="div">
-                        <HStack>
-                            {/*getBreedTitle(dog.breed)*/}
-                            {/*<LuDot style={{ padding: 0, margin: -6 }}/>*/}
-                            {getDogAge(dog)}
-                            <Spacer />
-                            {/*<LuDot style={{ padding: 0, margin: -6 }}/>*/}
-                            {getSizeTitle(dog.size)}
-                        </HStack>
-                    </Card.Description>
-                </Card.Body>
-                <Card.Footer p={2}>
+                </Card.Title>
+                <Card.Description as="div">
+                    <HStack>
+                        {/*getBreedTitle(dog.breed)*/}
+                        {/*<LuDot style={{ padding: 0, margin: -6 }}/>*/}
+                        {getDogAge(dog)}
+                        <Spacer />
+                        {/*<LuDot style={{ padding: 0, margin: -6 }}/>*/}
+                        {getSizeTitle(dog.size)}
+                    </HStack>
+                </Card.Description>
+            </Card.Body>
+            <Card.Footer p={2}>
+                <VStack w="100%">
+                    <IconButton w="100%" variant={"subtle"} asChild>
+                        <NavLink to={`dog/${dog.id}`}>
+                            <FaMagnifyingGlass /> More about {dog.name}
+                        </NavLink>
+                    </IconButton>
                     <Button w="100%" onClick={onMeetClick}>
                         <FaRegCalendar /> Meet {dog.name}
                     </Button>  
-                </Card.Footer>
-            </Card.Root>
-        </NavLink>
+                </VStack>
+            </Card.Footer>
+        </Card.Root>
     )
 }

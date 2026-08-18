@@ -37,7 +37,11 @@ export default function UserRegisterForm({ showLoginHint } : UserRegisterFormPro
         <form onSubmit={handleSubmit(handleRegister)}>
             <Field.Root invalid={!!errors.name}>
                 <Field.Label>Name</Field.Label>
-                <Input type="text" {...register("name")} placeholder="John Doe/Jane Roe"/>
+                <Input 
+                    type="text"
+                    aria-invalid={!!errors.name}
+                    {...register("name")}
+                    placeholder="John Doe/Jane Roe" />
                 <Field.ErrorText>
                     <Field.ErrorIcon />
                     {errors.name?.message}
@@ -48,7 +52,12 @@ export default function UserRegisterForm({ showLoginHint } : UserRegisterFormPro
             
             <Field.Root invalid={!!errors.email}>
                 <Field.Label>E-Mail</Field.Label>
-                <Input type="email" {...register("email")} placeholder="jane@example.com"/>
+                <Input 
+                    type="email" 
+                    autoComplete="email"
+                    aria-invalid={!!errors.email}
+                    {...register("email")}
+                    placeholder="jane@example.com" />
                 <Field.ErrorText>
                     <Field.ErrorIcon />
                     {errors.email?.message}
@@ -59,7 +68,12 @@ export default function UserRegisterForm({ showLoginHint } : UserRegisterFormPro
 
             <Field.Root invalid={!!errors.password}>
                 <Field.Label>Password</Field.Label>
-                <Input type="password" {...register("password")} placeholder="*******" />
+                <Input 
+                    type="password" 
+                    autoComplete="password"
+                    aria-invalid={!!errors.password}
+                    {...register("password")} 
+                    placeholder="*******" />
                 <Field.ErrorText>
                     <Field.ErrorIcon />
                     {errors.password?.message}
@@ -71,7 +85,7 @@ export default function UserRegisterForm({ showLoginHint } : UserRegisterFormPro
                      <>
                         <Spacer h={2} />
 
-                        <Alert.Root status="error" title={error} p={2}>
+                        <Alert.Root status="error" role="alert" title={error} p={2}>
                             <Alert.Indicator />
                             <Alert.Title>{error}</Alert.Title>
                         </Alert.Root>

@@ -13,7 +13,7 @@ export default function DogCard({ dog } : DogCardProps) {
                 <AspectRatio minH={210} ratio={{ base: 1.5, md: 1 }}>
                     <Image src={
                         `${dog.imageURL ? dog.imageURL : 'https://meredith.nhcrafts.org/wp-content/uploads/dog-placeholder.jpg'}`
-                    } />
+                    } alt={`Photo of ${dog.name}`} />
                 </AspectRatio>
             </Card.Header>
             <Card.Body p={4}>

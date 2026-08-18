@@ -71,7 +71,11 @@ export default function VolunteerForm({ volunteer, onSubmit, onReset } : Volunte
 
             <Field.Root invalid={!!errors.name}>
                 <Field.Label>Name</Field.Label>
-                <Input type="text" {...register("name")} placeholder="John Doe/Jane Roe" />
+                <Input 
+                    type="text" 
+                    aria-invalid={!!errors.name}
+                    {...register("name")}
+                     placeholder="John Doe/Jane Roe" />
                 <Field.ErrorText>
                     <Field.ErrorIcon />
                     {errors.name?.message}
@@ -107,7 +111,10 @@ export default function VolunteerForm({ volunteer, onSubmit, onReset } : Volunte
                 />
 
                 <Field.Root>
-                    <DatePicker name="volunteerSince" defaultValue={[timestampToDateValue(volunteer.volunteerSince)]} disabled>
+                    <DatePicker 
+                        name="volunteerSince"
+                        defaultValue={[timestampToDateValue(volunteer.volunteerSince)]} 
+                        disabled >
                         Volunteer since
                     </DatePicker>
                     <Field.ErrorText />

@@ -31,8 +31,13 @@ export default function DogEditButton({ dog } : DogEditButtonProps) {
         <>
         { 
             volunteer && role == "admin" &&
-                <IconButton borderRadius={24} bgColor={"accent.200"} _hover={{ bgColor: "accent.100" }} onClick={onEditDogClick}>
-                    <PiPencil color={"black"} />
+                <IconButton 
+                    aria-label={`Edit ${dog.name}`}
+                    borderRadius={24} 
+                    bgColor={"accent.200"} 
+                    _hover={{ bgColor: "accent.100" }} 
+                    onClick={onEditDogClick} >
+                    <PiPencil  aria-hidden="true" color={"black"} />
                 </IconButton>
         }
         </>

@@ -67,7 +67,7 @@ export default function AdminAppointmentPage() {
 
     return (
         <Flex flexDirection="column" m="auto" maxW={850}>
-            <Heading justifyContent="left" w="100%" fontSize={"2xl"}>All visits</Heading>
+            <Heading as="h1" justifyContent="left" w="100%" fontSize={"2xl"}>All visits</Heading>
             <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight={"light"}>You can edit visits here. For admins only.</Text>
             
             <Container mt={4} p={0}>

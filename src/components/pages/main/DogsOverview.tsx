@@ -8,7 +8,7 @@ export default function DogsOverview() {
 
     return (
         <Flex flexDirection="column" m="auto" maxW={850}>
-            <Heading justifyContent="left" w="100%" fontSize={"2xl"}>Dogs Overview</Heading>
+            <Heading as="h1" justifyContent="left" w="100%" fontSize={"2xl"}>Dogs Overview</Heading>
             <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight="light">Find a shelter companion to spend time with today.</Text>
             
             <Text fontVariant="all-petite-caps" mt={2}>{dogs.length} dogs available</Text>

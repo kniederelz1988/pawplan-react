@@ -58,7 +58,7 @@ export default function UserAppointments() {
 
     return (
         <Flex flexDirection="column" m="auto" maxW={850}>
-            <Heading justifyContent="left" w="100%" fontSize={"2xl"}>Your visits</Heading>
+            <Heading as="h1" justifyContent="left" w="100%" fontSize={"2xl"}>Your visits</Heading>
             <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight={"light"}>
                 All your scheduled and past shelter visits.
             </Text>
