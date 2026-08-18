@@ -1,42 +1,46 @@
 import { Link } from '@chakra-ui/react';
-import { useCallback } from 'react';
+import { NavLink } from 'react-router-dom';
+import { NavigationItemStyles } from './NavigationStyling';
 
 type NavigationLinkProps = {
-    children: React.ReactNode | React.ReactNode[] 
-    active: boolean
+    children: React.ReactNode
+    target: string
     disabled?: boolean
-    onClick?: () => void
 }
 
-export default function NavigationLink({ children, active, disabled, onClick } : NavigationLinkProps)
+export default function NavigationLink({ 
+    children, 
+    target, 
+    disabled = false
+} : NavigationLinkProps)
 {
-    const handleOnClick = useCallback((e: React.MouseEvent) => {
-        if (!onClick)
-            return
+    if (disabled) {
+        return (
+            <Link
+                as="span"
 
-        e.preventDefault();
-        onClick()
-    }, [onClick])
+                opacity={0.6}
+                cursor={"disabled"}
+                aria-disabled="true"
+
+                {...NavigationItemStyles}
+            >
+                {children}                
+            </Link>
+        )
+    }
 
     return (
-        <Link onClick={handleOnClick} as="span"
-            width="100%"
-
-            fontSize={"sm"}
-            fontWeight={active ? "bold" : "medium"}
-            textDecoration={active ? "underline" : "none"}
-
-            px={4}
-            py={2}
-            borderRadius={32}
-
-            bgColor={"accent.bg"} 
-            color={"accent.fg"} 
-            
-            cursor={disabled? "disabled": "pointer"}
-            opacity={disabled? 0.6 : 1}
-        >
-            {children}
+        <Link asChild {...NavigationItemStyles}>
+            <NavLink
+                to={target}
+                style={({isActive}) => ({
+                    fontWeight: isActive ? "bold" : "inherit",
+                    textDecoration: isActive ? "underline" : "none",
+                })}
+            >
+                {children}
+            </NavLink>
         </Link>
     )
 }

@@ -14,7 +14,9 @@ export default function SidebarContent({ ...props }: StackProps) {
 
             <Spacer />
             
-            <Navigation />
+            <nav aria-label="Main navigation">
+                <Navigation />
+            </nav>
 
             <Spacer />
 

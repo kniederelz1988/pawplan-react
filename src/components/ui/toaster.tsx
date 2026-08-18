@@ -15,26 +15,51 @@ export const toaster = createToaster({
 })
 
 export const Toaster = () => {
+
   return (
     <Portal>
       <ChakraToaster toaster={toaster} insetInline={{ mdDown: "4" }}>
         {(toast) => (
           <Toast.Root width={{ md: "sm" }}>
-            {toast.type === "loading" ? (
-              <Spinner size="sm" color="blue.solid" />
-            ) : (
-              <Toast.Indicator />
-            )}
+            {
+              toast.type === "loading" ? (
+                <Spinner size="sm" color="blue.solid" />
+              ) : (
+                <Toast.Indicator />
+              )
+            }
             <Stack gap="1" flex="1" maxWidth="100%">
-              {toast.title && <Toast.Title>{toast.title}</Toast.Title>}
-              {toast.description && (
-                <Toast.Description>{toast.description}</Toast.Description>
-              )}
+              { 
+                toast.title && 
+                  <Toast.Title>{toast.title}</Toast.Title>
+              }
+              {
+                toast.description && (
+                  toast.type === "success" ? (
+                    <Toast.Description role="status" aria-live="polite" aria-atomic="true">
+                      {toast.description}
+                    </Toast.Description>
+                  ) : toast.type === "error" ? (
+                    <Toast.Description role="alert" aria-live="assertive" aria-atomic="true">
+                      {toast.description}
+                    </Toast.Description>
+                  ) : (
+                    <Toast.Description>
+                      {toast.description}
+                    </Toast.Description>
+                  )
+                )
+              }
             </Stack>
-            {toast.action && (
-              <Toast.ActionTrigger>{toast.action.label}</Toast.ActionTrigger>
-            )}
-            {toast.closable && <Toast.CloseTrigger />}
+            {
+              toast.action && (
+                <Toast.ActionTrigger>{toast.action.label}</Toast.ActionTrigger>
+              )
+            }
+            {
+              toast.closable && 
+                <Toast.CloseTrigger />
+            }
           </Toast.Root>
         )}
       </ChakraToaster>

@@ -41,7 +41,7 @@ export default function UserProfile() {
     return (
         user && volunteer &&
             <Flex flexDirection="column" m="auto" maxW={850}>
-                <Heading justifyContent="left" w="100%" fontSize={"2xl"}>Your profile</Heading>
+                <Heading as="h1" justifyContent="left" w="100%" fontSize={"2xl"}>Your profile</Heading>
                 <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight={"light"}>
                     Your volunteer account and activity.
                 </Text>

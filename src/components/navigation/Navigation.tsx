@@ -1,11 +1,9 @@
 import { useCallback } from "react"
 
-import { Spacer, Text, VStack } from "@chakra-ui/react"
+import { Button, Heading, Spacer, VStack } from "@chakra-ui/react"
 import { FaMagnifyingGlass, FaPaw, FaRegCalendar, FaRegUser, FaUsers } from "react-icons/fa6"
 
 import NavigationLink from "@components/navigation/NavigationLink"
-import withRouterLink from "@components/hocs/withRouterLink"
-import withButtonLink from "@components/hocs/withButtonLink"
 
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
 
@@ -13,9 +11,7 @@ import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
 import { useDialogueContext } from "@contexts/DialogueContext"
 
 import { createDogAddDialogueData } from "@components/dialogues/DogAddDialogue"
-
-const RouterNavigationLink = withRouterLink(NavigationLink)
-const ButtonLink = withButtonLink(NavigationLink)
+import { NavigationItemStyles } from "./NavigationStyling"
 
 export default function Navigation() {
     const dialogueContext = useDialogueContext()
@@ -33,31 +29,33 @@ export default function Navigation() {
 
     return (
         <VStack w="100%" h="100%" m={0} p={0} align="stretch">
-            <RouterNavigationLink target="/">
-                <FaMagnifyingGlass /> Discover
-            </RouterNavigationLink>
-            <RouterNavigationLink target="/userAppointments" disabled={!volunteer || role == "observer"}>
-                <FaRegCalendar /> Visits
-            </RouterNavigationLink>
-            <RouterNavigationLink target="/userProfile" disabled={!volunteer}>
-                <FaRegUser />Profile
-            </RouterNavigationLink>
+            <NavigationLink target="/">
+                <FaMagnifyingGlass aria-hidden="true"/> Discover
+            </NavigationLink>
+            <NavigationLink target="/userAppointments" disabled={!volunteer || role == "observer"}>
+                <FaRegCalendar aria-hidden="true"/> Visits
+            </NavigationLink>
+            <NavigationLink target="/userProfile" disabled={!volunteer}>
+                <FaRegUser aria-hidden="true"/>Profile
+            </NavigationLink>
 
             <Spacer />
 
-            <Text fontVariant="all-petite-caps">Admin</Text>
+            <Heading fontVariant="all-petite-caps">Admin</Heading>
             
-            <ButtonLink onClick={handleNewDogClick} disabled={!volunteer || role != "admin"}>
-                <FaPaw /> New dog
-            </ButtonLink>
+            <Button variant="ghost" {...NavigationItemStyles}
+                onClick={handleNewDogClick} disabled={!volunteer || role != "admin"}
+                >
+                <FaPaw aria-hidden="true"/> New dog
+            </Button>
 
-            <RouterNavigationLink target="/admin/users" disabled={!volunteer || role != "admin"}>
-                <FaUsers /> Users
-            </RouterNavigationLink>
+            <NavigationLink target="/admin/users" disabled={!volunteer || role != "admin"}>
+                <FaUsers aria-hidden="true"/> Users
+            </NavigationLink>
 
-            <RouterNavigationLink target="/admin/appointments" disabled={!volunteer || role != "admin"}>
-                <FaRegCalendar /> Visits
-            </RouterNavigationLink>
+            <NavigationLink target="/admin/appointments" disabled={!volunteer || role != "admin"}>
+                <FaRegCalendar aria-hidden="true"/> Visits
+            </NavigationLink>
 
             <Spacer />
             <Spacer />

@@ -17,7 +17,7 @@ export default function AdminUserPage() {
     const dialogueContext = useDialogueContext()
 
     const { volunteer } = useVolunteer()
-    const { role } = useVolunteerRole(volunteer)
+    const role = useVolunteerRole()
 
     const { updateVolunteerRole } = useVolunteerRepository()
 
@@ -39,7 +39,7 @@ export default function AdminUserPage() {
 
     return (
         <Flex flexDirection="column" m="auto" maxW={850}>
-            <Heading justifyContent="left" w="100%" fontSize={"2xl"}>All users</Heading>
+            <Heading as="h1" justifyContent="left" w="100%" fontSize={"2xl"}>All users</Heading>
             <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight="light">You can edit all users here. For admins only.</Text>
             
             <Flex direction={"column"} gap={4} mt={4}>

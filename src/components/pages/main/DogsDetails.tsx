@@ -54,7 +54,7 @@ export default function DogsDetails({ } : DogsDetailsProps) {
     }, [dog])
 
     const { volunteer } = useVolunteer()
-    const { role } = useVolunteerRole(volunteer)
+    const role = useVolunteerRole()
 
     const dialogueContext = useDialogueContext()
 
@@ -107,7 +107,7 @@ export default function DogsDetails({ } : DogsDetailsProps) {
 
                     <GridItem colSpan={{ base: 1, lg: 6}}>
                         <HStack>
-                            <Heading justifyContent="left" w="100%">More about {dog?.name}</Heading>
+                            <Heading as="h2" justifyContent="left" w="100%">More about {dog?.name}</Heading>
                             
                             <DogEditButton dog={dog} />
                             <DogFavouriteButton dog={dog} />
@@ -120,7 +120,7 @@ export default function DogsDetails({ } : DogsDetailsProps) {
                 </Grid>
 
                 <VStack w="full" bgColor={"softAccent.bg/30"} borderRadius={"3xl"} boxShadow={"md"} m={0} mt={8} px={4} pt={4} pb={4} gap={4}>
-                    <Heading w="full" pl={4}>Remarks about {dog.name}</Heading>
+                    <Heading as="h2" w="full" pl={4}>Remarks about {dog.name}</Heading>
                     {   
                         ratingCollection.ratings.length > 0 
                             ? 

@@ -27,12 +27,25 @@ export default function DogFavouriteButton({ dog } : DogFavouriteButtonProps) {
         toggleFavourite(dog)
     }, [volunteer, toggleFavourite, dog])
 
+    const favourite = isFavourite(dog)
+
     return (
         <>
         { 
             volunteer &&
-                <IconButton borderRadius={24} bgColor={"accent.200"} _hover={{ bgColor: "accent.100" }} onClick={onFavouriteDogClick}>
-                    <HiHeart color={isFavourite(dog) ? "red": "black" } />
+                <IconButton 
+                    aria-label={
+                        favourite
+                            ? `Remove ${dog.name} from favourites`
+                            : `Add ${dog.name} to favourites`
+                    }
+                    aria-pressed={favourite}
+                    borderRadius={24} 
+                    bgColor={"accent.200"} 
+                    _hover={{ bgColor: "accent.100" }}
+                    onClick={onFavouriteDogClick}
+                >
+                    <HiHeart aria-hidden="true" color={isFavourite(dog) ? "red": "black" } />
                 </IconButton>
         }
         </>

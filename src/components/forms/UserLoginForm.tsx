@@ -36,7 +36,13 @@ export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps)
         <form onSubmit={handleSubmit(handleLogin)}> 
             <Field.Root invalid={!!errors.email}>
                 <Field.Label>E-Mail</Field.Label>
-                <Input type="email" {...register("email")} placeholder="jane@example.com"/>
+                <Input 
+                    type="email" 
+                    autoComplete="email"
+                    aria-invalid={!!errors.email}
+                    {...register("email")}
+                    placeholder="jane@example.com"
+                    />
                 <Field.ErrorText>
                     <Field.ErrorIcon />
                     {errors.email?.message}
@@ -47,7 +53,13 @@ export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps)
 
             <Field.Root invalid={!!errors.password}>
                 <Field.Label>Password</Field.Label>
-                <Input type="password" {...register("password")} placeholder="*******" />
+                <Input 
+                    type="password"
+                    autoComplete="password"
+                    aria-invalid={!!errors.password}
+                    {...register("password")}
+                    placeholder="*******" 
+                    />
                 <Field.ErrorText>
                     <Field.ErrorIcon />
                     {errors.password?.message}
@@ -59,7 +71,7 @@ export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps)
                     <>
                         <Spacer h={2} />
 
-                        <Alert.Root status="error" title={error} p={2}>
+                        <Alert.Root status="error" role="alert" title={error} p={2}>
                             <Alert.Indicator />
                             <Alert.Title>{error}</Alert.Title>
                         </Alert.Root>
