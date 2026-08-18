@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { Alert, Center, Field, HStack, IconButton, Input, Link, Spacer, Text } from "@chakra-ui/react";
+import { Alert, Button, Center, Field, HStack, IconButton, Input, Link, Spacer, Text } from "@chakra-ui/react";
 import { FaUserPlus } from "react-icons/fa";
 
 import { useDialogueContext } from "@contexts/DialogueContext";
@@ -108,7 +108,7 @@ export default function UserRegisterForm({ showLoginHint } : UserRegisterFormPro
                         <Center>
                             <HStack>
                                 <Text>Already volunteering?</Text>
-                                <Link onClick={handleLogin}>Use existing account</Link>
+                                <Button as="span" onClick={handleLogin}>Use existing account</Button>
                             </HStack>
                         </Center>
                     </>

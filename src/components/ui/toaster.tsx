@@ -20,7 +20,7 @@ export const Toaster = () => {
     <Portal>
       <ChakraToaster toaster={toaster} insetInline={{ mdDown: "4" }}>
         {(toast) => (
-          <Toast.Root width={{ md: "sm" }}>
+          <Toast.Root width={{ md: "sm" }} role={toast.type === "error" ? "alert" : "status"}>
             {
               toast.type === "loading" ? (
                 <Spinner size="sm" color="blue.solid" />
@@ -35,20 +35,10 @@ export const Toaster = () => {
               }
               {
                 toast.description && (
-                  toast.type === "success" ? (
-                    <Toast.Description role="status" aria-live="polite" aria-atomic="true">
-                      {toast.description}
-                    </Toast.Description>
-                  ) : toast.type === "error" ? (
-                    <Toast.Description role="alert" aria-live="assertive" aria-atomic="true">
-                      {toast.description}
-                    </Toast.Description>
-                  ) : (
                     <Toast.Description>
                       {toast.description}
                     </Toast.Description>
                   )
-                )
               }
             </Stack>
             {

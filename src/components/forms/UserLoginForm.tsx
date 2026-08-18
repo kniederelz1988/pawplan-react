@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { Alert, Center, Field, HStack, IconButton, Input, Link, Spacer, Text } from "@chakra-ui/react";
+import { Alert, Button, Center, Field, HStack, IconButton, Input, Link, Spacer, Text } from "@chakra-ui/react";
 import { FiLogIn } from "react-icons/fi";
 
 import useAuthentification from "@hooks/useAuthentification";
@@ -55,7 +55,7 @@ export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps)
                 <Field.Label>Password</Field.Label>
                 <Input 
                     type="password"
-                    autoComplete="password"
+                    autoComplete="current-password"
                     aria-invalid={!!errors.password}
                     {...register("password")}
                     placeholder="*******" 
@@ -94,7 +94,7 @@ export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps)
                         <Center>
                             <HStack>
                                 <Text>New volunteer?</Text>
-                                <Link onClick={handleRegister}>Create an account</Link>
+                                <Button as="span" onClick={handleRegister}>Create an account</Button>
                             </HStack>
                         </Center>
                     </>

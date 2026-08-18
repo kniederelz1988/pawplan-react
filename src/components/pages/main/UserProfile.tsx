@@ -14,6 +14,7 @@ import { useAppointmentsFilteredByVolunteer } from "@repos/hooks/AppointmentHook
 import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
 
 import ProfileBadge from "@components/misc/profiles/ProfileBadge";
+import { PageHeading } from "@components/misc/PageHeading";
 
 export default function UserProfile() {
     const dialogueContext = useDialogueContext()
@@ -41,7 +42,8 @@ export default function UserProfile() {
     return (
         user && volunteer &&
             <Flex flexDirection="column" m="auto" maxW={850}>
-                <Heading as="h1" justifyContent="left" w="100%" fontSize={"2xl"}>Your profile</Heading>
+                <PageHeading>Your profile</PageHeading>
+
                 <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight={"light"}>
                     Your volunteer account and activity.
                 </Text>

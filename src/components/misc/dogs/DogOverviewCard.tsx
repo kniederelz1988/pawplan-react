@@ -1,7 +1,7 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { NavLink } from 'react-router-dom';
 
-import { Button, Card, HStack, IconButton, Link, Spacer, Span, Text, VStack } from "@chakra-ui/react";
+import { Button, Card, Heading, HStack, IconButton, Link, Spacer, Span, Text, VStack } from "@chakra-ui/react";
 
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks";
 
@@ -42,8 +42,10 @@ export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
         dialogueContext.openDialogue(DialogueTypeEnum.AppointmentBooking, { dog: dog })
     }, [volunteer, role, dog])
     
+    const titleId = useMemo(() => `dog-${dog.id}-title`, [dog])
+
     return (
-        <Card.Root key={dog.id} overflow="hidden" as="article" aria-label={dog.name}>
+        <Card.Root key={dog.id} overflow="hidden" as="article" aria-labelledby={titleId}>
             <Card.Header p={0}>
                 <HStack minH={210} aspectRatio={{ base: 1.5, md: 1 }}
                     align="start" bgImage={`url(${dog.imageURL ? dog.imageURL : 'https://meredith.nhcrafts.org/wp-content/uploads/dog-placeholder.jpg'})`} bgSize="cover" bgPos="center"
@@ -57,7 +59,7 @@ export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
             <Card.Body gap={0} p={4} pb={2}>
                 <Card.Title lineHeight={1.5} as="div">
                     <HStack>
-                        <Span as="p" aria-hidden="true">{dog.name}</Span>
+                        <Heading as="h2" id={titleId} size="md">{dog.name}</Heading>
                         <Spacer />
                         <Text fontSize={"sm"}>{getGenderTitle(dog.gender)}</Text>
                     </HStack>
@@ -75,13 +77,13 @@ export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
             </Card.Body>
             <Card.Footer p={2}>
                 <VStack w="100%">
-                    <IconButton w="100%" variant={"subtle"} asChild>
+                    <Button w="100%" variant={"subtle"} asChild>
                         <NavLink to={`dog/${dog.id}`}>
-                            <FaMagnifyingGlass /> More about {dog.name}
+                            <FaMagnifyingGlass aria-hidden="true"/> More about {dog.name}
                         </NavLink>
-                    </IconButton>
+                    </Button>
                     <Button w="100%" onClick={onMeetClick}>
-                        <FaRegCalendar /> Meet {dog.name}
+                        <FaRegCalendar  aria-hidden="true"/> Meet {dog.name}
                     </Button>  
                 </VStack>
             </Card.Footer>
