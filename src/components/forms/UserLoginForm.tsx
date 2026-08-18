@@ -81,9 +81,9 @@ export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps)
             <Spacer h={4} />
 
             <HStack mx={0} mt={2}>
-                <IconButton type="submit" w="100%">
-                    <FiLogIn />Sign in
-                </IconButton>
+                <Button type="submit" w="100%">
+                    <FiLogIn aria-hidden="true" /> Sign in
+                </Button>
             </HStack>
 
             { 
