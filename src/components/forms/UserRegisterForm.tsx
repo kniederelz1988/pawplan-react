@@ -95,9 +95,9 @@ export default function UserRegisterForm({ showLoginHint } : UserRegisterFormPro
             <Spacer h={4} />
 
             <HStack mx={0} mt={2}>
-                <IconButton type="submit" w="100%">
-                    <FaUserPlus /> Create account
-                </IconButton>
+                <Button type="submit" w="100%">
+                    <FaUserPlus aria-hidden="true" /> Create account
+                </Button>
             </HStack>
 
             {
