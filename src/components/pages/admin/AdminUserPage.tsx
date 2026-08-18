@@ -12,6 +12,7 @@ import { useDialogueContext } from "@contexts/DialogueContext"
 import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
 
 import VolunteersAdminCard from "@components/misc/volunteers/VolunteerAdminCard"
+import { PageHeading } from "@components/misc/PageHeading"
 
 export default function AdminUserPage() {
     const dialogueContext = useDialogueContext()
@@ -39,7 +40,8 @@ export default function AdminUserPage() {
 
     return (
         <Flex flexDirection="column" m="auto" maxW={850}>
-            <Heading as="h1" justifyContent="left" w="100%" fontSize={"2xl"}>All users</Heading>
+            <PageHeading>All users</PageHeading>
+            
             <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight="light">You can edit all users here. For admins only.</Text>
             
             <Flex direction={"column"} gap={4} mt={4}>

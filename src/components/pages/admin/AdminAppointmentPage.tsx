@@ -19,6 +19,7 @@ import withTabs from "@components/hocs/withAppointmentCollection"
 import { AppointmentCollection } from "@components/misc/appointments/AppointmentCollection"
 
 import { Timestamp } from "firebase/firestore"
+import { PageHeading } from "@components/misc/PageHeading"
 
 const AppointmentTabs = withTabs(AppointmentCollection)
 
@@ -67,7 +68,8 @@ export default function AdminAppointmentPage() {
 
     return (
         <Flex flexDirection="column" m="auto" maxW={850}>
-            <Heading as="h1" justifyContent="left" w="100%" fontSize={"2xl"}>All visits</Heading>
+            <PageHeading>All visits</PageHeading>
+            
             <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight={"light"}>You can edit visits here. For admins only.</Text>
             
             <Container mt={4} p={0}>

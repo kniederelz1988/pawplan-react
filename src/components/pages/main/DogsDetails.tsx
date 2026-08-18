@@ -17,6 +17,7 @@ import DogCard from "@components/misc/dogs/DogCard"
 import { AppointmentRating } from "@components/misc/appointments/AppointmentRating"
 import { creatUserInsufficientRightsDialogueData } from "@components/dialogues/UserInsufficientRightsDialogue"
 import { FaRegCalendar } from "react-icons/fa6"
+import { PageHeading } from "@components/misc/PageHeading"
 
 type DogsDetailsProps = {
 }
@@ -76,81 +77,84 @@ export default function DogsDetails({ } : DogsDetailsProps) {
     }, [volunteer, role, dog])
 
     return (
-        dog &&
-            <Flex flexDirection="column" m="auto" maxW={850}>
-                <Grid templateColumns={{ base: "repeat(1, 1fr)", lg: "repeat(10, 1fr)"}} mt={4} p={0} gap={4}>
-                    <GridItem colSpan={{ base: 1, lg: 4}}>
-                        <Flex direction={"column"} bgColor={"softAccent.bg/30"} borderRadius={"3xl"} boxShadow={"md"} p={4} gap={4}>
-                            <DogCard dog={dog} />
+        dog && (
+            <>
+                <Flex flexDirection="column" m="auto" maxW={850}>
+                    <Grid templateColumns={{ base: "repeat(1, 1fr)", lg: "repeat(10, 1fr)"}} mt={4} p={0} gap={4}>
+                        <GridItem colSpan={{ base: 1, lg: 4}}>
+                            <Flex direction={"column"} bgColor={"softAccent.bg/30"} borderRadius={"3xl"} boxShadow={"md"} p={4} gap={4}>
+                                <DogCard dog={dog} />
 
-                            <Grid templateColumns={"repeat(2, 1fr)"} w="full" gap={4}>
-                                <GridItem colSpan={1} bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"}>
-                                    <VStack gap={0} m={4}>
-                                        <Text fontSize={"md"} fontWeight={"bold"}>{appointmentCounter.count}</Text>
-                                        <Text fontSize={"sm"}>visits</Text>
-                                    </VStack>
-                                </GridItem>
-                            
-                                <GridItem colSpan={1} bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"}>
-                                    <VStack gap={0} m={4}>
-                                        <Text fontSize={"md"} fontWeight={"bold"}>{likeCounter.count}</Text>
-                                        <Text fontSize={"sm"}>favourited</Text>
-                                    </VStack>
-                                </GridItem>
-                            </Grid>
-
-                            <Button variant="solid" w="full" boxShadow={"md"} onClick={onMeetClick}>
-                                <FaRegCalendar /> Meet {dog.name}
-                            </Button>
-                        </Flex>
-                    </GridItem>
-
-                    <GridItem colSpan={{ base: 1, lg: 6}}>
-                        <HStack>
-                            <Heading as="h2" justifyContent="left" w="100%">More about {dog?.name}</Heading>
-                            
-                            <DogEditButton dog={dog} />
-                            <DogFavouriteButton dog={dog} />
-                        </HStack>
-                            
-                        <Text textAlign={"justify"} whiteSpace="pre-line" mt={4}>
-                            { dog?.description }
-                        </Text>
-                    </GridItem>
-                </Grid>
-
-                <VStack w="full" bgColor={"softAccent.bg/30"} borderRadius={"3xl"} boxShadow={"md"} m={0} mt={8} px={4} pt={4} pb={4} gap={4}>
-                    <Heading as="h2" w="full" pl={4}>Remarks about {dog.name}</Heading>
-                    {   
-                        ratingCollection.ratings.length > 0 
-                            ? 
-                                <> 
-                                {
-                                    ratingCollection.ratings.map(t => 
-                                        <VStack w="full" >
-                                            <AppointmentRating rating={t} />
+                                <Grid templateColumns={"repeat(2, 1fr)"} w="full" gap={4}>
+                                    <GridItem colSpan={1} bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"}>
+                                        <VStack gap={0} m={4}>
+                                            <Text fontSize={"md"} fontWeight={"bold"}>{appointmentCounter.count}</Text>
+                                            <Text fontSize={"sm"}>visits</Text>
                                         </VStack>
-                                    )
-                                }
-                                    <Center gap={4}>
-                                        <Button onClick={ratingCollection.previousPage} disabled={!ratingCollection.previousPageActive}>
-                                            Prev
-                                        </Button>
-                                        <Text w={16} textAlign={"center"} fontSize={"sm"} fontWeight={"bold"}>{ratingCollection.page + 1}</Text>
-                                        <Button onClick={ratingCollection.nextPage} disabled={!ratingCollection.nextPageActive}>
-                                            Next
-                                        </Button>
-                                    </Center>
-                                </>
-                            :
-                                <Box w="full" bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"} p={4}>
-                                    <Center>
-                                        <Text fontSize={"xs"}>No remarks yet...</Text>
-                                    </Center>
-                                </Box>
-                            
-                    }
-                </VStack>
-            </Flex>
+                                    </GridItem>
+                                
+                                    <GridItem colSpan={1} bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"}>
+                                        <VStack gap={0} m={4}>
+                                            <Text fontSize={"md"} fontWeight={"bold"}>{likeCounter.count}</Text>
+                                            <Text fontSize={"sm"}>favourited</Text>
+                                        </VStack>
+                                    </GridItem>
+                                </Grid>
+
+                                <Button variant="solid" w="full" boxShadow={"md"} onClick={onMeetClick}>
+                                    <FaRegCalendar /> Meet {dog.name}
+                                </Button>
+                            </Flex>
+                        </GridItem>
+
+                        <GridItem colSpan={{ base: 1, lg: 6}}>
+                            <HStack>
+                                <PageHeading>More about {dog.name}</PageHeading>
+
+                                <DogEditButton dog={dog} />
+                                <DogFavouriteButton dog={dog} />
+                            </HStack>
+                                
+                            <Text textAlign={"justify"} whiteSpace="pre-line" mt={4}>
+                                { dog?.description }
+                            </Text>
+                        </GridItem>
+                    </Grid>
+
+                    <VStack w="full" bgColor={"softAccent.bg/30"} borderRadius={"3xl"} boxShadow={"md"} m={0} mt={8} px={4} pt={4} pb={4} gap={4}>
+                        <Heading as="h2" w="full" pl={4}>Remarks about {dog.name}</Heading>
+                        {   
+                            ratingCollection.ratings.length > 0 
+                                ? 
+                                    <> 
+                                    {
+                                        ratingCollection.ratings.map(t => 
+                                            <VStack w="full" >
+                                                <AppointmentRating rating={t} />
+                                            </VStack>
+                                        )
+                                    }
+                                        <Center gap={4}>
+                                            <Button onClick={ratingCollection.previousPage} disabled={!ratingCollection.previousPageActive}>
+                                                Prev
+                                            </Button>
+                                            <Text w={16} textAlign={"center"} fontSize={"sm"} fontWeight={"bold"}>{ratingCollection.page + 1}</Text>
+                                            <Button onClick={ratingCollection.nextPage} disabled={!ratingCollection.nextPageActive}>
+                                                Next
+                                            </Button>
+                                        </Center>
+                                    </>
+                                :
+                                    <Box w="full" bgColor={"secondary.bg"} borderColor={"secondary.fg"} borderRadius={"2xl"} borderWidth={"xs"} boxShadow={"sm"} p={4}>
+                                        <Center>
+                                            <Text fontSize={"xs"}>No remarks yet...</Text>
+                                        </Center>
+                                    </Box>
+                                
+                        }
+                    </VStack>
+                </Flex>
+            </>
+        )
     )
 }

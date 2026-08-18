@@ -17,6 +17,7 @@ import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus";
 import { AppointmentCollection } from "@components/misc/appointments/AppointmentCollection";
 
 import { DogModel } from "@models/DogModel";
+import { PageHeading } from "@components/misc/PageHeading";
 
 const AppointmentTabs = withTabs(AppointmentCollection)
 
@@ -58,7 +59,7 @@ export default function UserAppointments() {
 
     return (
         <Flex flexDirection="column" m="auto" maxW={850}>
-            <Heading as="h1" justifyContent="left" w="100%" fontSize={"2xl"}>Your visits</Heading>
+            <PageHeading>Your visits</PageHeading>
             <Text justifyContent="left" w="100%" fontSize={"md"} fontWeight={"light"}>
                 All your scheduled and past shelter visits.
             </Text>
