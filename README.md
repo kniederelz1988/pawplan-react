@@ -1,4 +1,4 @@
-# PawPlan Android
+# PawPlan
 
 PawPlan is a volunteer-coordination platform for animal shelters.
 
