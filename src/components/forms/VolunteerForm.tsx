@@ -13,9 +13,13 @@ type VolunteerFormProps = {
     onSubmit: (v: VolunteerModel) => void,
     onReset: () => void
 }
+type VolunteerFormData = {
+    name: string,
+    birthday: Date
+}
 
 export default function VolunteerForm({ volunteer, onSubmit, onReset } : VolunteerFormProps) {
-    const { handleSubmit, register, formState: { errors }, control, reset, resetField } = useForm({
+    const form = useForm({
         mode: "onBlur",
         reValidateMode: "onChange",
         resolver: yupResolver(volunteerEditSchema),
@@ -25,26 +29,31 @@ export default function VolunteerForm({ volunteer, onSubmit, onReset } : Volunte
         }
     })
 
-    const birthdayValue = useWatch({ name: "birthday", control: control })
+    const birthdayValue = useWatch({ name: "birthday", control: form.control })
 
     useEffect(() => {
         if (!volunteer) {
-            resetField("name")
-            resetField("birthday")
+            form.resetField("name")
+            form.resetField("birthday")
             return
         }
 
-        reset({
+        form.reset({
             "name": volunteer.name,
             "birthday": timestampToDate(volunteer.birthday),
         })
-    }, [volunteer])
+    }, [form, volunteer])
 
-    const handleFormSubmit = useCallback((data: any) => {
-        volunteer.name = data.name
-        volunteer.birthday = dateToTimestamp(data.birthday)
+    const handleFormSubmit = useCallback((data: VolunteerFormData) => {
+        const tVolunteer: VolunteerModel = {
+            id: volunteer.id,
+            userId: volunteer.userId,
+            birthday: dateToTimestamp(data.birthday),
+            volunteerSince: volunteer.volunteerSince,
+            name: volunteer.name
+        }
 
-        onSubmit(volunteer)
+        onSubmit(tVolunteer)
     }, [volunteer, onSubmit])
     const handleFormReset = useCallback((e: React.SyntheticEvent) => {
         e.preventDefault();
@@ -52,7 +61,7 @@ export default function VolunteerForm({ volunteer, onSubmit, onReset } : Volunte
     }, [onReset])
 
     return (
-        <form onSubmit={handleSubmit(handleFormSubmit)} onReset={handleFormReset}>
+        <form onSubmit={form.handleSubmit(handleFormSubmit)} onReset={handleFormReset}>
             <HStack>
                 <Field.Root disabled>
                     <Field.Label>Id</Field.Label>
@@ -69,25 +78,25 @@ export default function VolunteerForm({ volunteer, onSubmit, onReset } : Volunte
         
             <Spacer h={4} />
 
-            <Field.Root invalid={!!errors.name}>
+            <Field.Root invalid={!!form.formState.errors.name}>
                 <Field.Label>Name</Field.Label>
                 <Input 
                     type="text" 
-                    aria-invalid={!!errors.name}
-                    {...register("name")}
+                    aria-invalid={!!form.formState.errors.name}
+                    {...form.register("name")}
                      placeholder="John Doe/Jane Roe" />
                 <Field.ErrorText>
                     <Field.ErrorIcon />
-                    {errors.name?.message}
+                    {form.formState.errors.name?.message}
                 </Field.ErrorText>
             </Field.Root>
 
             <Spacer h={4} />
 
             <HStack align={"flex-start"}>
-                <Controller name="birthday" control={control}
+                <Controller name="birthday" control={form.control}
                     render={({ field }) => (
-                        <Field.Root invalid={!!errors.birthday}>
+                        <Field.Root invalid={!!form.formState.errors.birthday}>
                             <DatePicker 
                                 value={birthdayValue ? [dateToDateValue(birthdayValue)] : []}
                                 onValueChange={(d) => {
@@ -104,7 +113,7 @@ export default function VolunteerForm({ volunteer, onSubmit, onReset } : Volunte
                             </DatePicker>
                             <Field.ErrorText>
                                 <Field.ErrorIcon />
-                                {errors.birthday?.message}
+                                {form.formState.errors.birthday?.message}
                             </Field.ErrorText>
                         </Field.Root>
                     )}

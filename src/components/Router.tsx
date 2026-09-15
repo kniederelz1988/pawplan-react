@@ -6,12 +6,11 @@ import UserProfile from "@components/pages/main/UserProfile"
 
 import AdminUserPage from "@components/pages/admin/AdminUserPage"
 import AdminAppointmentPage from "@components/pages/admin/AdminAppointmentPage"
-import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
+import { useLocalVolunteerRole } from "@repos/hooks/VolunteerHooks"
 import DogsDetails from "@components/pages/main/DogsDetails"
 
 export default function Router() {
-    const { volunteer } = useVolunteer()
-    const role = useVolunteerRole(volunteer)
+    const { role } = useLocalVolunteerRole()
 
     return (
         <Routes>

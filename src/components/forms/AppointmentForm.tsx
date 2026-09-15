@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { AspectRatio, Button, Grid, HStack, RadioCard, Spacer } from "@chakra-ui/react";
+import { Button, Grid, HStack, RadioCard, Spacer } from "@chakra-ui/react";
 
 import { getDateFromToday } from "@helpers/TimeHelpers";
 
@@ -60,12 +60,12 @@ export default function AppointmentForm({ dog, onConfirm, onClose } : Appointmen
             time.minute
         )
         onConfirm(dog, dateTime)
-    }, [date, time, dog])
+    }, [date, time, dog, onConfirm])
 
     const handleReset = useCallback((e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
         onClose()
-    }, [])
+    }, [onClose])
 
     function onDayOffsetChanged(details: RadioCard.ValueChangeDetails) {
         if (!details.value)

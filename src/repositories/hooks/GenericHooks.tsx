@@ -1,42 +1,55 @@
-import { useMemo, useState } from "react"
+import { useCallback, useState } from "react"
 
-export function usePages<T>() {
+type PageCursor = {
+    id?: string
+}
+
+export function usePages<P extends PageCursor>() {
     const [page, setPage] = useState(0)
-    const [pageCursors, setPageCursors] = useState<T[]>([])
+    const [pageCursors, setPageCursors] = useState<(P | null)[]>([null])
 
-    function setPageCursor(pageCursor: T) {
-        const p = [...pageCursors.slice(0, page), pageCursor, ...pageCursors.slice(page + 1)]
-        setPageCursors(p)
-    }
-    function getPageCursor() {
-        if (page <= 0)
-            return null
+    const setPageCursor = useCallback((page: number, pageCursor: P) => {
+        setPageCursors(current => {
+            const next = [...current]
 
-        if (page >= pageCursors.length)
-            return pageCursors[pageCursors.length - 1]
+            while (next.length <= page)
+                next.push(null)
 
-        return pageCursors[page - 1]
-    }
+            next[page] = pageCursor
 
-    function previousPage() {
-        if (page == 0)
+            if (
+                next.length === current.length &&
+                next.every((value, index) => Object.is(value?.id, current[index]?.id))
+            ) {
+                return current
+            }
+
+            return next
+        })
+    }, [])
+
+    const activePageCursor = pageCursors[page] ?? null
+    const nextPageCursor = pageCursors[page + 1] ?? null
+    const previousPageActive = page > 0
+    const nextPageActive = nextPageCursor != null
+
+    const previousPage = useCallback(() => {
+        if (!previousPageActive)
             return
 
-        setPage(page - 1)
-    }
-    const previousPageActive = useMemo(() => page >= 1, [page])
+        setPage(current => current - 1)
+    }, [previousPageActive])
     
-    function nextPage() {
-        if (page >= pageCursors.length)
+    const nextPage = useCallback(() => {
+        if (!nextPageActive)
             return
         
-        setPage(page + 1)
-    }
-    const nextPageActive = useMemo(() => page < pageCursors.length, [page, pageCursors])
+        setPage(current => current + 1)
+    }, [nextPageActive])
 
     return { 
-        page:           page,
-        pageControls:   { previousPage, previousPageActive, nextPage, nextPageActive },
-        pageCursor:     { set: setPageCursor, get: getPageCursor }
+        page:               page,
+        pageControls:       { previousPage, previousPageActive, nextPage, nextPageActive },
+        activePageCursor, setPageCursor
     }
 }

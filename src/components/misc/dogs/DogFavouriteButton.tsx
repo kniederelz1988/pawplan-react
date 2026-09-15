@@ -1,8 +1,7 @@
 import { IconButton } from "@chakra-ui/react";
-import { useDialogueContext } from "@contexts/DialogueContext";
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext";
 import { useVolunteer } from "@repos/hooks/VolunteerHooks";
 import { DogModel } from "@models/DogModel";
-import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
 
 import { useCallback } from "react";
 import { HiHeart } from "react-icons/hi";
@@ -20,12 +19,12 @@ export default function DogFavouriteButton({ dog } : DogFavouriteButtonProps) {
         e.preventDefault();
 
         if (volunteer == null) {
-            dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
+            dialogueContext.openDialogue({ type: "userLogin" })
             return
         }
 
         toggleFavourite(dog)
-    }, [volunteer, toggleFavourite, dog])
+    }, [volunteer, dialogueContext, toggleFavourite, dog])
 
     const favourite = isFavourite(dog)
 

@@ -11,6 +11,10 @@ type AppointmentRatingFormProps = {
     onConfirm: (rating: number, comment: string) => void,
     onClose: () => void
 }
+type AppointmentRatingFormData = {
+    comment: string;
+}
+
 
 export default function AppointmentRatingForm({ onConfirm, onClose} : AppointmentRatingFormProps) {
     const { handleSubmit, register, formState: { errors } } = useForm({
@@ -21,10 +25,10 @@ export default function AppointmentRatingForm({ onConfirm, onClose} : Appointmen
 
     const [ratingValue, setRating] = useState(0)
 
-    const handleFormSubmit = useCallback((data: any) => {
+    const handleFormSubmit = useCallback((data: AppointmentRatingFormData) => {
         onConfirm(ratingValue, data.comment)
-    }, [ratingValue])
-    const handleFormReset = useCallback((_e: React.SyntheticEvent) => {
+    }, [ratingValue, onConfirm])
+    const handleFormReset = useCallback((_: React.SyntheticEvent) => {
         onClose()
     }, [onClose])
 

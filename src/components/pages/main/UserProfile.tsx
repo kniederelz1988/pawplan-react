@@ -1,17 +1,15 @@
 import { useCallback, useEffect } from "react";
 
-import { Box, Button, Circle, Flex, Grid, GridItem, Heading, HStack, IconButton, Link, Text, VStack } from "@chakra-ui/react";
+import { Box, Circle, Flex, Grid, GridItem, HStack, IconButton, Text, VStack } from "@chakra-ui/react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { FiLogIn } from "react-icons/fi";
 import { BiPencil } from "react-icons/bi";
 
-import { useDialogueContext } from "@contexts/DialogueContext";
-import { useAuthContext } from "@contexts/AuthContexts";
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext";
+import { useAuthContext } from "@contexts/hooks/useAuthContext";
 
 import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks";
 import { useAppointmentsFilteredByVolunteer } from "@repos/hooks/AppointmentHooks";
-
-import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
 
 import ProfileBadge from "@components/misc/profiles/ProfileBadge";
 import { PageHeading } from "@components/misc/PageHeading";
@@ -21,13 +19,14 @@ export default function UserProfile() {
 
     const { user, signOut }  = useAuthContext()
     const { volunteer, likeCounter } = useVolunteer()
-    const role = useVolunteerRole(volunteer)
+    const { role, roleFor } = useVolunteerRole(volunteer)
 
-    const appointments = useAppointmentsFilteredByVolunteer(20)
+    const appointments = useAppointmentsFilteredByVolunteer(100)
 
     useEffect(() => {
         appointments.for(volunteer)
-    }, [volunteer])
+        roleFor(volunteer)
+    }, [volunteer, appointments, roleFor])
     
     const onEditUserClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
@@ -36,8 +35,8 @@ export default function UserProfile() {
             return
         }
 
-        dialogueContext.openDialogue(DialogueTypeEnum.UserEdit, { volunteer: volunteer })
-    }, [volunteer])
+        dialogueContext.openDialogue({ type: "userEdit", data: { volunteer: volunteer } })
+    }, [dialogueContext, volunteer])
 
     return (
         user && volunteer &&

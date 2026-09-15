@@ -1,16 +1,12 @@
 import { useEffect } from "react";
 
-import { Container, Flex, Heading, Text } from "@chakra-ui/react";
+import { Container, Flex, Text } from "@chakra-ui/react";
 
 import withTabs from "@components/hocs/withAppointmentCollection";
 
-import { useDialogueContext } from "@contexts/DialogueContext";
-import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
-import { createAppointmentCancelDialogueData } from "@components/dialogues/AppointmentCancelDialogue";
-import { createAppointmentEditDialogueData } from "@components/dialogues/AppointmentEditDialogue";
-
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext";
 import { useVolunteer } from "@repos/hooks/VolunteerHooks";
-import { useAppointmentStatusCollection } from "@repos/hooks/AppointmentHooks";
+import { useAppointmentRepository, useAppointmentStatusCollection } from "@repos/hooks/AppointmentHooks";
 
 import { Appointment } from "@models/AppointmentModel";
 import { AppointmentStatusEnum } from "@models/enums/AppointmentStatus";
@@ -18,6 +14,8 @@ import { AppointmentCollection } from "@components/misc/appointments/Appointment
 
 import { DogModel } from "@models/DogModel";
 import { PageHeading } from "@components/misc/PageHeading";
+import { createAppointmentEditDialogueData } from "@components/dialogues/functions/createAppointmentEditDialogueData";
+import { createAppointmentCancelDialogueData } from "@components/dialogues/functions/createAppointmentCancelDialogueData";
 
 const AppointmentTabs = withTabs(AppointmentCollection)
 
@@ -25,6 +23,7 @@ export default function UserAppointments() {
     const dialogue = useDialogueContext()
     
     const { volunteer } = useVolunteer()
+    const { updateStatus } = useAppointmentRepository()
 
     const confirmed     = useAppointmentStatusCollection([AppointmentStatusEnum.Confirmed], 10)
     const pending       = useAppointmentStatusCollection([AppointmentStatusEnum.Pending],   10)
@@ -36,25 +35,34 @@ export default function UserAppointments() {
         pending.for(volunteer)
         canceled.for(volunteer)
         completed.for(volunteer)
-    }, [volunteer])
+    }, [volunteer, confirmed, pending, canceled, completed])
 
     function onEditAppointment(appointment: Appointment) {
+        if (!appointment?.data)
+            return
+
         const data = createAppointmentEditDialogueData(appointment.data)
-        dialogue.openDialogue(DialogueTypeEnum.AppointmentEdit, data)
+        dialogue.openDialogue({ type: "appointmentEdit", data: data })
     }
     function onCancelAppointment(appointment: Appointment, dog: DogModel) {
+        if (!appointment?.data)
+            return
+        
         if (!volunteer?.id)
             return
 
-        const data = createAppointmentCancelDialogueData(appointment.data, volunteer, dog)
-        dialogue.openDialogue(DialogueTypeEnum.AppointmentCancel, data)
+        const data = createAppointmentCancelDialogueData(updateStatus, appointment.data, volunteer, dog)
+        dialogue.openDialogue({ type: "appointmentCancel", data: data })
     }
     function onCompleteAppointment(appointment: Appointment, dog: DogModel) {
+        if (!appointment?.data)
+            return
+        
         if (!volunteer?.id)
             return
 
         const data = { appointment: appointment.data, volunteer: volunteer, dog: dog }
-        dialogue.openDialogue(DialogueTypeEnum.AppointmentComplete, data)
+        dialogue.openDialogue({ type: "appointmentComplete", data: data })
     }
 
     return (

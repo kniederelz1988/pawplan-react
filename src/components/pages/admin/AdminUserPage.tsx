@@ -1,24 +1,21 @@
 import { useCallback } from "react"
 
-import { Button, Center, Flex, Heading, Text } from "@chakra-ui/react"
+import { Button, Center, Flex, Text } from "@chakra-ui/react"
 
 import { VolunteerModel } from "@models/VolunteerModel"
 import { VolunteerRole } from "@models/enums/UserRoleType"
-import { useVolunteer, useVolunteerCollection, useVolunteerRepository, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
+import { useLocalVolunteerRole, useVolunteerCollection, useVolunteerRepository } from "@repos/hooks/VolunteerHooks"
 
-import { createVolunteerEditDialogueData } from "@components/dialogues/VolunteerEditDialogue"
-
-import { useDialogueContext } from "@contexts/DialogueContext"
-import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext"
 
 import VolunteersAdminCard from "@components/misc/volunteers/VolunteerAdminCard"
 import { PageHeading } from "@components/misc/PageHeading"
+import { createVolunteerEditDialogueData } from "@components/dialogues/functions/createVolunteerEditDialogueData"
 
 export default function AdminUserPage() {
     const dialogueContext = useDialogueContext()
 
-    const { volunteer } = useVolunteer()
-    const role = useVolunteerRole()
+    const { volunteer, role } = useLocalVolunteerRole()
 
     const { updateVolunteerRole } = useVolunteerRepository()
 
@@ -29,14 +26,14 @@ export default function AdminUserPage() {
             return
 
         const data = createVolunteerEditDialogueData(v)
-        dialogueContext.openDialogue(DialogueTypeEnum.UserEdit, data)
-    }, [volunteer, role])
+        dialogueContext.openDialogue({ type: "userEdit", data: data})
+    }, [volunteer, role, dialogueContext])
     const onEditRole = useCallback((v: VolunteerModel, r: VolunteerRole) => {
         if (volunteer?.id == v?.id && role != "admin")
             return
 
         updateVolunteerRole(v, r)
-    }, [volunteer, role])
+    }, [volunteer, role, updateVolunteerRole])
 
     return (
         <Flex flexDirection="column" m="auto" maxW={850}>

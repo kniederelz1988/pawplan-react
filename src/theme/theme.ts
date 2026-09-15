@@ -238,7 +238,7 @@ const system = createSystem(defaultConfig, {
       },
       input: {
         variants: {
-          variant: {
+          variant: {
             outline: {
               bg: "background.200",
               color: "secondary.fg",
@@ -249,7 +249,7 @@ const system = createSystem(defaultConfig, {
       },
       textarea: {
         variants: {
-          variant: {
+          variant: {
             outline: {
               bg: "background.200",
               color: "secondary.fg",

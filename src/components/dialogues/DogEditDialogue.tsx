@@ -1,45 +1,42 @@
 import { useCallback } from "react";
 
-import { CloseButton, Dialog, DialogOpenChangeDetails, Grid, GridItem, Heading, Portal } from "@chakra-ui/react";
-import DogForm from "@components/forms/DogForm";
+import { Grid, GridItem } from "@chakra-ui/react";
+import { useDogRepository } from "@repos/hooks/DogHooks";
 
 import { DogModel } from "@models/DogModel";
 import DogCard from "@components/misc/dogs/DogCard";
+import DogForm from "@components/forms/DogForm";
 
-import { useDogRepository } from "@repos/hooks/DogHooks";
 import DialogueBox from "@components/hocs/withDialogueBox";
+import { DialogueProps } from "@contexts/providers/DialogueProvider";
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext";
 
 export type DogEditDialogueData = {
     dog: DogModel
 }
-type DogEditDialogueProps = { 
-    open: boolean, 
-    onClose: () => void,
-    data: DogEditDialogueData
-}
 
-export default function DogEditDialogue({ open, onClose, data } : DogEditDialogueProps) {
-    const { updateDog }= useDogRepository()
+export default function DogEditDialogue({ open, data } : DialogueProps<DogEditDialogueData>) {
+    const { updateDog } = useDogRepository()
+
+    const dialogueContext = useDialogueContext()
+            
+    const handleClose = useCallback(() => {
+        dialogueContext.closeDialogue()
+    }, [dialogueContext])
 
     const handleConfirm = useCallback(() => {
         if (!data?.dog)
             return
 
         updateDog(data.dog)
-        onClose()
-    }, [data, onClose]);
+        handleClose()
+    }, [updateDog, handleClose, data]);
     const handleCancel = useCallback(() => {
-        onClose()
-    }, [data, onClose])
-
-    const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
-        if(!e.open) {
-            onClose()
-        }
-    }, [onClose])
+        handleClose()
+    }, [handleClose])
 
     return (
-        <DialogueBox open={open} title="Edit dog" size="xl" onClose={onClose}>
+        <DialogueBox open={open} title="Edit dog" size="xl" onClose={handleClose}>
             <Grid templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(5, 1fr)" }} gap={6}>
                 <GridItem colSpan={{ base: 2, md: 2 }} alignContent={"start"}>
                     { data?.dog && <DogCard dog={data.dog} /> }

@@ -5,6 +5,7 @@ import { auth } from "@fb/config"
 import { getAuthErrorMessage } from "@fb/FirebaseErrorHelpers"
 
 import { useVolunteerRepository } from "@repos/hooks/VolunteerHooks"
+import { FirebaseError } from "firebase/app"
 
 export default function useCreateUser() {
     const { createVolunteer } = useVolunteerRepository()
@@ -21,8 +22,12 @@ export default function useCreateUser() {
 
             createVolunteer(cred.user, name)
             setError(null)
-        } catch(err: any) {
-            setError(getAuthErrorMessage(err.code))
+        } catch(err: unknown) {
+            if (err instanceof FirebaseError) {
+                setError(getAuthErrorMessage(err.code))
+            } else {
+                setError("An unexpected error occurred.")
+            }
         }
 
         setLoading(false)

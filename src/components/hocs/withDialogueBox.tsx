@@ -1,4 +1,3 @@
-import { useCallback } from "react"
 import { CloseButton, Dialog, DialogOpenChangeDetails, Heading, Portal } from "@chakra-ui/react"
 
 type Props = {
@@ -13,12 +12,14 @@ type Props = {
 }
 
 function withDialogueBox() {
-    return ({ open, title, size, children, onClose } : Props) => {
-        const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
-            if (!e.open) {
-                onClose()
-            }
-        }, [onClose])
+    function render({ open, title, size, children, onClose } : Props) {
+
+        function handleOpenChange(e: DialogOpenChangeDetails) {
+            if (e.open)
+                return
+
+            onClose()
+        }
 
         return (
             <Dialog.Root motionPreset="slide-in-bottom" open={open} onOpenChange={handleOpenChange} size={size}>
@@ -43,6 +44,8 @@ function withDialogueBox() {
             </Dialog.Root>
         )
     }
+
+    return render
 }
 
 const DialogueBox = withDialogueBox()

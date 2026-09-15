@@ -5,27 +5,24 @@ import { FaMagnifyingGlass, FaPaw, FaRegCalendar, FaRegUser, FaUsers } from "rea
 
 import NavigationLink from "@components/navigation/NavigationLink"
 
-import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
+import { useLocalVolunteerRole } from "@repos/hooks/VolunteerHooks"
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext"
 
-import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
-import { useDialogueContext } from "@contexts/DialogueContext"
-
-import { createDogAddDialogueData } from "@components/dialogues/DogAddDialogue"
 import { NavigationItemStyles } from "./NavigationStyling"
+import { createDogAddDialogueData } from "@components/dialogues/functions/createDogAddDialogueData"
 
 export default function Navigation() {
     const dialogueContext = useDialogueContext()
 
-    const { volunteer } = useVolunteer()
-    const role = useVolunteerRole(volunteer)
+    const { volunteer, role } = useLocalVolunteerRole()
 
     const handleNewDogClick = useCallback(() => {
         if (!volunteer || role != "admin")
             return
 
         const data = createDogAddDialogueData()
-        dialogueContext.openDialogue(DialogueTypeEnum.DogAdd, data)
-    }, [volunteer, role])
+        dialogueContext.openDialogue({ type: "dogAdd", data: data })
+    }, [dialogueContext, volunteer, role])
 
     return (
         <VStack w="100%" h="100%" m={0} p={0} align="stretch">

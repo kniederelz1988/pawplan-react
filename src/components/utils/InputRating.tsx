@@ -9,7 +9,7 @@ type InputRatingProps = {
 }
 
 export default function InputRating({ value, onValueChanged } : InputRatingProps) {
-    const [rating, setRating] = useState(0)
+    const [rating, setRating] = useState(value)
     const [hoveredRating, setHoveredRating] = useState(0)
 
     const activeRating = useMemo(() => {
@@ -17,12 +17,8 @@ export default function InputRating({ value, onValueChanged } : InputRatingProps
     }, [rating, hoveredRating])
 
     useEffect(() => {
-        setRating(value)
-    }, [value])
-
-    useEffect(() => {
         onValueChanged(rating)
-    }, [rating])
+    }, [rating, onValueChanged])
 
     return (
         Array.from({ length: 5 }).map((_,i) => {

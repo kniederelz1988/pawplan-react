@@ -17,7 +17,7 @@ const modelConverter: FirestoreDataConverter<VolunteerDogLikeModel, VolunteerDog
 
 type VolunteerDogLikesRepositoryListener = (result: VolunteerDogLikeModel[]) => void
 
-function VolunteerDogLikesRepository({ database } : { database: Firestore }) {
+function createVolunteerDogLikesRepository({ database } : { database: Firestore }) {
     const collectionName = "volunteerDogLikes";
 
     function subscribeForVolunteerLikes(volunteerId: string, listener: VolunteerDogLikesRepositoryListener) {
@@ -82,5 +82,5 @@ function VolunteerDogLikesRepository({ database } : { database: Firestore }) {
     return { subscribeForVolunteerLikes, subscribeForDogLikes, addLike, removeLike }
 }
 
-const volunteerDogLikesRepository = VolunteerDogLikesRepository({ database })
+const volunteerDogLikesRepository = createVolunteerDogLikesRepository({ database })
 export default volunteerDogLikesRepository

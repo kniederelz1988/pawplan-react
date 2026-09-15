@@ -12,14 +12,14 @@ export default defineConfig({
   resolve: {
     alias: {
       // Alias ^ to the src directory
-      '@hooks': path.resolve(__dirname, './src/hooks'),
-      '@components': path.resolve(__dirname, './src/components'),
-      '@contexts': path.resolve(__dirname, './src/contexts'),
-      '@fb': path.resolve(__dirname, './src/firebase'),
-      '@models': path.resolve(__dirname, './src/models'),
-      '@repos': path.resolve(__dirname, './src/repositories'),
-      '@helpers': path.resolve(__dirname, './src/helpers'),
-      '@schemas': path.resolve(__dirname, './src/schemas')
+      '@hooks': path.resolve(import.meta.dirname, './src/hooks'),
+      '@components': path.resolve(import.meta.dirname, './src/components'),
+      '@contexts': path.resolve(import.meta.dirname, './src/contexts'),
+      '@fb': path.resolve(import.meta.dirname, './src/firebase'),
+      '@models': path.resolve(import.meta.dirname, './src/models'),
+      '@repos': path.resolve(import.meta.dirname, './src/repositories'),
+      '@helpers': path.resolve(import.meta.dirname, './src/helpers'),
+      '@schemas': path.resolve(import.meta.dirname, './src/schemas')
     }
   }
 })

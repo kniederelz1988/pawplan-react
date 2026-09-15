@@ -1,19 +1,12 @@
-export const DialogueTypeEnum = {
-    None:               0,
-
-    UserRegister:       1,
-    UserLogin:          2,
-    UserInsuffientRights: 3,
-
-    AppointmentBooking: 11,
-    AppointmentEdit:    12,
-    AppointmentCancel:  13,
-    AppointmentComplete:14,
-
-    DogAdd:             21,
-    DogEdit:            22,
-    UserEdit:           23
-
-
-} as const
-export type DialogueType = typeof DialogueTypeEnum[keyof typeof DialogueTypeEnum]
+export type DialogueType =
+    "none" 
+    | "userRegister" 
+    | "userLogin" 
+    | "userInsuffientRights" 
+    | "appointmentBooking" 
+    | "appointmentEdit" 
+    | "appointmentCancel" 
+    | "appointmentComplete"
+    | "dogAdd" 
+    | "dogEdit" 
+    | "userEdit"

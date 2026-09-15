@@ -1,8 +1,41 @@
 import { useImmerReducer } from "use-immer"
 
-const initialState = { name: { first: "", last: "" }, age: null, address: { street: "", number: "", postalCode: "", city: "" } }
+type StateData  = {
+    name: {
+        first: string;
+        last: string;
+    };
+    age: number;
+    address: {
+        street: string;
+        number: string;
+        postalCode: string;
+        city: string;
+    };
+}
+type ActionData = { type: "setFirstName"; firstName: string }
+    | { type: "setLastName"; lastName: string }
+    | { type: "setAge"; age: number }
+    | { type: "setStreet"; street: string }
+    | { type: "setStreetNumber"; streetNumber: string }
+    | { type: "setPostalCode"; postalCode: string }
+    | { type: "setCity"; city: string };
 
-const eventUserReducer = (draft: any, action: any) => {
+const initialState = {
+    name: { 
+        first: "",
+        last: ""
+    }, 
+    age: 0, 
+    address: { 
+        street: "", 
+        number: "", 
+        postalCode: "", 
+        city: ""
+    }
+}
+
+const eventUserReducer = (draft: StateData, action: ActionData) => {
     switch(action.type) {
         case "setFirstName":
             draft.name.first = action.firstName
@@ -11,8 +44,7 @@ const eventUserReducer = (draft: any, action: any) => {
             draft.name.last = action.lastName
             break
         case "setAge":
-            const newAge = Math.max(action.age, 18)
-            draft.age = newAge
+            draft.age = Math.max(action.age, 18)
             break
         case "setStreet":
             draft.address.street = action.street
@@ -26,42 +58,61 @@ const eventUserReducer = (draft: any, action: any) => {
         case "setCity":
             draft.address.city = action.city
             break;
-        default:
-            return new Error("Unexpected action:" + action)
     }
 }
 
 export const EventUserForm = () => {
-    const [state, dispatch] = useImmerReducer<any, any>(eventUserReducer, initialState)
+    const [state, dispatch] = useImmerReducer<StateData, ActionData>(eventUserReducer, initialState)
 
-    const updateFirstName = (e: any) => {
-        dispatch({ type: "setFirstName", firstName: e.currentTarget.value })
+    const updateFirstName   = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch({ 
+            type: "setFirstName",
+            firstName: e.target.value 
+        })
     }
 
-    const updateLastName = (e: any) => {
-        dispatch({ type: "setLastName", lastName: e.currentTarget.value })
+    const updateLastName    = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch({ 
+            type: "setLastName", 
+            lastName: e.target.value
+        })
     }
 
-    const updateAge = (e: any) => {
-        dispatch({ type: "setAge", age: e.currentTarget.value })
+    const updateAge         = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch({ 
+            type: "setAge", 
+            age: parseInt(e.target.value)
+        })
     }
 
-    const updateStreet = (e: any) => {
-        dispatch({ type: "setStreet", street: e.currentTarget.value })
+    const updateStreet      = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch({ 
+            type: "setStreet", 
+            street: e.target.value 
+        })
     }
-    const updateStreetNumber = (e: any) => {
-        dispatch({ type: "setStreetNumber", streetNumber: e.currentTarget.value })
-    }
-
-    const updatePostalCode = (e: any) => {
-        dispatch({ type: "setPostalCode", postalCode: e.currentTarget.value })
-    }
-
-    const updateCity = (e: any) => {
-        dispatch({ type: "setCity", city: e.currentTarget.value })
+    const updateStreetNumber= (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch({ 
+            type: "setStreetNumber", 
+            streetNumber: e.target.value 
+        })
     }
 
-    const handleSubmit = (e: any) => {
+    const updatePostalCode  = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch({ 
+            type: "setPostalCode", 
+            postalCode: e.target.value 
+        })
+    }
+
+    const updateCity        = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch({
+            type: "setCity", 
+            city: e.target.value 
+        })
+    }
+
+    const handleSubmit      = (e: React.MouseEvent) => {
         e.preventDefault()
 
         const output = `${state.name.first} ${state.name.last} (${state.age})`

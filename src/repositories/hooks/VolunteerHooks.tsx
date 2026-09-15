@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 
 import { User } from "firebase/auth"
-import { useAuthContext } from "@contexts/AuthContexts"
+import { useAuthContext } from "@contexts/hooks/useAuthContext"
 
 import volunteerDogLikesRepository from "@repos/VolunteerDogLikesRepository"
 import { VolunteerRole } from "@models/enums/UserRoleType"
@@ -98,7 +98,7 @@ export function useVolunteer() {
             return false
 
         return likedDogs.some(t => t == dog.id)
-    }, [volunteer, likedDogs])
+    }, [likedDogs])
 
     const toggleFavourite = useCallback((dog: DogModel) => {
         if (!volunteer || !dog?.id)
@@ -127,11 +127,10 @@ export function useVolunteer() {
                 }
             })
         }
-    }, [volunteer, likedDogs])
+    }, [isFavourite, volunteer])
 
     useEffect(() => {
         if (!user) {
-            setVolunteer(null)
             return
         }
 
@@ -144,37 +143,43 @@ export function useVolunteer() {
     }, [user])
 
     useEffect(() => {
-        if (!volunteer?.id) {
-            setLikedDogs([])
+        if (!volunteer?.id)
             return
-        }
 
-        return volunteerDogLikesRepository.subscribeForVolunteerLikes(volunteer.id, (m) => setLikedDogs(m.map(m => m.dogId)))
+        return volunteerDogLikesRepository.subscribeForVolunteerLikes(volunteer.id, (m) => { 
+            setLikedDogs(m.map(m => m.dogId))
+        })
     }, [volunteer])
 
     const likeCounter = useMemo(() => likedDogs.length, [likedDogs])
 
     return { volunteer, isFavourite, toggleFavourite, likeCounter }
 }
-export function useVolunteerRole(volunteer: VolunteerModel | null) {
+export function useVolunteerRole(targetVolunteer: VolunteerModel | null) {
+    const [volunteer, setVolunteer] = useState(targetVolunteer)
     const [role, setRole] = useState<VolunteerRole>("observer")
 
     useEffect(() => {
-        if (!volunteer?.id) {
-            setRole("observer")
+        if (!volunteer?.id)
             return
-        }
 
         return volunteerRepository.subscribeForVolunteerRole(volunteer.id, (r) => {
             setRole(r.role)
         })
     }, [volunteer])
 
-    useEffect(() => {
-        console.log(role)
-    }, [role])
+    return { role, roleFor: setVolunteer }
+}
 
-    return role
+export function useLocalVolunteerRole() {
+    const { volunteer } = useVolunteer()
+    const { role, roleFor } = useVolunteerRole(null)
+
+    useEffect(() => {
+        roleFor(volunteer)
+    }, [volunteer, roleFor])
+
+    return { volunteer, role }
 }
 
 export function useVolunteerById(id: string | null) {
@@ -182,10 +187,8 @@ export function useVolunteerById(id: string | null) {
     const [volunteer, setVolunteer] = useState<VolunteerModel | null>(null)
 
     useEffect(() => {
-        if (!volunteerId) {
-            setVolunteer(null)
+        if (!volunteerId)
             return
-        }
 
         return volunteerRepository.subscribeForVolunteer(volunteerId, (t) => {
             if (!t.length) {
@@ -201,24 +204,20 @@ export function useVolunteerById(id: string | null) {
 }
 
 export function useVolunteerCollection(elementLimit: number) {
-    const [volunteers, setVolunteers]       = useState<VolunteerModel[]>([])
-    const { page, pageControls, pageCursor }= usePages<VolunteerModel>()
+    const [ volunteers, setVolunteers ]       = useState<VolunteerModel[]>([])
+    const { page, pageControls, activePageCursor, setPageCursor } = usePages<VolunteerModel>()
+
+    const volunteerListener = useCallback((volunteers: VolunteerModel[]) => {
+        if (volunteers.length >= elementLimit) {
+            setPageCursor(page + 1, volunteers[volunteers.length - 1])
+        }
+            
+        setVolunteers(volunteers)
+    }, [elementLimit, page, setPageCursor, setVolunteers])
 
     useEffect(() => {
-        const cursor = pageCursor.get()
-        return volunteerRepository.subscribeForAllVolunteers(cursor, elementLimit, (result) => {
-            if (!result?.length) {
-                setVolunteers([])
-                return
-            }
+        return volunteerRepository.subscribeForAllVolunteers(activePageCursor, elementLimit, volunteerListener)
+    }, [activePageCursor, elementLimit, volunteerListener])
 
-            setVolunteers(result)
-
-            if (result.length >= elementLimit) {
-                pageCursor.set(result[result.length - 1])
-            }
-        })
-    }, [page])
-    
     return { volunteers, page, ...pageControls }
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Link, Text } from "@chakra-ui/react";
 
 type AuthProps = { 
@@ -6,7 +6,7 @@ type AuthProps = {
 }
 
 export default function withAuth<P extends React.JSX.IntrinsicAttributes>(Component : React.ComponentType) {
-    return ({ isAuthenticated, ...props } : AuthProps & P ) => {
+    function f({ isAuthenticated, ...props } : AuthProps & P ) : ReactNode {
         if (!isAuthenticated) {
             return <>
                 <Text color="red">
@@ -17,4 +17,6 @@ export default function withAuth<P extends React.JSX.IntrinsicAttributes>(Compon
 
         return <Component {...props} />
     }
+
+    return f
 }

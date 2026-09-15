@@ -1,8 +1,7 @@
 import { IconButton } from "@chakra-ui/react"
-import { useDialogueContext } from "@contexts/DialogueContext"
-import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext"
+import { useLocalVolunteerRole } from "@repos/hooks/VolunteerHooks"
 import { DogModel } from "@models/DogModel"
-import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
 import { useCallback } from "react"
 import { PiPencil } from "react-icons/pi"
 
@@ -11,8 +10,7 @@ type DogEditButtonProps = {
 }
 
 export default function DogEditButton({ dog } : DogEditButtonProps) {
-    const { volunteer } = useVolunteer()
-    const role = useVolunteerRole(volunteer)
+    const { volunteer, role } = useLocalVolunteerRole()
 
     const dialogueContext = useDialogueContext()
 
@@ -20,12 +18,12 @@ export default function DogEditButton({ dog } : DogEditButtonProps) {
         e.preventDefault();
 
         if (volunteer == null) {
-            dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
+            dialogueContext.openDialogue({ type: "userLogin" })
             return
         }
 
-        dialogueContext.openDialogue(DialogueTypeEnum.DogEdit, { dog: dog })
-    }, [volunteer, role, dog])
+        dialogueContext.openDialogue({ type: "dogEdit", data: { dog: dog } })
+    }, [dog, volunteer, dialogueContext])
 
     return (
         <>

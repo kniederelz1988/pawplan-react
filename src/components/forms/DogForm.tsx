@@ -3,7 +3,7 @@ import { Controller, useForm, useWatch } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { dogFormSchema } from "@schemas/dogSchemas";
 
-import { Button, Field, HStack, Input, Spacer, SwitchControl, SwitchHiddenInput, SwitchLabel, SwitchRoot, Textarea, VStack } from "@chakra-ui/react";
+import { Button, Field, HStack, Input, Spacer, SwitchControl, SwitchHiddenInput, SwitchRoot, Textarea, VStack } from "@chakra-ui/react";
 
 import { DogModel } from "@models/DogModel";
 import { DogGender, DogGenderEnum } from "@models/enums/DogGender";
@@ -14,11 +14,22 @@ import DatePicker from "@components/utils/DatePicker";
 import { dateToDateValue, dateToday, dateToTimestamp, dateValueToDate, timestampToDate } from "@helpers/TimeHelpers";
 import DogSizeSelection from "@components/utils/DogSizeSelection";
 import DogGenderSelection from "@components/utils/DogGenderSelection";
+import { Timestamp } from "firebase/firestore";
 
 type DogFormProps = {
     dog: DogModel,
     onSubmit: (v: DogModel) => void,
     onReset: () => void
+}
+type DogFormData = {
+    adoptionDate?: Date | undefined;
+    name: string;
+    birthday: Date;
+    shelterday: Date;
+    adoptionDateValid: NonNullable<boolean | undefined>;
+    description: string;
+    gender: DogGender[];
+    size: DogSize[];
 }
 
 export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
@@ -38,8 +49,8 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
         resolver: yupResolver(dogFormSchema)
     })
 
-    const [breed, setBreed] = useState(dog?.breed)
-    const [imageUrl, setImageUrl] = useState(dog?.imageURL)
+    const [_breed, _setBreed] = useState(dog?.breed)
+    const [_imageUrl, _setImageUrl] = useState(dog?.imageURL)
 
     useEffect(() => {
         if (!dog) {
@@ -63,7 +74,7 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
             "size": [dog.size],
             "description": dog.description
         })
-    }, [dog])
+    }, [dog, form])
 
     const birthdayValue = useWatch({ name: "birthday", control: form.control })
     const shelterdayValue = useWatch({ name: "shelterday", control: form.control })
@@ -72,22 +83,27 @@ export default function DogForm({ dog, onSubmit, onReset }: DogFormProps) {
     const genderValue = useWatch({ name: "gender", control: form.control })
     const sizeValue = useWatch({ name: "size", control: form.control })
 
-    const handleFormSubmit = useCallback((data: any) => {
-        dog.name = data.name
-        dog.birthday = dateToTimestamp(data.birthday)
-        dog.shelterDate = dateToTimestamp(data.shelterday)
+    const handleFormSubmit = useCallback((data: DogFormData) => {
+        const dog: DogModel = {
+            name: data.name,
+            birthday: dateToTimestamp(data.birthday),
+            shelterDate: dateToTimestamp(data.shelterday),
 
-        dog.adoptionDateValid = data.adoptionDateValid
-        if (dog.adoptionDateValid && data.adoptionDateValue)
-            dog.adoptionDate = dateToTimestamp(data.adoptionDateValue)
+            adoptionDateValid: data.adoptionDateValid,
+            adoptionDate: (data.adoptionDateValid && data.adoptionDate) 
+                ? dateToTimestamp(data.adoptionDate) 
+                : Timestamp.now(),
 
-        dog.gender = data.gender[0] as DogGender
-        dog.size = data.size[0] as DogSize
+            gender: data.gender[0] as DogGender,
+            size: data.size[0] as DogSize,
+            breed: "",
+            imageURL: "",
 
-        dog.description = data.description
+            description: data.description
+        }
 
         onSubmit(dog)
-    }, [dog, onSubmit])
+    }, [onSubmit])
     const handleFormReset = useCallback((e: React.SyntheticEvent) => {
         e.preventDefault();
 

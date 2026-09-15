@@ -1,5 +1,6 @@
 import { useCallback } from "react";
-import { CloseButton, Dialog, DialogOpenChangeDetails, Grid, GridItem, Heading, Portal } from "@chakra-ui/react";
+
+import { Grid, GridItem } from "@chakra-ui/react";
 
 import { useDogRepository } from "@repos/hooks/DogHooks";
 import { DogModel } from "@models/DogModel";
@@ -7,53 +8,36 @@ import { DogModel } from "@models/DogModel";
 import DogForm from "@components/forms/DogForm";
 import DogCard from "@components/misc/dogs/DogCard";
 
-import { Timestamp } from "firebase/firestore";
-import { DogGenderEnum } from "@models/enums/DogGender";
-import { DogSizeEnum } from "@models/enums/DogSize";
 import DialogueBox from "@components/hocs/withDialogueBox";
+import { DialogueProps } from "@contexts/providers/DialogueProvider";
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext";
 
 export type DogAddDialogueData = {
     dog: DogModel
 }
-export function createDogAddDialogueData() : DogAddDialogueData {
-    return {
-        dog: {
-            name: "",
-            birthday: Timestamp.now(),
-            shelterDate: Timestamp.now(),
-            adoptionDateValid: false,
-            adoptionDate: Timestamp.now(),
-            breed: "",
-            gender: DogGenderEnum.Female,
-            size: DogSizeEnum.Small,
-            imageURL: "",
-            description: ""
-        }
-    }
-}
 
-type DogAddDialogueProps = { 
-    open: boolean, 
-    onClose: () => void,
-    data: DogAddDialogueData
-}
-
-export default function DogAddDialogue({ open, onClose, data } : DogAddDialogueProps) {
+export default function DogAddDialogue({ open, data } : DialogueProps<DogAddDialogueData>) {
     const { createDog } = useDogRepository()
+
+    const dialogueContext = useDialogueContext()
+            
+    const handleClose = useCallback(() => {
+        dialogueContext.closeDialogue()
+    }, [dialogueContext])
 
     const handleConfirm = useCallback(() => {
         if (!data?.dog)
             return
 
         createDog(data.dog)
-        onClose()
-    }, [data, onClose]);
+        handleClose()
+    }, [createDog, handleClose, data]);
     const handleCancel = useCallback(() => {
-        onClose()
-    }, [data, onClose])
+        handleClose()
+    }, [handleClose])
 
     return (
-        <DialogueBox open={open} title="Add dog" size="xl" onClose={onClose}>
+        <DialogueBox open={open} title="Add dog" size="xl" onClose={handleClose}>
             <Grid templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(5, 1fr)" }} gap={6}>
                 <GridItem colSpan={{ base: 2, md: 2 }} alignContent={"start"}>
                     { data?.dog && <DogCard dog={data.dog} /> }

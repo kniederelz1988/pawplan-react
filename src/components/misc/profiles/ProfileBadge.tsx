@@ -18,7 +18,7 @@ export default function ProfileBadge({ role, ...props } : ProfileBadgeProps & Om
             case "admin":
                 return (<Badge colorPalette={"red"} {...props}>Admin</Badge>)
         }
-    }, [role])
+    }, [role, props])
 
     return badge
 }

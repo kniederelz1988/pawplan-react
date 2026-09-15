@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { VolunteerModel } from "@models/VolunteerModel";
 import { DogModel } from "@models/DogModel";
 
-import { Appointment, AppointmentModel, AppointmentRatingModel, AppointmentStatusModel } from "@models/AppointmentModel";
+import { AppointmentModel, AppointmentRatingModel, AppointmentStatusModel } from "@models/AppointmentModel";
 
 import { setupAppointments } from "../../helpers/AppointmentSort";
 
@@ -51,8 +51,8 @@ export function useAppointmentRepository() {
             }
         })
     }
-    function deleteAppointment(appointment: Appointment) {
-        appointmentRepository.deleteAppointment(appointment.data, (state, result) => {
+    function deleteAppointment(appointment: AppointmentModel) {
+        appointmentRepository.deleteAppointment(appointment, (state, result) => {
             switch (state) {
                 case RepositoryOperationStatusEnum.Success:
                     toaster.success({ 
@@ -129,53 +129,45 @@ export function useAppointmentsFilteredByVolunteer(elementLimit: number) {
     const [volunteer, setVolunteer] = useState<VolunteerModel | null>(null)
 
     const { appointments, setAppointmentModels } = useAppointments()
-    const { page, pageControls, pageCursor }     = usePages<AppointmentModel>()
 
     useEffect(() => {
         if (!volunteer?.id) {
-            setAppointmentModels(new Map<string, AppointmentModel>())
             return
         }
 
-        const c = pageCursor.get()
-        return appointmentRepository.subscribeForVolunteerAppointments(volunteer, c, elementLimit, setAppointmentModels)
-    }, [volunteer])
+        return appointmentRepository.subscribeForVolunteerAppointments(volunteer, null, elementLimit, setAppointmentModels)
+    }, [volunteer, elementLimit, setAppointmentModels])
 
-    useEffect(() => {
-        if (appointments.length >= elementLimit) {
-            const t = appointments[appointments.length - 1]
-            pageCursor.set(t.data)
-        }
-    }, [appointments])
-
-    return { appointments, page, ...pageControls, for: setVolunteer }
+    return { appointments, for: setVolunteer }
 }
-export function useAppointmentRatingsFilteredByDog(elementLimit: number) 
-{
+export function useAppointmentRatingsFilteredByDog(elementLimit: number) {
     const [dog, setDog] = useState<DogModel | null>(null)
-
     const [ratings, setRatings]                 = useState<AppointmentRatingModel[]>([])
-    const { page, pageControls, pageCursor }    = usePages<AppointmentRatingModel>()
 
+    const { page, pageControls, activePageCursor, setPageCursor }    = usePages<AppointmentRatingModel>()
+
+    const ratingListener = useCallback((ratings: Map<string, AppointmentRatingModel>) => {
+        const entries = Array.from(ratings.values())
+        if (entries.length >= elementLimit) {
+            setPageCursor(page + 1, entries[entries.length - 1])
+        }
+            
+        setRatings(entries)
+    }, [elementLimit, page, setPageCursor, setRatings])
     useEffect(() => {
-        if (!dog?.id) {
-            setRatings([])
+        if (!dog?.id)
             return
-        }
 
-        const c = pageCursor.get()
-        return appointmentRepository.subscribeForDogAppointmentRatings(dog, c, elementLimit, (r) => {
-            const ratings = Array.from(r.values()) 
-            setRatings(ratings) 
-        })
-    }, [dog, page])
+        return appointmentRepository.subscribeForDogAppointmentRatings(dog, activePageCursor, elementLimit, ratingListener)
+    }, [dog, activePageCursor, elementLimit, ratingListener])
 
     useEffect(() => {
-        if (ratings.length >= elementLimit) {
-            const t = ratings[ratings.length - 1]
-            pageCursor.set(t)
-        }
-    }, [ratings])
+        if (ratings.length < elementLimit) 
+            return
+    
+        const t = ratings[ratings.length - 1]
+        setPageCursor(page, t)
+    }, [ratings, elementLimit, page, setPageCursor])
 
     return { ratings, page, ...pageControls, for: setDog }
 }
@@ -185,11 +177,8 @@ function useAppointments() {
     const [statusModels,        setAppointmentStatusModels] = useState(new Map<string, AppointmentStatusModel>())
     const [ratingModels,        setAppointmentRatingModels] = useState(new Map<string, AppointmentRatingModel>())
 
-    const [appointments,        setAppointments]            = useState<Appointment[]>([])
-
-    useEffect(() => {
-        const t = setupAppointments(appointmentModels, statusModels, ratingModels)
-        setAppointments(t)
+    const appointments = useMemo(() => { 
+        return setupAppointments(appointmentModels, statusModels, ratingModels)
     }, [appointmentModels, statusModels, ratingModels])
 
     return { appointments, appointmentModels, setAppointmentModels, statusModels, setAppointmentStatusModels, ratingModels, setAppointmentRatingModels }
@@ -199,48 +188,40 @@ export function useAppointmentStatusCollection(states: AppointmentStatus[], elem
     const [filterByStates, setFilterByStates]       = useState<AppointmentStatus[]>(states)
     const [filterByVolunteer, setFilterByVolunteer] = useState<VolunteerModel | null>(null)
 
-    const collection                                = useAppointments()
-    const { page, pageControls, pageCursor }        = usePages<AppointmentStatusModel>()
+    const { appointments, setAppointmentModels, statusModels, setAppointmentStatusModels, setAppointmentRatingModels } = useAppointments()
+    const { page, pageControls, activePageCursor, setPageCursor }        = usePages<AppointmentStatusModel>()
+
+    const statusListener = useCallback((value: Map<string, AppointmentStatusModel>) => {
+        const entries = Array.from(value.values())
+        if (entries.length >= elementLimit) {
+            setPageCursor(page + 1, entries[entries.length - 1])
+        }
+
+        setAppointmentStatusModels(value)
+    }, [elementLimit, page, setPageCursor, setAppointmentStatusModels])
 
     useEffect(() => {
-        if (!filterByStates.length) {
-            collection.setAppointmentStatusModels(new Map<string, AppointmentStatusModel>())
+        if (!filterByStates.length)
             return
-        }
 
-        const cursor = pageCursor.get()
-        return appointmentRepository.subscribeForAppointmentStatus(filterByStates, filterByVolunteer, cursor, elementLimit, collection.setAppointmentStatusModels)
-    }, [filterByStates, filterByVolunteer, page])
+        return appointmentRepository.subscribeForAppointmentStatus(filterByStates, filterByVolunteer, activePageCursor, elementLimit, statusListener)
+    }, [filterByStates, filterByVolunteer, activePageCursor, elementLimit, statusListener])
 
     useEffect(() => {
-        if (!collection.statusModels) {
-            collection.setAppointmentModels(new Map<string, AppointmentModel>())
+        if (!statusModels.size)
             return
-        }
 
-        const keys = Array.from(collection.statusModels.keys())
-        return appointmentRepository.subscribeForAppointments(keys, collection.setAppointmentModels)
-    }, [collection.statusModels])
+        const keys = Array.from(statusModels.keys())
+        return appointmentRepository.subscribeForAppointments(keys, setAppointmentModels)
+    }, [statusModels, setAppointmentModels])
 
     useEffect(() => {
-        if (!collection.statusModels) {
-            collection.setAppointmentRatingModels(new Map<string, AppointmentRatingModel>())
+        if (!statusModels.size)
             return
-        }
 
-        const keys = Array.from(collection.statusModels.keys())
-        return appointmentRepository.subscribeForAppointmentRatings(keys, collection.setAppointmentRatingModels)
-    }, [collection.statusModels])
+        const keys = Array.from(statusModels.keys())
+        return appointmentRepository.subscribeForAppointmentRatings(keys, setAppointmentRatingModels)
+    }, [statusModels, setAppointmentRatingModels])
 
-    useEffect(() => {
-        if (collection.appointments.length >= elementLimit) {
-            const t = collection.appointments[collection.appointments.length - 1]
-            if (!t.statusData)
-                return
-
-            pageCursor.set(t.statusData)
-        }
-    }, [collection.appointments])
-
-    return { appointments: collection.appointments, with: setFilterByStates, for: setFilterByVolunteer, page, ...pageControls }
+    return { appointments: appointments, with: setFilterByStates, for: setFilterByVolunteer, page, ...pageControls }
 }

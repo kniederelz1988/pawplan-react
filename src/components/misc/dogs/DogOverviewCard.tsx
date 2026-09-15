@@ -1,46 +1,45 @@
 import { useCallback, useMemo } from "react";
 import { NavLink } from 'react-router-dom';
 
-import { Button, Card, Heading, HStack, IconButton, Link, Spacer, Span, Text, VStack } from "@chakra-ui/react";
+import { Button, Card, Heading, HStack, Spacer, Text, VStack } from "@chakra-ui/react";
 
-import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks";
+import { useLocalVolunteerRole } from "@repos/hooks/VolunteerHooks";
 
-import { useDialogueContext } from "@contexts/DialogueContext";
-import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext";
 
 import { DogModel, getDogAge, getGenderTitle, getSizeTitle} from "@models/DogModel";
 
-import DogEditButton from "./DogEditButton";
-import DogFavouriteButton from "./DogFavouriteButton";
-import { creatUserInsufficientRightsDialogueData } from "@components/dialogues/UserInsufficientRightsDialogue";
+import DogEditButton from "@components/misc/dogs/DogEditButton";
+import DogFavouriteButton from "@components/misc/dogs/DogFavouriteButton";
 import { FaMagnifyingGlass, FaRegCalendar } from "react-icons/fa6";
+
+import { creatUserInsufficientRightsDialogueData } from "@components/dialogues/functions/createUserInsuffientRightsDialogueData";
 
 type DogAppointmentCardProps = {
     dog: DogModel
 }
 
 export default function DogOverviewCard({ dog } : DogAppointmentCardProps) {
-    const { volunteer } = useVolunteer()
-    const role = useVolunteerRole(volunteer)
-
+    const { volunteer, role } = useLocalVolunteerRole()
+    
     const dialogueContext = useDialogueContext()
 
     const onMeetClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
         
         if (!volunteer) {
-            dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
+            dialogueContext.openDialogue({ type: "userLogin" })
             return
         }
 
         if (role == "observer") {
             const data = creatUserInsufficientRightsDialogueData()
-            dialogueContext.openDialogue(DialogueTypeEnum.UserInsuffientRights, data)
+            dialogueContext.openDialogue({ type: "userInsuffientRights", data: data})
             return
         }
 
-        dialogueContext.openDialogue(DialogueTypeEnum.AppointmentBooking, { dog: dog })
-    }, [volunteer, role, dog])
+        dialogueContext.openDialogue({ type: "appointmentBooking", data: { dog: dog }})
+    }, [dog, volunteer, role, dialogueContext])
     
     const titleId = useMemo(() => `dog-${dog.id}-title`, [dog])
 

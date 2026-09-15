@@ -5,7 +5,7 @@ import { LuLogOut } from "react-icons/lu"
 
 import { useVolunteer } from "@repos/hooks/VolunteerHooks"
 
-import { useAuthContext } from "@contexts/AuthContexts"
+import { useAuthContext } from "@contexts/hooks/useAuthContext"
 import UserLoginForm from "@components/forms/UserLoginForm"
 import UserRegisterForm from "@components/forms/UserRegisterForm"
 

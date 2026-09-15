@@ -7,9 +7,10 @@ export declare type AppointmentModel = {
     volunteerId     : string,
     createdAt       : Timestamp,
     date            : Timestamp
-    type            : any
+    type            : number
 }
 export declare type AppointmentStatusModel = {
+    id?             : string
     appointmentId   : string
     dogId           : string
     volunteerId     : string
@@ -18,6 +19,7 @@ export declare type AppointmentStatusModel = {
     updatedBy       : string
 }
 export declare type AppointmentRatingModel = {
+    id?             : string
     appointmentId   : string
     dogId           : string
     volunteerId     : string
@@ -27,9 +29,10 @@ export declare type AppointmentRatingModel = {
 }
 
 export declare type Appointment = {
-    data            : AppointmentModel,
-    statusData      : AppointmentStatusModel | undefined,
-    ratingData      : AppointmentRatingModel | undefined
+    id              : string,
+    data            : AppointmentModel       | undefined,
+    status          : AppointmentStatusModel | undefined,
+    rating          : AppointmentRatingModel | undefined
 }
 export declare type AppointmentCollection = { 
     all:        Appointment[]

@@ -1,4 +1,4 @@
-import { HStack, Text, VStack } from "@chakra-ui/react"
+import { Text, VStack } from "@chakra-ui/react"
 import { Time } from "@internationalized/date"
 
 type TimeProps = {

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react"
+import { useCallback } from "react"
 import { Timestamp } from "firebase/firestore";
 
 import { CalendarDateTime } from "@internationalized/date";
@@ -18,19 +18,24 @@ import AppointmentForm from "@components/forms/AppointmentForm"
 import { dateValueToTimestamp } from "@helpers/TimeHelpers";
 import DialogueBox from "@components/hocs/withDialogueBox";
 
+import { DialogueProps } from "@contexts/providers/DialogueProvider";
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext";
+
 export type AppointmentBookingDialogueData = {
     dog: DogModel
 }
 
-type AppointmentBookingDialogueProps = { 
-    open: boolean, 
-    onClose: () => void,
-    data: AppointmentBookingDialogueData
-}
+export default function AppointmentBookingDialogue({ open, data } 
+    : DialogueProps<AppointmentBookingDialogueData>) {
 
-export default function AppointmentBookingDialogue({ open, onClose, data } : AppointmentBookingDialogueProps) {
+    const dialogueContext = useDialogueContext()
+
     const { volunteer } = useVolunteer()
     const repository = useAppointmentRepository()
+
+    const handleClose = useCallback(() => {
+        dialogueContext.closeDialogue()
+    }, [dialogueContext])
 
     const handleConfirm = useCallback((dog: DogModel, date: CalendarDateTime) => {
         if (!volunteer?.id || !dog?.id)
@@ -44,18 +49,18 @@ export default function AppointmentBookingDialogue({ open, onClose, data } : App
             type: AppointmentTypeEnum.Walk
         }
         repository.createAppointment(appointment)
-        onClose()
-    }, [data, onClose])
+        handleClose()
+    }, [volunteer, repository, handleClose])
 
     return (
-        <DialogueBox open={open} title="Your appointment" size="xl" onClose={onClose}>
+        <DialogueBox open={open} title="Your appointment" size="xl" onClose={handleClose}>
             <Grid templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(5, 1fr)" }} gap={6}>
                 <GridItem colSpan={{ base: 2, md: 2 }} alignContent={"start"}>
                     { data?.dog && <DogCard dog={data.dog} /> }
                 </GridItem>
 
                 <GridItem colSpan={{ base: 2, md: 3 }} alignContent={"center"}>
-                    { data?.dog && <AppointmentForm dog={data.dog} onConfirm={handleConfirm} onClose={onClose}/> }
+                    { data?.dog && <AppointmentForm dog={data.dog} onConfirm={handleConfirm} onClose={handleClose}/> }
                 </GridItem>
             </Grid>
         </DialogueBox>

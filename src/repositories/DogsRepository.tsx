@@ -16,7 +16,7 @@ const dogConverter: FirestoreDataConverter<DogModel, DogModel> = {
 
 type DogRepositoryListener = (dogs: DogModel[]) => void
 
-function DogRepository({ database } : { database: Firestore }) {
+function createDogRepository({ database } : { database: Firestore }) {
     const collectionName = "dogs"
 
     function subscribeForAllDogs(listener: DogRepositoryListener) {
@@ -89,5 +89,5 @@ function DogRepository({ database } : { database: Firestore }) {
     }
 }
 
-const dogRepository = DogRepository({ database })
+const dogRepository = createDogRepository({ database })
 export default dogRepository

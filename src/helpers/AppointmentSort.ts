@@ -9,9 +9,10 @@ export function setupAppointments(
 
     modelMap.forEach((data, id) => {
         const a = { 
+            id:         id,
             data:       data, 
-            statusData: statusMap.get(id), 
-            ratingData: ratingMap.get(id)
+            status:     statusMap.get(id), 
+            rating:     ratingMap.get(id)
         }
         appointments.push(a)
     })

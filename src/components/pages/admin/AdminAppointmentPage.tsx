@@ -1,15 +1,12 @@
 import { useCallback } from "react"
 
-import { Container, Flex, Heading, Text } from "@chakra-ui/react"
+import { Container, Flex, Text } from "@chakra-ui/react"
 
-import { useDialogueContext } from "@contexts/DialogueContext"
-import { createAppointmentEditDialogueData } from "@components/dialogues/AppointmentEditDialogue"
-import { createAppointmentCancelDialogueData } from "@components/dialogues/AppointmentCancelDialogue"
-import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
-    
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext"
+
 import { DogModel } from "@models/DogModel"
 
-import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
+import { useLocalVolunteerRole } from "@repos/hooks/VolunteerHooks"
 import { useAppointmentRepository, useAppointmentStatusCollection } from "@repos/hooks/AppointmentHooks"
 
 import { Appointment } from "@models/AppointmentModel"
@@ -20,14 +17,15 @@ import { AppointmentCollection } from "@components/misc/appointments/Appointment
 
 import { Timestamp } from "firebase/firestore"
 import { PageHeading } from "@components/misc/PageHeading"
+import { createAppointmentEditDialogueData } from "@components/dialogues/functions/createAppointmentEditDialogueData"
+import { createAppointmentCancelDialogueData } from "@components/dialogues/functions/createAppointmentCancelDialogueData"
 
 const AppointmentTabs = withTabs(AppointmentCollection)
 
 export default function AdminAppointmentPage() {
-    const dialogue = useDialogueContext()
+    const dialogueContext = useDialogueContext()
 
-    const { volunteer } = useVolunteer()
-    const role = useVolunteerRole(volunteer)
+    const { volunteer, role } = useLocalVolunteerRole()
 
     const repository    = useAppointmentRepository()
 
@@ -37,9 +35,12 @@ export default function AdminAppointmentPage() {
     const completed     = useAppointmentStatusCollection([AppointmentStatusEnum.Completed], 10)
 
     const onEditAppointment = useCallback((appointment: Appointment) => {
+        if (!appointment.data)
+            return
+
         const data = createAppointmentEditDialogueData(appointment.data)
-        dialogue.openDialogue(DialogueTypeEnum.AppointmentEdit, data)
-    }, [])
+        dialogueContext.openDialogue({ type: "appointmentEdit", data: data })
+    }, [dialogueContext])
 
     const onConfirmAppointment = useCallback((appointment: Appointment) => {
         if (!volunteer?.id || role != "admin")
@@ -57,14 +58,17 @@ export default function AdminAppointmentPage() {
             updateAt        : Timestamp.now()
         }
         repository.updateStatus(appointment.data, status)
-    }, [volunteer, role])
+    }, [volunteer, role, repository])
     const onCancelAppointment = useCallback((appointment: Appointment, dog: DogModel) => {
         if (!volunteer?.id || role != "admin")
             return
 
-        const data = createAppointmentCancelDialogueData(appointment.data, volunteer, dog)
-        dialogue.openDialogue(DialogueTypeEnum.AppointmentCancel, data)
-    }, [volunteer, role])
+        if (!appointment.data)
+            return
+
+        const data = createAppointmentCancelDialogueData(repository.updateStatus, appointment.data, volunteer, dog)
+        dialogueContext.openDialogue({ type: "appointmentCancel", data: data })
+    }, [volunteer, role, repository, dialogueContext])
 
     return (
         <Flex flexDirection="column" m="auto" maxW={850}>

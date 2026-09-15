@@ -25,7 +25,7 @@ const roleConverter: FirestoreDataConverter<VolunteerRoleModel, VolunteerRoleMod
 type VolunteerRepositoryListener = (result: VolunteerModel[]) => void
 type VolunteerRoleRepositoryListener = (result: VolunteerRoleModel) => void
 
-function VolunteerRepository({ database } : { database: Firestore }) {
+function createVolunteerRepository({ database } : { database: Firestore }) {
     const collectionName = "volunteers2";
     const roleCollectionName = "volunteerRoles"
 
@@ -99,6 +99,11 @@ function VolunteerRepository({ database } : { database: Firestore }) {
     function subscribeForAllVolunteers(queryCursor: VolunteerModel | null, queryLimit: number, listener: VolunteerRepositoryListener) {
         const q = createVolunteerQuery(queryCursor, queryLimit)
         return onSnapshot(q, (snap) => {
+            if (snap.empty)
+            {   listener([])
+                return
+            }
+
             const data = snap.docs.map(t => t.data())
             listener(data)
         })
@@ -197,6 +202,7 @@ function VolunteerRepository({ database } : { database: Firestore }) {
                 birthday: Timestamp.now(),
                 volunteerSince: Timestamp.now(),
                 name: name,
+                imageUrl:  ""
             }
             createVolunteer(volunteer, operationCallback)
         })
@@ -215,5 +221,5 @@ function VolunteerRepository({ database } : { database: Firestore }) {
     }
 }
 
-const volunteerRepository = VolunteerRepository({ database })
+const volunteerRepository = createVolunteerRepository({ database })
 export default volunteerRepository

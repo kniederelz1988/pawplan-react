@@ -17,7 +17,7 @@ type VolunteersAdminCardProps = {
 }
 
 export default function VolunteersAdminCard({ volunteer, onEditVolunteer, onEditRole, disableEditRole } : VolunteersAdminCardProps) {
-    const role = useVolunteerRole(volunteer)
+    const { role } = useVolunteerRole(volunteer)
 
     const onEditUserClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
@@ -27,16 +27,16 @@ export default function VolunteersAdminCard({ volunteer, onEditVolunteer, onEdit
     const handleObserverClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
         onEditRole(volunteer, "observer")
-    }, [volunteer])
+    }, [volunteer, onEditRole])
 
     const handleVolunteerClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
         onEditRole(volunteer, "volunteer")
-    }, [volunteer])
+    }, [volunteer, onEditRole])
     const handleAdminClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
         onEditRole(volunteer, "admin")
-    }, [volunteer])
+    }, [volunteer, onEditRole])
 
     return (
         <Card.Root key={volunteer.id}>

@@ -6,4 +6,6 @@ export declare type VolunteerModel = {
     birthday: Timestamp
     volunteerSince: Timestamp
     name: string
+    phoneNumber?: string
+    imageUrl?: string
 }

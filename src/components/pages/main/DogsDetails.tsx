@@ -3,26 +3,22 @@ import { useParams } from "react-router-dom"
 
 import { Box, Button, Center, Flex, Grid, GridItem, Heading, HStack, Text, VStack } from "@chakra-ui/react"
 
-import { useDialogueContext } from "@contexts/DialogueContext"
-import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext"
 
 import useDogsCollection, { useDogAppointmentCount, useDogLikeCount } from "@repos/hooks/DogHooks"
 import { useAppointmentRatingsFilteredByDog } from "@repos/hooks/AppointmentHooks"
 
-import { useVolunteer, useVolunteerRole } from "@repos/hooks/VolunteerHooks"
+import { useLocalVolunteerRole } from "@repos/hooks/VolunteerHooks"
 
 import DogEditButton from "@components/misc/dogs/DogEditButton"
 import DogFavouriteButton from "@components/misc/dogs/DogFavouriteButton"
 import DogCard from "@components/misc/dogs/DogCard"
 import { AppointmentRating } from "@components/misc/appointments/AppointmentRating"
-import { creatUserInsufficientRightsDialogueData } from "@components/dialogues/UserInsufficientRightsDialogue"
 import { FaRegCalendar } from "react-icons/fa6"
 import { PageHeading } from "@components/misc/PageHeading"
+import { creatUserInsufficientRightsDialogueData } from "@components/dialogues/functions/createUserInsuffientRightsDialogueData"
 
-type DogsDetailsProps = {
-}
-
-export default function DogsDetails({ } : DogsDetailsProps) {
+export default function DogsDetails() {
     const { id } = useParams<string>()
     const { dogs, filterDogsByIds } = useDogsCollection([])
 
@@ -33,7 +29,7 @@ export default function DogsDetails({ } : DogsDetailsProps) {
         }
 
         filterDogsByIds([id])
-    }, [id])
+    }, [id, filterDogsByIds])
 
     const dog = useMemo(() => {
         if (dogs.length != 1) {
@@ -52,29 +48,32 @@ export default function DogsDetails({ } : DogsDetailsProps) {
         likeCounter.for(dog)
         appointmentCounter.for(dog)
         ratingCollection.for(dog)
-    }, [dog])
+    }, [dog, likeCounter, appointmentCounter, ratingCollection])
 
-    const { volunteer } = useVolunteer()
-    const role = useVolunteerRole(volunteer)
+    const { volunteer, role } = useLocalVolunteerRole()
 
     const dialogueContext = useDialogueContext()
 
     const onMeetClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
+
+        if (!dog) {
+            return
+        }
         
         if (!volunteer) {
-            dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
+            dialogueContext.openDialogue({ type: "userLogin" })
             return
         }
 
         if (role == "observer") {
             const data = creatUserInsufficientRightsDialogueData()
-            dialogueContext.openDialogue(DialogueTypeEnum.UserInsuffientRights, data)
+            dialogueContext.openDialogue({ type: "userInsuffientRights", data: data })
             return
         }
 
-        dialogueContext.openDialogue(DialogueTypeEnum.AppointmentBooking, { dog: dog })
-    }, [volunteer, role, dog])
+        dialogueContext.openDialogue({ type: "appointmentBooking", data: { dog: dog } })
+    }, [volunteer, role, dog, dialogueContext])
 
     return (
         dog && (
@@ -128,8 +127,8 @@ export default function DogsDetails({ } : DogsDetailsProps) {
                                 ? 
                                     <> 
                                     {
-                                        ratingCollection.ratings.map(t => 
-                                            <VStack w="full" >
+                                        ratingCollection.ratings.map((t, i) => 
+                                            <VStack w="full" key={i}>
                                                 <AppointmentRating rating={t} />
                                             </VStack>
                                         )

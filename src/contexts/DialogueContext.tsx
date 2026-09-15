@@ -1,116 +1,33 @@
-import React, { createContext, useContext, useState } from "react"
+import { createContext } from "react"
 
-import { DialogueType, DialogueTypeEnum } from "@components/dialogues/enums/DialogueType"
+import { UserInsufficientRightsDialogueData } from "@components/dialogues/UserInsufficientRightsDialogue"
+import { AppointmentBookingDialogueData } from "@components/dialogues/AppointmentBookingDialogue"
+import { AppointmentCancelDialogueData } from "@components/dialogues/AppointmentCancelDialogue"
+import { AppointmentEditDialogueData } from "@components/dialogues/AppointmentEditDialogue"
+import { AppointmentCompleteDialogueData } from "@components/dialogues/AppointmentCompleteDialogue"
+import { DogAddDialogueData } from "@components/dialogues/DogAddDialogue"
+import { DogEditDialogueData } from "@components/dialogues/DogEditDialogue"
+import { VolunteerEditDialogueData } from "@components/dialogues/VolunteerEditDialogue"
 
-import UserRegisterDialogue from "@components/dialogues/UserRegisterDialogue"
-import UserLoginDialogue from "@components/dialogues/UserLoginDialogue"
-import AppointmentBookingDialogue, { AppointmentBookingDialogueData } from "@components/dialogues/AppointmentBookingDialogue"
-import AppointmentCancelDialogue, { AppointmentCancelDialogueData } from "@components/dialogues/AppointmentCancelDialogue"
-import AppointmentEditDialogue, { AppointmentEditDialogueData } from "@components/dialogues/AppointmentEditDialogue"
-import DogEditDialogue, { DogEditDialogueData } from "@components/dialogues/DogEditDialogue"
-import VolunteerEditDialogue, { VolunteerEditDialogueData } from "@components/dialogues/VolunteerEditDialogue"
-import AppointmentCompleteDialogue, { AppointmentCompleteDialogueData } from "@components/dialogues/AppointmentCompleteDialogue"
-import DogAddDialogue, { DogAddDialogueData } from "@components/dialogues/DogAddDialogue"
-import UserInsufficientRightsDialogue, { UserInsufficientRightsDialogueData } from "@components/dialogues/UserInsufficientRightsDialogue"
+export type DialogueParameter =
+    { type: "none",                 } |
+    { type: "userLogin";            } | 
+    { type: "userRegister";         } |
+    { type: "userInsuffientRights"; data: UserInsufficientRightsDialogueData } |
+    { type: "appointmentBooking";   data: AppointmentBookingDialogueData } |
+    { type: "appointmentCancel";    data: AppointmentCancelDialogueData } | 
+    { type: "appointmentEdit";      data: AppointmentEditDialogueData } | 
+    { type: "appointmentComplete";  data: AppointmentCompleteDialogueData } |
+    { type: "dogAdd";               data: DogAddDialogueData } |
+    { type: "dogEdit";              data: DogEditDialogueData } |
+    { type: "userEdit";             data: VolunteerEditDialogueData }
 
 type DialogueContextData = {
-    openDialogue: (type: DialogueType, data?: any) => void
+    openDialogue: (parameter: DialogueParameter) => void
     closeDialogue: () => void
 }
 
-const DialogueContext = createContext<DialogueContextData>({ 
-    openDialogue: (_: DialogueType) => {},
+export const DialogueContext = createContext<DialogueContextData>({ 
+    openDialogue: (_: DialogueParameter) => {},
     closeDialogue: () => {}
 })
-
-type DialogueProviderProps = {
-    children: React.ReactNode
-}
-
-type DialogueData =
-    AppointmentBookingDialogueData |
-    AppointmentCancelDialogueData | 
-    AppointmentEditDialogueData | 
-    DogAddDialogueData |
-    DogEditDialogueData |
-    VolunteerEditDialogueData |
-    null
-
-export function DialogueProvider({ children } : DialogueProviderProps ) {
-    const [dialogueType, setDialogueType] = useState<DialogueType>(DialogueTypeEnum.None)
-    const [dialogueData, setDialogueData] = useState<DialogueData>(null)
-
-    function onOpenDialogue(type: DialogueType, data: any | null) {
-        if (type == DialogueTypeEnum.AppointmentBooking && (data as AppointmentBookingDialogueData) == null) {
-            return
-        }
-
-        if (type == DialogueTypeEnum.AppointmentEdit && (data as AppointmentEditDialogueData) == null) {
-            return
-        }
-
-        if (type == DialogueTypeEnum.AppointmentCancel && (data as AppointmentBookingDialogueData) == null) {
-            return
-        }
-
-        if (type == DialogueTypeEnum.AppointmentComplete && (data as AppointmentCompleteDialogueData) == null) {
-            return
-        }
-
-        if (type == DialogueTypeEnum.DogAdd && (data as DogAddDialogueData) == null) {
-            return
-        }
-
-        if (type == DialogueTypeEnum.DogEdit && (data as DogEditDialogueData) == null) {
-            return
-        }
-
-        if (type == DialogueTypeEnum.UserEdit && (data as VolunteerEditDialogueData) == null) {
-            return
-        }
-
-        setDialogueType(type)
-        setDialogueData(data)
-    }
-    function onCloseDialogue() {
-        setDialogueType(DialogueTypeEnum.None)
-        setDialogueData(null)
-    }
-
-    return (
-        <DialogueContext.Provider value={{ openDialogue: onOpenDialogue, closeDialogue: onCloseDialogue }}>
-            {children}
-
-            <UserLoginDialogue open={dialogueType == DialogueTypeEnum.UserLogin} onClose={onCloseDialogue}/>
-            <UserRegisterDialogue open={dialogueType == DialogueTypeEnum.UserRegister} onClose={onCloseDialogue}/>
-            <UserInsufficientRightsDialogue open={dialogueType == DialogueTypeEnum.UserInsuffientRights} onClose={onCloseDialogue}
-                data={dialogueData as UserInsufficientRightsDialogueData}
-            />
-
-            <AppointmentBookingDialogue open={dialogueType == DialogueTypeEnum.AppointmentBooking} onClose={onCloseDialogue} 
-                data={dialogueData as AppointmentBookingDialogueData}
-            />
-            <AppointmentEditDialogue open={dialogueType == DialogueTypeEnum.AppointmentEdit} onClose={onCloseDialogue}
-                data={dialogueData as AppointmentEditDialogueData} />
-            <AppointmentCancelDialogue open={dialogueType == DialogueTypeEnum.AppointmentCancel} onClose={onCloseDialogue} 
-                data={dialogueData as AppointmentCancelDialogueData}
-            />
-            <AppointmentCompleteDialogue open={dialogueType == DialogueTypeEnum.AppointmentComplete} onClose={onCloseDialogue}
-                data={dialogueData as AppointmentCompleteDialogueData}
-            />
-            
-            <DogAddDialogue open={dialogueType == DialogueTypeEnum.DogAdd} onClose={onCloseDialogue}
-                data={dialogueData as DogAddDialogueData}
-            />
-            <DogEditDialogue open={dialogueType == DialogueTypeEnum.DogEdit} onClose={onCloseDialogue}
-                data={dialogueData as DogEditDialogueData}
-            />
-            
-            <VolunteerEditDialogue open={dialogueType == DialogueTypeEnum.UserEdit} onClose={onCloseDialogue}
-                data={dialogueData as VolunteerEditDialogueData}
-            />
-        </DialogueContext.Provider>
-    )
-}
-
-export const useDialogueContext = () => useContext(DialogueContext)

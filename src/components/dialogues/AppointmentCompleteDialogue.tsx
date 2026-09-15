@@ -12,6 +12,8 @@ import { DogModel } from "@models/DogModel";
 
 import AppointmentRatingForm from "@components/forms/AppointmentRatingForm";
 import DialogueBox from "@components/hocs/withDialogueBox";
+import { DialogueProps } from "@contexts/providers/DialogueProvider";
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext";
 
 export type AppointmentCompleteDialogueData = {
     appointment: AppointmentModel, 
@@ -19,14 +21,16 @@ export type AppointmentCompleteDialogueData = {
     dog: DogModel
 }
 
-type AppointmentCompleteDialogueProps = { 
-    open: boolean, 
-    onClose: () => void,
-    data: AppointmentCompleteDialogueData
-}
+export default function AppointmentCompleteDialogue({ open, data } 
+    : DialogueProps<AppointmentCompleteDialogueData>) {
+    
+    const dialogueContext = useDialogueContext()
 
-export default function AppointmentCompleteDialogue({ open, onClose, data } : AppointmentCompleteDialogueProps) {
     const repository = useAppointmentRepository()
+    
+    const handleClose = useCallback(() => {
+        dialogueContext.closeDialogue()
+    }, [dialogueContext])
 
     const handleConfirm = useCallback((ratingValue: number, commentValue: string) => {
         if (!data?.appointment?.id || !data?.volunteer.id || !data?.dog.id)
@@ -51,14 +55,15 @@ export default function AppointmentCompleteDialogue({ open, onClose, data } : Ap
 
         repository.updateStatus(data.appointment, status)
         repository.createRating(data.appointment, rating)
-        onClose()
-    }, [data, onClose]);
+        handleClose()
+    }, [repository, handleClose, data])
+
     const handleCancel = useCallback(() => {
-        onClose()
-    }, [data, onClose])
+        handleClose()
+    }, [handleClose])
 
     return (
-        <DialogueBox open={open} title={`Complete visit with ${data?.dog && data.dog.name}`} onClose={onClose}>
+        <DialogueBox open={open} title={`Complete visit with ${data?.dog && data.dog.name}`} onClose={handleClose}>
             <AppointmentRatingForm onConfirm={handleConfirm} onClose={handleCancel}/>
         </DialogueBox>
     )

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { auth } from "@fb/config" 
 import { User, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth"
 import { getAuthErrorMessage } from "@fb/FirebaseErrorHelpers"
+import { FirebaseError } from "firebase/app"
 
 export default function useAuthentification() {
     const [user, setUser] = useState<User | null>(null)
@@ -15,8 +16,12 @@ export default function useAuthentification() {
         try {
             await signInWithEmailAndPassword(auth, email, password)
             setError(null)
-        } catch(err: any) {
-            setError(getAuthErrorMessage(err.code))
+        } catch(err: unknown) {
+            if (err instanceof FirebaseError) {
+                setError(getAuthErrorMessage(err.code))
+            } else {
+                setError("An unexpected error occurred.")
+            }
         }
 
         setLoading(false)

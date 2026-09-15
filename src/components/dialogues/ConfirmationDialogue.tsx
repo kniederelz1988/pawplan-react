@@ -1,5 +1,7 @@
-import { Box, Button, CloseButton, Dialog, DialogOpenChangeDetails, Heading, HStack, Portal, Spacer } from "@chakra-ui/react"
+import { Button, HStack, Spacer } from "@chakra-ui/react"
 import DialogueBox from "@components/hocs/withDialogueBox"
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext"
+import { DialogueProps } from "@contexts/providers/DialogueProvider"
 import React, { useCallback, useMemo } from "react"
 
 export type ConfirmationDialogueData = {
@@ -12,38 +14,35 @@ export type ConfirmationDialogueData = {
     cancel: React.ReactNode,
     onCancel?: () => void
 }
-type ConfirmationDialogueProps = {
-    open: boolean,
-    onClose: () => void,
-    data: ConfirmationDialogueData,
-}
 
-export default function ConfirmationDialogue({ open, onClose, data } : ConfirmationDialogueProps) {
-    const handleConfirm = useCallback((_e: React.MouseEvent) => {
+export default function ConfirmationDialogue({ open, data } 
+    : DialogueProps<ConfirmationDialogueData>) {
+    
+    const dialogueContext = useDialogueContext()
+        
+    const handleClose = useCallback(() => {
+        dialogueContext.closeDialogue()
+    }, [dialogueContext])
+
+    const handleConfirm = useCallback((_: React.MouseEvent) => {
         if (data?.onConfirm)
             data.onConfirm()
 
-        onClose()
-    }, [data, onClose])
-    const handleCancel = useCallback((_e: React.MouseEvent) => {
+        handleClose()
+    }, [data, handleClose])
+    const handleCancel = useCallback((_: React.MouseEvent) => {
         if (data?.onCancel)
             data.onCancel()
 
-        onClose()
-    }, [data, onClose])
+        handleClose()
+    }, [data, handleClose])
     
-    const handleOpenChange = useCallback((e: DialogOpenChangeDetails) => {
-        if(!e.open) {
-            onClose()
-        }
-    }, [onClose])
-
     const title = useMemo(() => {
         return data ? data.title : ""
     }, [data])
 
     return (
-        <DialogueBox open={open} title={title} onClose={onClose}>
+        <DialogueBox open={open} title={title} onClose={handleClose}>
             { data && data.description }
 
             <HStack pt={2}>

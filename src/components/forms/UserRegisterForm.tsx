@@ -1,17 +1,21 @@
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { Alert, Button, Center, Field, HStack, IconButton, Input, Link, Spacer, Text } from "@chakra-ui/react";
+import { Alert, Button, Center, Field, HStack, Input, Spacer, Text } from "@chakra-ui/react";
 import { FaUserPlus } from "react-icons/fa";
 
-import { useDialogueContext } from "@contexts/DialogueContext";
-import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext";
 
 import useCreateUser from "@hooks/useCreateUser";
 import { userRegisterSchema } from "@schemas/userSchemas";
 
 type UserRegisterFormProps = {
     showLoginHint: boolean
+}
+type UserRegisterFormData = {
+    email: string,
+    password: string,
+    name: string
 }
 
 export default function UserRegisterForm({ showLoginHint } : UserRegisterFormProps) {
@@ -27,9 +31,9 @@ export default function UserRegisterForm({ showLoginHint } : UserRegisterFormPro
 
     function handleLogin(e: React.MouseEvent) {
         e.preventDefault()
-        dialogueContext.openDialogue(DialogueTypeEnum.UserLogin)
+        dialogueContext.openDialogue({ type: "userLogin" })
     }
-    function handleRegister(data: any) {
+    function handleRegister(data: UserRegisterFormData) {
         createUser(data.email, data.password, data.name)
     }
     

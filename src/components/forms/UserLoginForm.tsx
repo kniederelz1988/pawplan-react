@@ -1,17 +1,20 @@
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { Alert, Button, Center, Field, HStack, IconButton, Input, Link, Spacer, Text } from "@chakra-ui/react";
+import { Alert, Button, Center, Field, HStack, Input, Spacer, Text } from "@chakra-ui/react";
 import { FiLogIn } from "react-icons/fi";
 
 import useAuthentification from "@hooks/useAuthentification";
-import { useDialogueContext } from "@contexts/DialogueContext";
+import { useDialogueContext } from "@contexts/hooks/useDialogueContext";
 
-import { DialogueTypeEnum } from "@components/dialogues/enums/DialogueType";
 import { userLoginSchema } from "@schemas/userSchemas";
 
 type UserLoginFormProps = {
     showRegisterLink: boolean
+}
+type UserLoginFormData = {
+    email: string;
+    password: string;
 }
 
 export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps) {
@@ -24,12 +27,12 @@ export default function UserLoginForm({ showRegisterLink } : UserLoginFormProps)
         resolver: yupResolver(userLoginSchema)
     })
 
-    function handleLogin(data: any) {
+    function handleLogin(data: UserLoginFormData) {
         signInUser(data.email , data.password)
     }
-    function handleRegister(e: any) {
+    function handleRegister(e: React.MouseEvent) {
         e.preventDefault()
-        dialogueContext.openDialogue(DialogueTypeEnum.UserRegister)
+        dialogueContext.openDialogue({ type: "userRegister" })
     }
 
     return (

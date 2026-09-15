@@ -21,18 +21,26 @@ const appointmentConverter: FirestoreDataConverter<AppointmentModel, Appointment
 }
 const statusConverter: FirestoreDataConverter<AppointmentStatusModel, AppointmentStatusModel> = {
     toFirestore: (data: AppointmentStatusModel) => data,
-    fromFirestore: (snap: QueryDocumentSnapshot) => snap.data() as AppointmentStatusModel
+    fromFirestore: (snap: QueryDocumentSnapshot) => {
+        const d = snap.data() as AppointmentStatusModel
+        d.id = snap.id
+        return d
+    }
 }
 const ratingsConverter: FirestoreDataConverter<AppointmentRatingModel, AppointmentRatingModel> = {
     toFirestore: (data: AppointmentRatingModel) => data,
-    fromFirestore: (snap: QueryDocumentSnapshot) => snap.data() as AppointmentRatingModel
+    fromFirestore: (snap: QueryDocumentSnapshot) => {
+        const d = snap.data() as AppointmentRatingModel
+        d.id = snap.id
+        return d
+    }
 }
 
 type AppointmentsListener = (appointments: Map<string, AppointmentModel>) => void
 type AppointmentStatesListener = (appointmentStates: Map<string, AppointmentStatusModel>) => void
 type AppointmentRatingsListener = (appointmentRatings: Map<string, AppointmentRatingModel>) => void
 
-function AppointmentRepository({ database } : { database: Firestore }) {
+function createAppointmentRepository({ database } : { database: Firestore }) {
     const collectionName = "appointments2";
     const statusCollectionName = "appointmentsStatus"
     const ratingCollectionName = "appointmentsRating"
@@ -374,5 +382,5 @@ function AppointmentRepository({ database } : { database: Firestore }) {
     }
 }
 
-const appointmentRepository = AppointmentRepository({ database })
+const appointmentRepository = createAppointmentRepository({ database })
 export default appointmentRepository

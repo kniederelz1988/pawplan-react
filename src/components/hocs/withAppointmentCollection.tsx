@@ -20,7 +20,8 @@ type TabsProps = {
 }
 
 export default function withTabs(Component : React.ComponentType<AppointmentCollectionProps>) {
-    return ({ tabs, defaultTab, onEdit, onConfirm, onCancel} : TabsProps & Omit<AppointmentCollectionProps, "collection" | "pageControls" | "isEditable" | "isConfirmable" | "isCancelable"> ) => {
+    function render({ tabs, defaultTab, onEdit, onConfirm, onCancel} : TabsProps 
+        & Omit<AppointmentCollectionProps, "collection" | "pageControls" | "isEditable" | "isConfirmable" | "isCancelable"> ) {
         return (
             <Tabs.Root lazyMount unmountOnExit variant="line" fitted defaultValue={defaultTab}>
                 <Tabs.List>
@@ -48,4 +49,6 @@ export default function withTabs(Component : React.ComponentType<AppointmentColl
             </Tabs.Root>
         )
     }
+
+    return render
 }

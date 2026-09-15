@@ -54,12 +54,11 @@ export default function useDogsCollection(dogIds: string[]) {
     const [filterByIds, filterDogsByIds] = useState(dogIds)
 
     useEffect(() => {
-        if (!filterByIds || filterByIds.length == 0) {
+        if (!filterByIds.length)
             return subscribeForAllDogs(setDogs)
-        }
-
+        
         return subscribeForDogs(filterByIds, setDogs)
-    }, [filterByIds])
+    }, [filterByIds, subscribeForDogs, subscribeForAllDogs])
 
     return { dogs, filterDogsByIds }
 }
